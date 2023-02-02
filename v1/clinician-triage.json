@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.0.0",
   "info": {
     "title": "Clinician Triage Service Contract",
     "description": "API contract for the Clinician Triage Service",
@@ -435,7 +435,7 @@
               }
             }
           },
-          "required": true,
+          "required": true
         },
         "responses": {
           "200": {
