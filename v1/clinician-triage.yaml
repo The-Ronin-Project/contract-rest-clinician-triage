@@ -11,8 +11,7 @@ servers:
 tags:
   - name: Care Team Response
     description: Endpoints for creating and updating clinician communication
-  - name: Reported Symptoms
-    description: Endpoints related to fetching the patient's reported symptoms
+
 paths:
   /add_care_team_response/{patientId}:
     post:
@@ -208,20 +207,13 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
-  /care_team_response/{surveyResponseId}:
-    put:
+  /care_team_response/:
+    post:
       tags:
         - Care Team Response
-      description: Create/update a care team response for the associated survey response
+      description: Create a care team response for the associated survey response
       summary: Create/Update Care Team Response
-      operationId: saveCareTeamResponse
-      parameters:
-        - name: surveyResponseId
-          in: path
-          required: true
-          example: '543346'
-          schema:
-            type: string
+      operationId: createCareTeamResponse
       requestBody:
         content:
           application/json:
@@ -229,18 +221,22 @@ paths:
               type: object
               required:
                 - option
+                - surveyResponseId
               properties:
+                surveyResponseId:
+                  type: string
                 option:
                   type: string
                 comment:
                   type: string
             example:
+              surveyResponseId: 982735
               option: schedule_visit
               comment: You should get in to see the doctor this week
         required: true
       responses:
         '200':
-          description: Successful create of care team response
+          description: Successful creation of care team response
           content:
             application/json:
               schema:
@@ -301,17 +297,100 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
-  /care_team_response/{surveyResponseId}/draft:
-    put:
+    get:
       tags:
         - Care Team Response
-      summary: Create/update Care Team Response Draft
-      description: >-
-        Create/Update a care team response draft for the associated survey
-        response
-      operationId: saveCareTeamResponseDraft
+      description: Fetch Care Team Responses
+      summary: Fetch Care Team Responses
+      operationId: fetchCareTeamResponses
       parameters:
-        - name: surveyResponseId
+        - in: query
+          name: surveyResponseId
+          required: false
+          description: Required if `patientId` is not provided
+          schema:
+            type: string
+        - in: query
+          name: patientId
+          required: false
+          description: Required if `surveyResponseId` is not provided
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful creation of care team response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/AbstractResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CareTeamResponse'
+              examples:
+                CareTeamResponseExample:
+                  $ref: '#/components/examples/CareTeamResponsesExample'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/AbstractResponse"
+                  - type: object
+                    properties:
+                      errors:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Error"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/BadRequestError"
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/AbstractResponse"
+                  - type: object
+                    properties:
+                      errors:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Error"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/NotFoundError"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/AbstractResponse"
+                  - type: object
+                    properties:
+                      errors:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Error"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/InternalServerError"
+  /care_team_response/{careTeamResponseId}:
+    patch:
+      tags:
+        - Care Team Response
+      summary: Update Care Team Response
+      description: >-
+        Update the selected option and custom comment of a patient message
+      operationId: updateCareTeamResponse
+      parameters:
+        - name: careTeamResponseId
           in: path
           required: true
           example: '543346'
@@ -396,17 +475,16 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
-  /care_team_response/{surveyResponseId}/sign:
+  /care_team_response/{careTeamResponseId}/sign:
     patch:
       tags:
         - Care Team Response
       summary: Sign Care Team Response
       description: >-
-        Sign a care team response for the associated survey response. May
-        include an optional internal note
+        Sign a care team response. May include an internal note
       operationId: signCareTeamResponse
       parameters:
-        - name: surveyResponseId
+        - name: careTeamResponseId
           in: path
           required: true
           example: '543346'
@@ -486,82 +564,7 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
-  /patient_reported_symptoms/{patientId}:
-    get:
-      tags:
-        - Reported Symptoms
-      summary: Get Patient Reported Symptoms
-      description: Get all reported symptoms and response options for a patient
-      operationId: getPatientReportedSymptoms
-      parameters:
-        - name: patientId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful fetch of symptoms
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/QuestionnaireResponse'
-              examples:
-                QuestionnaireResponseExample:
-                  $ref: '#/components/examples/QuestionnaireResponseExample'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
-              examples:
-                BadRequestError:
-                  $ref: "#/components/examples/BadRequestError"
-        '404':
-          description: Resource Not Found
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
-              examples:
-                BadRequestError:
-                  $ref: "#/components/examples/NotFoundError"
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
-              examples:
-                BadRequestError:
-                  $ref: "#/components/examples/InternalServerError"
+
 components:
   schemas:
     AbstractResponse:
@@ -665,139 +668,6 @@ components:
         updated_at:
           type: string
           format: date-time
-    SymptomResponse:
-      type: object
-      properties:
-        id:
-          type: integer
-        answer_id:
-          type: integer
-        category_id:
-          type: integer
-        name:
-          type: string
-        severity:
-          type: string
-        survey_response_id:
-          type: integer
-        value:
-          type: string
-    AlertTier:
-      type: object
-      properties:
-        tier:
-          type: number
-        triage_dash_tag:
-          type: string
-        triage_dash_label:
-          type: string
-        triage_dash_label_icon:
-          type: string
-    SymptomEducation:
-      type: object
-      properties:
-        category:
-          type: object
-          properties:
-            name:
-              type: string
-        body:
-          type: string
-          description: String containing the symptome education
-        external_links:
-          type: array
-          items:
-            type: object
-            properties:
-              title:
-                type: string
-              url:
-                type: string
-    QuestionnaireResponse:
-      type: object
-      properties:
-        permissions:
-          type: object
-          properties:
-            writeEnabled:
-              type: boolean
-            allowedResponses:
-              type: array
-              items:
-                type: object
-                additionalProperties:
-                  type: string
-        symptoms:
-          type: object
-          properties:
-            survey_responses:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  is_alerted:
-                    type: boolean
-                    description: >-
-                      Whether the symptoms reported by the patient triggered an
-                      alert
-                  alert_tier:
-                    $ref: '#/components/schemas/AlertTier'
-                  care_team_response:
-                    $ref: '#/components/schemas/CareTeamResponse'
-                  survey_id:
-                    type: integer
-                    description: The ID of the survey taken by the patient
-                  category_severe_symptoms_map:
-                    type: object
-                    deprecated: true
-                    description: Replaced with `symptoms -> severe`
-                    additionalProperties:
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/SymptomResponse'
-                  categories_without_severe_symptoms_map:
-                    type: object
-                    deprecated: true
-                    description: Replaced with `symptoms -> non_severe`
-                    additionalProperties:
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/SymptomResponse'
-                  symptoms:
-                    type: object
-                    description: The symptoms reported by the patient via the phone app
-                    properties:
-                      severe:
-                        type: object
-                        additionalProperties:
-                          type: array
-                          items:
-                            $ref: '#/components/schemas/SymptomResponse'
-                      non_severe:
-                        type: object
-                        additionalProperties:
-                          type: array
-                          items:
-                            $ref: '#/components/schemas/SymptomResponse'
-                  write_in:
-                    type: string
-                    description: >-
-                      Custom string entered by the patient while reporting
-                      symptoms
-                    nullable: true
-                  symptom_educations:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/SymptomEducation'
-                    nullable: true
-                  completed_on:
-                    type: string
-                    format: date-time
-                  created_at:
-                    type: string
-                    format: date-time
     Error:
       type: object
       properties:
@@ -823,123 +693,6 @@ components:
           type: string
           description: HTTP status of the response
   examples:
-    QuestionnaireResponseExample:
-      summary: Questionnaire Response Example
-      value:
-        meta:
-          links:
-            self: /v1/patient_reported_symptoms/23232
-          version: 1.0.0
-        data:
-          permissions:
-            allowed_responses:
-              contact_patient: Contact Patient
-              monitor_at_home: Monitor at Home
-              patient_contacted_us: Patient Contacted Us
-              schedule_visit: Schedule Visit
-              send_to_ed: Send to ED
-            write_enabled: true
-          symptoms:
-            survey_responses:
-              - id: 918943
-                is_alerted: true
-                alert_tier:
-                  tier: 2
-                  triage_dash_tag: Urgent Response Required
-                  triage_dash_label: Patient told to call 911
-                care_team_response:
-                  id: 10256
-                  status: schedule_visit
-                  display_status: Schedule Visit
-                  custom_comment: You should get in to see the doctor this week
-                  comment: Patient needs blood drawn
-                  patient_message:
-                    option: schedule_visit
-                    display: Schedule Visit
-                    comment: You should get in to see the doctor this week
-                  internal_note: Patient needs blood drawn
-                  responder:
-                    id: 28639
-                    name: Charles Henri
-                    created_at: '2022-01-09T03:08:01.123Z'
-                    updated_at: '2022-02-16T04:28:45.723Z'
-                  read_at: '2023-01-12T09:48:54.826Z'
-                  signed_at: '2023-01-12T07:23:13.837Z'
-                  created_at: '2023-01-12T07:23:13.837Z'
-                  updated_at: '2023-01-12T07:23:13.837Z'
-                survey_id: 24643
-                category_severe_symptoms_map:
-                  Diarrhea:
-                    - id: 88469
-                      answer_id: 127326
-                      category_id: 63
-                      name: 'Frequency: Occasionally'
-                      severity: Mild/Moderate
-                      survey_response_id: 15522
-                      value: '2'
-                      created_at: '2022-12-02T19:52:45.000Z'
-                      updated_at: '2022-12-02T19:52:45.000Z'
-                    - id: 88470
-                      answer_id: 127327
-                      category_id: 63
-                      name: 'Daily episodes at worst: 2-3'
-                      severity: Mild/Moderate
-                      survey_response_id: 15522
-                      value: '2'
-                      created_at: '2022-12-02T19:52:45.000Z'
-                      updated_at: '2022-12-02T19:52:45.000Z'
-                categories_without_severe_symptoms_map:
-                  Vomiting:
-                    - id: 88442
-                      answer_id: 127288
-                      category_id: 69
-                      name: '[Vomiting] Present: No'
-                      survey_response_id: 15518
-                      value: '0'
-                      created_at: '2022-12-02T19:26:48.000Z'
-                      updated_at: '2022-12-02T19:26:48.000Z'
-                symptoms:
-                  severe:
-                    Diarrhea:
-                      - id: 88469
-                        answer_id: 127326
-                        category_id: 63
-                        name: 'Frequency: Occasionally'
-                        severity: Mild/Moderate
-                        survey_response_id: 15522
-                        value: '2'
-                        created_at: '2022-12-02T19:52:45.000Z'
-                        updated_at: '2022-12-02T19:52:45.000Z'
-                      - id: 88470
-                        answer_id: 127327
-                        category_id: 63
-                        name: 'Daily episodes at worst: 2-3'
-                        severity: Mild/Moderate
-                        survey_response_id: 15522
-                        value: '2'
-                        created_at: '2022-12-02T19:52:45.000Z'
-                        updated_at: '2022-12-02T19:52:45.000Z'
-                  non_severe:
-                    Vomiting:
-                      - id: 88442
-                        answer_id: 127288
-                        category_id: 69
-                        name: '[Vomiting] Present: No'
-                        survey_response_id: 15518
-                        value: '0'
-                        created_at: '2022-12-02T19:26:48.000Z'
-                        updated_at: '2022-12-02T19:26:48.000Z'
-                write_in: Vomiting has gotten better
-                symptom_educations:
-                  - body: "\r\n**Nausea is a common side effect of cancer treatment that may lead to vomiting**  \r\n\r\n**Medicine**\r\n\r\n* If your care team gave you nausea medicines (antiemetics), follow the instructions on how to take them  \r\n\r\n**Food/Fluids**\r\n\r\n* Eat small meals often to keep something in your stomach\r\n\r\n* Eat dry foods (such as crackers or toast) when you wake up, before you start to move around\r\n\r\n* It is important to stay hydrated. Drink 64 to 80 ounces of fluids per day. Fluids include clear soups, flavored gelatin, carbonated drinks, popsicles, tea and ice chips made of any kind of liquid.\r\n\r\n* Sip room temperature carbonated drinks such as cola or ginger ale\r\n\r\n* Try tart or sour flavored foods, hard candies or liquids\r\n\r\n**Other Tips**\r\n\r\n* Apply a cool wet cloth to your forehead or neck\r\n\r\n* Open a window or use a fan to feel fresh air movement\r\n\r\n"
-                    category:
-                      name: Nausea
-                    external_links:
-                      - title: Patient Education Nausea and Vomiting
-                        url: >-
-                          https://www.mdanderson.org/patient-education/Nutrition/Nausea-and-Vomiting-Tips-for-Coping.pdf
-                created_at: '2022-12-02T13:57:12.765Z'
-                completed_on: '2022-12-02T19:26:48.000Z'
     CareTeamResponseExample:
       summary: Care Team Response Example
       value:
@@ -967,6 +720,33 @@ components:
           signed_at: '2023-01-12T07:23:13.837Z'
           created_at: '2023-01-12T07:23:13.837Z'
           updated_at: '2023-01-12T07:23:13.837Z'
+    CareTeamResponsesExample:
+      summary: Care Team Response Example
+      value:
+        meta:
+          links:
+            self: /v1/care_team_response/10256
+          version: 1.0.0
+        data:
+          - id: 10256
+            status: schedule_visit
+            display_status: Schedule Visit
+            custom_comment: You should get in to see the doctor this week
+            comment: Patient needs blood drawn
+            patient_message:
+              option: schedule_visit
+              display: Schedule Visit
+              comment: You should get in to see the doctor this week
+            internal_note: Patient needs blood drawn
+            responder:
+              id: 28639
+              name: Charles Henri
+              created_at: '2022-01-09T03:08:01.123Z'
+              updated_at: '2022-02-16T04:28:45.723Z'
+            read_at: '2023-01-12T09:48:54.826Z'
+            signed_at: '2023-01-12T07:23:13.837Z'
+            created_at: '2023-01-12T07:23:13.837Z'
+            updated_at: '2023-01-12T07:23:13.837Z'
     BadRequestError:
       summary: Bad Request Error Example
       value:
