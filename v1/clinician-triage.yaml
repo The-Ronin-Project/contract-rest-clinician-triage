@@ -207,7 +207,7 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
-  /care_team_response/:
+  /care_team_response:
     post:
       tags:
         - Care Team Response
@@ -230,7 +230,7 @@ paths:
                 comment:
                   type: string
             example:
-              surveyResponseId: 982735
+              surveyResponseId: "982735"
               option: schedule_visit
               comment: You should get in to see the doctor this week
         required: true
