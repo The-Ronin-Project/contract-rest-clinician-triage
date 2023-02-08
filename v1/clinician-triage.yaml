@@ -13,226 +13,38 @@ tags:
     description: Endpoints for creating and updating clinician communication
 
 paths:
-  /add_care_team_response/{patientId}:
-    post:
-      deprecated: true
-      tags:
-        - Care Team Response
-      description: Create a care team response for the associated patient
-      summary: Create Care Team Response
-      operationId: addCareTeamResponseDEPRECATED
-      parameters:
-        - name: patientId
-          in: path
-          required: true
-          example: '10253'
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - survey_response_id
-              properties:
-                survey_response_id:
-                  type: integer
-                status:
-                  type: string
-                custom_comment:
-                  type: string
-                comment:
-                  type: string
-            example:
-              survey_response_id: 1025
-              status: address_at_next
-              custom_comment: Go do a thing
-              comment: I instructed the patient to do a thing
-        required: true
-      responses:
-        '200':
-          description: Successful create/update of care team response
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/CareTeamResponse'
-              examples:
-                CareTeamResponseExample:
-                  $ref: '#/components/examples/CareTeamResponseExample'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
-              examples:
-                BadRequestError:
-                  $ref: "#/components/examples/BadRequestError"
-        '404':
-          description: Resource Not Found
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
-              examples:
-                BadRequestError:
-                  $ref: "#/components/examples/NotFoundError"
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
-              examples:
-                BadRequestError:
-                  $ref: "#/components/examples/InternalServerError"
-  /sign_care_team_response/{patientId}:
-    patch:
-      deprecated: true
-      tags:
-        - Care Team Response
-      description: Sign a care team response for the associated patient
-      summary: Sign Care Team Response
-      operationId: signCareTeamResponseDEPRECATED
-      parameters:
-        - name: patientId
-          in: path
-          required: true
-          example: '10352'
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - survey_response_id
-              properties:
-                survey_response_id:
-                  type: integer
-                comment:
-                  type: string
-            example:
-              survey_response_id: 1025
-              comment: I instructed the patient to do a thing
-        required: true
-      responses:
-        '200':
-          description: Successful signing of care team response
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/CareTeamResponse'
-              examples:
-                CareTeamResponseExample:
-                  $ref: '#/components/examples/CareTeamResponseExample'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
-              examples:
-                BadRequestError:
-                  $ref: "#/components/examples/BadRequestError"
-        '404':
-          description: Resource Not Found
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
-              examples:
-                BadRequestError:
-                  $ref: "#/components/examples/NotFoundError"
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
-              examples:
-                BadRequestError:
-                  $ref: "#/components/examples/InternalServerError"
   /care_team_response:
     post:
       tags:
         - Care Team Response
       description: Create a care team response for the associated survey response
-      summary: Create/Update Care Team Response
+      summary: Create Care Team Response
       operationId: createCareTeamResponse
       requestBody:
         content:
           application/json:
             schema:
               type: object
-              required:
-                - option
-                - surveyResponseId
               properties:
-                surveyResponseId:
+                survey_response_id:
                   type: string
-                option:
-                  type: string
-                comment:
-                  type: string
+                patient_message:
+                  type: object
+                  properties:
+                    option:
+                      type: string
+                    comment:
+                      type: string
+                  required:
+                    - option
+              required:
+                - survey_response_id
+                - patient_message
             example:
-              surveyResponseId: "982735"
-              option: schedule_visit
-              comment: You should get in to see the doctor this week
+              survey_response_id: "982735"
+              patient_message:
+                option: schedule_visit
+                comment: You should get in to see the doctor this week
         required: true
       responses:
         '200':
@@ -247,8 +59,8 @@ paths:
                       data:
                         $ref: '#/components/schemas/CareTeamResponse'
               examples:
-                CareTeamResponseExample:
-                  $ref: '#/components/examples/CareTeamResponseExample'
+                CareTeamResponseExampleBeforeSigning:
+                  $ref: '#/components/examples/CareTeamResponseExampleBeforeSigning'
         '400':
           description: Bad request
           content:
@@ -300,20 +112,20 @@ paths:
     get:
       tags:
         - Care Team Response
-      description: Fetch Care Team Responses
+      description: Fetch Care Team Responses by either the survey response ID or the patient ID
       summary: Fetch Care Team Responses
       operationId: fetchCareTeamResponses
       parameters:
         - in: query
-          name: surveyResponseId
+          name: survey_response_id
           required: false
-          description: Required if `patientId` is not provided
+          description: Required if `patient_id` is not provided
           schema:
             type: string
         - in: query
-          name: patientId
+          name: patient_id
           required: false
-          description: Required if `surveyResponseId` is not provided
+          description: Required if `survey_response_id` is not provided
           schema:
             type: string
       responses:
@@ -401,16 +213,22 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-                - option
               properties:
-                option:
-                  type: string
-                comment:
-                  type: string
+                patient_message:
+                  type: object
+                  properties:
+                    option:
+                      type: string
+                    comment:
+                      type: string
+                  required:
+                    - option
+              required:
+                - patient_message
             example:
-              option: schedule_visit
-              comment: You should get in to see the doctor this week
+              patient_message:
+                option: schedule_visit
+                comment: You should get in to see the doctor this week
         required: true
       responses:
         '200':
@@ -587,7 +405,7 @@ components:
       type: object
       properties:
         id:
-          type: number
+          type: string
         name:
           type: string
         created_at:
@@ -603,29 +421,9 @@ components:
       type: object
       properties:
         id:
-          type: integer
-        status:
           type: string
-          deprecated: true
-          description: >-
-            (See `patient_message -> value`). Required if `patient_message ->
-            value` is `null`
-        display_status:
+        survey_response_id:
           type: string
-          deprecated: true
-          description: >-
-            (See `patient_message -> display`). Required if `patient_message ->
-            display` is `null`
-          nullable: true
-        custom_comment:
-          type: string
-          deprecated: true
-          description: (See `patient_message -> comment`)
-          nullable: true
-        comment:
-          type: string
-          deprecated: true
-          description: (See `internal_note`)
         patient_message:
           type: object
           properties:
@@ -701,23 +499,42 @@ components:
             self: /v1/care_team_response/10256
           version: 1.0.0
         data:
-          id: 10256
-          status: schedule_visit
-          display_status: Schedule Visit
-          custom_comment: You should get in to see the doctor this week
-          comment: Patient needs blood drawn
+          id: "10256"
+          survey_response_id: "982735"
           patient_message:
             option: schedule_visit
             display: Schedule Visit
             comment: You should get in to see the doctor this week
           internal_note: Patient needs blood drawn
           responder:
-            id: 28639
+            id: "28639"
             name: Charles Henri
             created_at: '2022-01-09T03:08:01.123Z'
             updated_at: '2022-02-16T04:28:45.723Z'
           read_at: '2023-01-12T09:48:54.826Z'
           signed_at: '2023-01-12T07:23:13.837Z'
+          created_at: '2023-01-12T07:23:13.837Z'
+          updated_at: '2023-01-12T07:23:13.837Z'
+    CareTeamResponseExampleBeforeSigning:
+      summary: Care Team Response Example Before Signing
+      value:
+        meta:
+          links:
+            self: /v1/care_team_response/10256
+          version: 1.0.0
+        data:
+          id: "10256"
+          survey_response_id: "982735"
+          patient_message:
+            option: schedule_visit
+            display: Schedule Visit
+            comment: You should get in to see the doctor this week
+          responder:
+            id: "28639"
+            name: Charles Henri
+            created_at: '2022-01-09T03:08:01.123Z'
+            updated_at: '2022-02-16T04:28:45.723Z'
+          read_at: '2023-01-12T09:48:54.826Z'
           created_at: '2023-01-12T07:23:13.837Z'
           updated_at: '2023-01-12T07:23:13.837Z'
     CareTeamResponsesExample:
@@ -728,18 +545,15 @@ components:
             self: /v1/care_team_response/10256
           version: 1.0.0
         data:
-          - id: 10256
-            status: schedule_visit
-            display_status: Schedule Visit
-            custom_comment: You should get in to see the doctor this week
-            comment: Patient needs blood drawn
+          - id: "10256"
+            survey_response_id: "982735"
             patient_message:
               option: schedule_visit
               display: Schedule Visit
               comment: You should get in to see the doctor this week
             internal_note: Patient needs blood drawn
             responder:
-              id: 28639
+              id: "28639"
               name: Charles Henri
               created_at: '2022-01-09T03:08:01.123Z'
               updated_at: '2022-02-16T04:28:45.723Z'
