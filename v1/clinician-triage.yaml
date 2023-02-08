@@ -20,6 +20,8 @@ paths:
       description: Create a care team response for the associated survey response
       summary: Create Care Team Response
       operationId: createCareTeamResponse
+      security:
+        - bearerAuth: []
       requestBody:
         content:
           application/json:
@@ -115,6 +117,8 @@ paths:
       description: Fetch Care Team Responses by either the survey response ID or the patient ID
       summary: Fetch Care Team Responses
       operationId: fetchCareTeamResponses
+      security:
+        - bearerAuth: []
       parameters:
         - in: query
           name: survey_response_id
@@ -201,6 +205,8 @@ paths:
       description: >-
         Update the selected option and custom comment of a patient message
       operationId: updateCareTeamResponse
+      security:
+        - bearerAuth: []
       parameters:
         - name: careTeamResponseId
           in: path
@@ -301,6 +307,8 @@ paths:
       description: >-
         Sign a care team response. May include an internal note
       operationId: signCareTeamResponse
+      security:
+        - bearerAuth: []
       parameters:
         - name: careTeamResponseId
           in: path
@@ -401,19 +409,6 @@ components:
             version:
               type: string
               description: Semver version of the API
-    Responder:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
     CareTeamResponse:
       description: >-
         Data pertaining to the messages that clinicians send to the patients,
@@ -424,6 +419,9 @@ components:
           type: string
         survey_response_id:
           type: string
+        ronin_practitioner_id:
+          type: string
+          description: ID of the practitioner who is writing the response
         patient_message:
           type: object
           properties:
@@ -446,8 +444,6 @@ components:
           type: string
           description: Optional note that the clinician can store for internal use
           nullable: true
-        responder:
-          $ref: '#/components/schemas/Responder'
         signed_at:
           type: string
           format: date-time
@@ -501,16 +497,12 @@ components:
         data:
           id: "10256"
           survey_response_id: "982735"
+          ronin_practitioner_id: "28639"
           patient_message:
             option: schedule_visit
             display: Schedule Visit
             comment: You should get in to see the doctor this week
           internal_note: Patient needs blood drawn
-          responder:
-            id: "28639"
-            name: Charles Henri
-            created_at: '2022-01-09T03:08:01.123Z'
-            updated_at: '2022-02-16T04:28:45.723Z'
           read_at: '2023-01-12T09:48:54.826Z'
           signed_at: '2023-01-12T07:23:13.837Z'
           created_at: '2023-01-12T07:23:13.837Z'
@@ -525,15 +517,11 @@ components:
         data:
           id: "10256"
           survey_response_id: "982735"
+          ronin_practitioner_id: "28639"
           patient_message:
             option: schedule_visit
             display: Schedule Visit
             comment: You should get in to see the doctor this week
-          responder:
-            id: "28639"
-            name: Charles Henri
-            created_at: '2022-01-09T03:08:01.123Z'
-            updated_at: '2022-02-16T04:28:45.723Z'
           read_at: '2023-01-12T09:48:54.826Z'
           created_at: '2023-01-12T07:23:13.837Z'
           updated_at: '2023-01-12T07:23:13.837Z'
@@ -547,16 +535,12 @@ components:
         data:
           - id: "10256"
             survey_response_id: "982735"
+            ronin_practitioner_id: "28639"
             patient_message:
               option: schedule_visit
               display: Schedule Visit
               comment: You should get in to see the doctor this week
             internal_note: Patient needs blood drawn
-            responder:
-              id: "28639"
-              name: Charles Henri
-              created_at: '2022-01-09T03:08:01.123Z'
-              updated_at: '2022-02-16T04:28:45.723Z'
             read_at: '2023-01-12T09:48:54.826Z'
             signed_at: '2023-01-12T07:23:13.837Z'
             created_at: '2023-01-12T07:23:13.837Z'
@@ -602,3 +586,8 @@ components:
             title: Internal Server Error
             detail_message: Lost connection with DB
             status: '500'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
