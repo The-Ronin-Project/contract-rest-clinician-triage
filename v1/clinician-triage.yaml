@@ -30,6 +30,10 @@ paths:
               properties:
                 survey_response_id:
                   type: string
+                tenant_id:
+                  type: string
+                patient_id:
+                  type: string
                 patient_message:
                   type: object
                   properties:
@@ -44,6 +48,8 @@ paths:
                 - patient_message
             example:
               survey_response_id: "982735"
+              tenant_id: "928795"
+              patient_id: "628374"
               patient_message:
                 option: schedule_visit
                 comment: You should get in to see the doctor this week
@@ -390,6 +396,86 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
+  /care_team_response/{careTeamResponseId}/read:
+    patch:
+      tags:
+        - Care Team Response
+      summary: Mark Care Team Response as Read
+      description: >-
+        Mark the Care Team Response as having been read by the patient
+      operationId: markCareTeamResponseAsRead
+#      security:
+#        - bearerAuth: [] Need to figure this out since it's coming from patient app
+      parameters:
+        - name: careTeamResponseId
+          in: path
+          required: true
+          example: '543346'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful signing of care team response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/AbstractResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/CareTeamResponse'
+              examples:
+                CareTeamResponseExample:
+                  $ref: '#/components/examples/CareTeamResponseExample'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/AbstractResponse"
+                  - type: object
+                    properties:
+                      errors:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Error"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/BadRequestError"
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/AbstractResponse"
+                  - type: object
+                    properties:
+                      errors:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Error"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/NotFoundError"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/AbstractResponse"
+                  - type: object
+                    properties:
+                      errors:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Error"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/InternalServerError"
 
 components:
   schemas:
@@ -422,6 +508,8 @@ components:
         ronin_practitioner_id:
           type: string
           description: ID of the practitioner who is writing the response
+        patient_id:
+          type: string
         patient_message:
           type: object
           properties:
@@ -498,6 +586,7 @@ components:
           id: "10256"
           survey_response_id: "982735"
           ronin_practitioner_id: "28639"
+          patient_id: "6726873"
           patient_message:
             option: schedule_visit
             display: Schedule Visit
@@ -536,6 +625,7 @@ components:
           - id: "10256"
             survey_response_id: "982735"
             ronin_practitioner_id: "28639"
+            patient_id: "6726873"
             patient_message:
               option: schedule_visit
               display: Schedule Visit
