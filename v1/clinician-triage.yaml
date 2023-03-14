@@ -11,8 +11,93 @@ servers:
 tags:
   - name: Care Team Response
     description: Endpoints for creating and updating clinician communication
+  - name: Patient Reported Symptoms
+    description: Endpoints for fetching questionnaires that have been completed by a patient
 
 paths:
+  /care_team_response/draft:
+    put:
+      tags:
+        - Care Team Response
+      description: Create or update a care team response draft
+      summary: Create/Update Care Team Response Draft
+      operationId: upsertCareTeamResponse
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          schema:
+            type: string
+          name: survey_response_id
+          required: true
+          example: fa3b78ce-c27b-11ed-afa1-0242ac120002
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                option:
+                  type: string
+                comment:
+                  type: string
+              required:
+                - option
+            example:
+              option: schedule_visit
+              comment: You should get in to see the doctor this week
+        required: true
+      responses:
+        '202':
+          description: Successful upsert of care team response draft
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/AbstractResponse"
+                  - type: object
+                    properties:
+                      errors:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Error"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/BadRequestError"
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/AbstractResponse"
+                  - type: object
+                    properties:
+                      errors:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Error"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/NotFoundError"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/AbstractResponse"
+                  - type: object
+                    properties:
+                      errors:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Error"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/InternalServerError"
   /care_team_response:
     post:
       tags:
@@ -22,229 +107,32 @@ paths:
       operationId: createCareTeamResponse
       security:
         - bearerAuth: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                survey_response_id:
-                  type: string
-                tenant_id:
-                  type: string
-                patient_id:
-                  type: string
-                patient_message:
-                  type: object
-                  properties:
-                    option:
-                      type: string
-                    comment:
-                      type: string
-                  required:
-                    - option
-              required:
-                - survey_response_id
-                - patient_message
-            example:
-              survey_response_id: "982735"
-              tenant_id: "928795"
-              patient_id: "628374"
-              patient_message:
-                option: schedule_visit
-                comment: You should get in to see the doctor this week
-        required: true
-      responses:
-        '200':
-          description: Successful creation of care team response
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/CareTeamResponse'
-              examples:
-                CareTeamResponseExampleBeforeSigning:
-                  $ref: '#/components/examples/CareTeamResponseExampleBeforeSigning'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
-              examples:
-                BadRequestError:
-                  $ref: "#/components/examples/BadRequestError"
-        '404':
-          description: Resource Not Found
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
-              examples:
-                BadRequestError:
-                  $ref: "#/components/examples/NotFoundError"
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
-              examples:
-                BadRequestError:
-                  $ref: "#/components/examples/InternalServerError"
-    get:
-      tags:
-        - Care Team Response
-      description: Fetch Care Team Responses by either the survey response ID or the patient ID
-      summary: Fetch Care Team Responses
-      operationId: fetchCareTeamResponses
-      security:
-        - bearerAuth: []
       parameters:
         - in: query
           name: survey_response_id
-          required: false
-          description: Required if `patient_id` is not provided
           schema:
             type: string
-        - in: query
-          name: patient_id
-          required: false
-          description: Required if `survey_response_id` is not provided
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful creation of care team response
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/CareTeamResponse'
-              examples:
-                CareTeamResponseExample:
-                  $ref: '#/components/examples/CareTeamResponsesExample'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
-              examples:
-                BadRequestError:
-                  $ref: "#/components/examples/BadRequestError"
-        '404':
-          description: Resource Not Found
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
-              examples:
-                BadRequestError:
-                  $ref: "#/components/examples/NotFoundError"
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
-              examples:
-                BadRequestError:
-                  $ref: "#/components/examples/InternalServerError"
-  /care_team_response/{careTeamResponseId}:
-    patch:
-      tags:
-        - Care Team Response
-      summary: Update Care Team Response
-      description: >-
-        Update the selected option and custom comment of a patient message
-      operationId: updateCareTeamResponse
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: careTeamResponseId
-          in: path
           required: true
-          example: '543346'
-          schema:
-            type: string
+          example: fa3b78ce-c27b-11ed-afa1-0242ac120002
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                patient_message:
-                  type: object
-                  properties:
-                    option:
-                      type: string
-                    comment:
-                      type: string
-                  required:
-                    - option
+                option:
+                  type: string
+                comment:
+                  type: string
               required:
-                - patient_message
+                - option
             example:
-              patient_message:
-                option: schedule_visit
-                comment: You should get in to see the doctor this week
+              option: schedule_visit
+              comment: You should get in to see the doctor this week
         required: true
       responses:
-        '200':
-          description: Successful create of care team response
+        '201':
+          description: Successful creation of care team response
           content:
             application/json:
               schema:
@@ -255,8 +143,8 @@ paths:
                       data:
                         $ref: '#/components/schemas/CareTeamResponse'
               examples:
-                CareTeamResponseExample:
-                  $ref: '#/components/examples/CareTeamResponseExample'
+                CreateCareTeamResponseExample:
+                  $ref: '#/components/examples/CreateCareTeamResponseExample'
         '400':
           description: Bad request
           content:
@@ -273,6 +161,8 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/BadRequestError"
+                DuplicateResource:
+                  $ref: "#/components/examples/DuplicateResource"
         '404':
           description: Resource Not Found
           content:
@@ -305,6 +195,7 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
+
   /care_team_response/{careTeamResponseId}/sign:
     patch:
       tags:
@@ -347,7 +238,103 @@ paths:
                         $ref: '#/components/schemas/CareTeamResponse'
               examples:
                 CareTeamResponseExample:
-                  $ref: '#/components/examples/CareTeamResponseExample'
+                  $ref: '#/components/examples/SignCareTeamResponseExample'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/AbstractResponse"
+                  - type: object
+                    properties:
+                      errors:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Error"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/BadRequestError"
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/AbstractResponse"
+                  - type: object
+                    properties:
+                      errors:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Error"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/NotFoundError"
+        '409':
+          description: Duplicate Signature
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/AbstractResponse"
+                  - type: object
+                    properties:
+                      errors:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Error"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/DuplicateSignature"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/AbstractResponse"
+                  - type: object
+                    properties:
+                      errors:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Error"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/InternalServerError"
+  /care_team_response/{careTeamResponseId}/read:
+    patch:
+      tags:
+        - Care Team Response
+      summary: Mark Care Team Response as Read
+      description: >-
+        Mark the Care Team Response as having been read by the patient
+      operationId: markCareTeamResponseAsRead
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: careTeamResponseId
+          in: path
+          required: true
+          example: 25e4822e-c289-11ed-afa1-0242ac120002
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful signing of care team response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/AbstractResponse"
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/CareTeamResponse'
+              examples:
+                CareTeamResponseExample:
+                  $ref: '#/components/examples/MarkCareTeamResponseAsReadExample'
         '400':
           description: Bad request
           content:
@@ -396,26 +383,25 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
-  /care_team_response/{careTeamResponseId}/read:
-    patch:
+  /symptoms:
+    get:
       tags:
-        - Care Team Response
-      summary: Mark Care Team Response as Read
-      description: >-
-        Mark the Care Team Response as having been read by the patient
-      operationId: markCareTeamResponseAsRead
-#      security:
-#        - bearerAuth: [] Need to figure this out since it's coming from patient app
+        - Patient Reported Symptoms
+      description: Fetch questionnaires that have been completed by a patient
+      summary: Fetch Patient Reported Symptoms
+      operationId: fetchPatientReportedSymptoms
+      security:
+        - bearerAuth: []
       parameters:
-        - name: careTeamResponseId
-          in: path
-          required: true
-          example: '543346'
+        - in: query
+          name: patient_id
           schema:
             type: string
+          required: true
+          example: b02cadd0-c27f-11ed-afa1-0242ac120002
       responses:
         '200':
-          description: Successful signing of care team response
+          description: Successful creation of care team response
           content:
             application/json:
               schema:
@@ -424,10 +410,12 @@ paths:
                   - type: object
                     properties:
                       data:
-                        $ref: '#/components/schemas/CareTeamResponse'
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/PatientReportedSymptomsResponse'
               examples:
                 CareTeamResponseExample:
-                  $ref: '#/components/examples/CareTeamResponseExample'
+                  $ref: '#/components/examples/PatientReportedSymptomsResponseExample'
         '400':
           description: Bad request
           content:
@@ -503,13 +491,10 @@ components:
       properties:
         id:
           type: string
-        survey_response_id:
-          type: string
-        ronin_practitioner_id:
-          type: string
-          description: ID of the practitioner who is writing the response
-        patient_id:
-          type: string
+        is_draft:
+          type: boolean
+        responder:
+          $ref: "#/components/schemas/Responder"
         patient_message:
           type: object
           properties:
@@ -517,12 +502,11 @@ components:
               type: string
               description: >-
                 Message sent from the clinician to the patient. Chosen from a
-                set number of options. Required if `status` is `null`
+                set number of options
             display:
               type: string
               description: >-
-                The display value of the `patient_message -> option` enum.
-                Required if `display_status` is `null`
+                The display value of the `option` enum
               nullable: true
             comment:
               type: string
@@ -550,6 +534,129 @@ components:
         updated_at:
           type: string
           format: date-time
+
+    Responder:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+
+    SymptomResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        severity:
+          type: string
+        value:
+          type: string
+        recorded_on:
+          type: string
+          format: date-time
+    AlertTier:
+      type: object
+      properties:
+        tier:
+          type: number
+        automatic_alert:
+          type: boolean
+        triage_dash_tag:
+          type: string
+        triage_dash_label:
+          type: string
+        triage_dash_label_icon:
+          type: boolean
+    SymptomEducation:
+      type: object
+      properties:
+        category:
+          type: object
+          properties:
+            name:
+              type: string
+        body:
+          type: string
+          description: String containing the symptom education
+        external_links:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              url:
+                type: string
+    PatientReportedSymptomsResponse:
+      type: object
+      properties:
+        permissions:
+          description: Per-patient permissions granted to the provider
+          type: object
+          properties:
+            write_enabled:
+              type: boolean
+              description: Whether the provider is able to send a care team response message
+            allowed_responses:
+              type: array
+              items:
+                type: object
+                additionalProperties:
+                  type: string
+              description: Key-value pairs where keys are an enum of allowed responses a provider may send to a patient, and the values are the display values of the enum
+        questionnaire_responses:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              is_alerted:
+                type: boolean
+                description: >-
+                  Whether the symptoms reported by the patient triggered an
+                  alert
+              alert_tier:
+                $ref: '#/components/schemas/AlertTier'
+              care_team_response:
+                $ref: '#/components/schemas/CareTeamResponse'
+              symptoms:
+                type: object
+                description: The symptoms reported by the patient via the phone app
+                properties:
+                  severe:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/SymptomResponse'
+                  non_severe:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/SymptomResponse'
+              write_in:
+                type: string
+                description: >-
+                  Custom string entered by the patient while reporting
+                  symptoms
+                nullable: true
+              symptom_educations:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SymptomEducation'
+                nullable: true
+              completed_on:
+                type: string
+                format: date-time
+              created_at:
+                type: string
+                format: date-time
+
     Error:
       type: object
       properties:
@@ -575,18 +682,66 @@ components:
           type: string
           description: HTTP status of the response
   examples:
-    CareTeamResponseExample:
-      summary: Care Team Response Example
+    CreateCareTeamResponseExample:
+      summary: Create Care Team Response Example
       value:
         meta:
           links:
-            self: /v1/care_team_response/10256
+            self: /v1/care_team_response
           version: 1.0.0
         data:
-          id: "10256"
-          survey_response_id: "982735"
-          ronin_practitioner_id: "28639"
-          patient_id: "6726873"
+          id: 25e4822e-c289-11ed-afa1-0242ac120002
+          survey_response_id: 9970ca54-c289-11ed-afa1-0242ac120002
+          responder:
+            id: 2cc29228-c281-11ed-afa1-0242ac120002
+            name: Susan Smith
+          patient_id: 9d63650e-c289-11ed-afa1-0242ac120002
+          patient_message:
+            option: schedule_visit
+            display: Schedule Visit
+            comment: You should get in to see the doctor this week
+          internal_note: Patient needs blood drawn
+          read_at: null
+          signed_at: null
+          created_at: '2023-01-12T07:23:13.837Z'
+          updated_at: '2023-01-12T07:23:13.837Z'
+    SignCareTeamResponseExample:
+      summary: Sign Care Team Response Draft Example
+      value:
+        meta:
+          links:
+            self: /v1/care_team_response/25e4822e-c289-11ed-afa1-0242ac120002/sign
+          version: 1.0.0
+        data:
+          id: 25e4822e-c289-11ed-afa1-0242ac120002
+          survey_response_id: 9970ca54-c289-11ed-afa1-0242ac120002
+          responder:
+            id: 2cc29228-c281-11ed-afa1-0242ac120002
+            name: Susan Smith
+          patient_id: 9d63650e-c289-11ed-afa1-0242ac120002
+          patient_message:
+            option: schedule_visit
+            display: Schedule Visit
+            comment: You should get in to see the doctor this week
+          internal_note: Patient needs blood drawn
+          read_at: null
+          signed_at: '2023-01-12T07:23:13.837Z'
+          created_at: '2023-01-12T07:23:13.837Z'
+          updated_at: '2023-01-12T07:23:13.837Z'
+    MarkCareTeamResponseAsReadExample:
+      summary: Upsert Care Team Response Draft Example
+      value:
+        meta:
+          links:
+            self: /v1/care_team_response/25e4822e-c289-11ed-afa1-0242ac120002/read
+          version: 1.0.0
+        data:
+          id: 25e4822e-c289-11ed-afa1-0242ac120002
+          survey_response_id: 9970ca54-c289-11ed-afa1-0242ac120002
+          responder:
+            id: 2cc29228-c281-11ed-afa1-0242ac120002
+            name: Susan Smith
+          patient_id: 9d63650e-c289-11ed-afa1-0242ac120002
           patient_message:
             option: schedule_visit
             display: Schedule Visit
@@ -596,45 +751,46 @@ components:
           signed_at: '2023-01-12T07:23:13.837Z'
           created_at: '2023-01-12T07:23:13.837Z'
           updated_at: '2023-01-12T07:23:13.837Z'
-    CareTeamResponseExampleBeforeSigning:
-      summary: Care Team Response Example Before Signing
+    PatientReportedSymptomsResponseExample:
+      summary: Completed Questionnaire
       value:
         meta:
           links:
-            self: /v1/care_team_response/10256
+            self: /v1/symptoms/27ce169e-c280-11ed-afa1-0242ac120002
           version: 1.0.0
         data:
-          id: "10256"
-          survey_response_id: "982735"
-          ronin_practitioner_id: "28639"
-          patient_message:
-            option: schedule_visit
-            display: Schedule Visit
-            comment: You should get in to see the doctor this week
-          read_at: '2023-01-12T09:48:54.826Z'
-          created_at: '2023-01-12T07:23:13.837Z'
-          updated_at: '2023-01-12T07:23:13.837Z'
-    CareTeamResponsesExample:
-      summary: Care Team Response Example
-      value:
-        meta:
-          links:
-            self: /v1/care_team_response/10256
-          version: 1.0.0
-        data:
-          - id: "10256"
-            survey_response_id: "982735"
-            ronin_practitioner_id: "28639"
-            patient_id: "6726873"
-            patient_message:
-              option: schedule_visit
-              display: Schedule Visit
-              comment: You should get in to see the doctor this week
-            internal_note: Patient needs blood drawn
-            read_at: '2023-01-12T09:48:54.826Z'
-            signed_at: '2023-01-12T07:23:13.837Z'
-            created_at: '2023-01-12T07:23:13.837Z'
-            updated_at: '2023-01-12T07:23:13.837Z'
+          id: 27ce169e-c280-11ed-afa1-0242ac120002
+          permissions:
+            write_enabled: true
+            allowed_responses:
+              address_before : "Will address: Before next appt"
+              address_next: "Will address: At next appt"
+              address_unneeded: "No need to address: Alert not needed"
+              addressed_already: "No need to address: Already discussed"
+          questionnaire_responses:
+            - id: 27ce169e-c280-11ed-afa1-0242ac120002
+              is_alerted: true
+              alert_tier:
+                tier: 4
+                automatic_alert: true
+                triage_dash_tag: Patient told to call 911
+                triage_dash_label: Urgent Response Required
+                triage_dash_label_icon: true
+              care_team_response:
+                id: 1f82b782-c281-11ed-afa1-0242ac120002
+                responder:
+                  id: 2cc29228-c281-11ed-afa1-0242ac120002
+                  name: Susan Smith
+                patient_message:
+                  option: address_next
+                  display: "Will address: At next appt"
+                  comment: "You'll be able to discuss this with the doctor at your next visit"
+                internal_note: "Patient would like to discuss their vomitting with the doctor"
+                signed_at: "2022-02-11T02:45:03.246Z"
+                read_at: "2022-02-11T03:26:16.876Z"
+                created_at: "2022-02-11T02:34:56.356"
+                updated_at: "2022-02-11T03:26:16.876Z"
+
     BadRequestError:
       summary: Bad Request Error Example
       value:
@@ -652,6 +808,32 @@ components:
               value: '-1'
               message: Must be a positive value
             status: '400'
+    DuplicateResource:
+      summary: Bad Request - Duplicate Resource
+      value:
+        meta:
+          links:
+            self: /v1/care_team_response/10256
+          version: 1.0.0
+        errors:
+          - id: 179F5161-D264-422B-8E2E-72B721739922
+            title: Resource Already Exists
+            detail_message: The care team response has already been stored and sent to the patient
+            code: DUPLICATE
+            status: '400'
+    DuplicateSignature:
+      summary: Duplicate Signature
+      value:
+        meta:
+          links:
+            self: /v1/care_team_response/10256
+          version: 1.0.0
+        errors:
+          - id: 179F5161-D264-422B-8E2E-72B721739922
+            title: Response Already Signed
+            detail_message: The care team response has already been signed by a provider
+            code: DUP_SIGNATURE
+            status: '409'
     NotFoundError:
       summary: Resource Not Found Error Example
       value:
