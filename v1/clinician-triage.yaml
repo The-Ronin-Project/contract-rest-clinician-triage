@@ -604,11 +604,9 @@ components:
               type: boolean
               description: Whether the provider is able to send a care team response message
             allowed_responses:
-              type: array
-              items:
-                type: object
-                additionalProperties:
-                  type: string
+              type: object
+              additionalProperties:
+                type: string
               description: Key-value pairs where keys are an enum of allowed responses a provider may send to a patient, and the values are the display values of the enum
         questionnaire_responses:
           type: array
@@ -762,37 +760,37 @@ components:
             self: /v1/symptoms/27ce169e-c280-11ed-afa1-0242ac120002
           version: 1.0.0
         data:
-          id: 27ce169e-c280-11ed-afa1-0242ac120002
-          permissions:
-            write_enabled: true
-            allowed_responses:
-              address_before : "Will address: Before next appt"
-              address_next: "Will address: At next appt"
-              address_unneeded: "No need to address: Alert not needed"
-              addressed_already: "No need to address: Already discussed"
-          questionnaire_responses:
-            - id: 27ce169e-c280-11ed-afa1-0242ac120002
-              is_alerted: true
-              alert_tier:
-                tier: 4
-                automatic_alert: true
-                triage_dash_tag: Patient told to call 911
-                triage_dash_label: Urgent Response Required
-                triage_dash_label_icon: true
-              care_team_response:
-                id: 1f82b782-c281-11ed-afa1-0242ac120002
-                responder:
-                  id: 2cc29228-c281-11ed-afa1-0242ac120002
-                  name: Susan Smith
-                patient_message:
-                  option: address_next
-                  display: "Will address: At next appt"
-                  comment: "You'll be able to discuss this with the doctor at your next visit"
-                internal_note: "Patient would like to discuss their vomitting with the doctor"
-                signed_at: "2022-02-11T02:45:03.246Z"
-                read_at: "2022-02-11T03:26:16.876Z"
-                created_at: "2022-02-11T02:34:56.356"
-                updated_at: "2022-02-11T03:26:16.876Z"
+          - id: 27ce169e-c280-11ed-afa1-0242ac120002
+            permissions:
+              write_enabled: true
+              allowed_responses:
+                address_before : "Will address: Before next appt"
+                address_next: "Will address: At next appt"
+                address_unneeded: "No need to address: Alert not needed"
+                addressed_already: "No need to address: Already discussed"
+            questionnaire_responses:
+              - id: 27ce169e-c280-11ed-afa1-0242ac120002
+                is_alerted: true
+                alert_tier:
+                  tier: 4
+                  automatic_alert: true
+                  triage_dash_tag: Patient told to call 911
+                  triage_dash_label: Urgent Response Required
+                  triage_dash_label_icon: true
+                care_team_response:
+                  id: 1f82b782-c281-11ed-afa1-0242ac120002
+                  responder:
+                    id: 2cc29228-c281-11ed-afa1-0242ac120002
+                    name: Susan Smith
+                  patient_message:
+                    option: address_next
+                    display: "Will address: At next appt"
+                    comment: "You'll be able to discuss this with the doctor at your next visit"
+                  internal_note: "Patient would like to discuss their vomitting with the doctor"
+                  signed_at: "2022-02-11T02:45:03.246Z"
+                  read_at: "2022-02-11T03:26:16.876Z"
+                  created_at: "2022-02-11T02:34:56.356"
+                  updated_at: "2022-02-11T03:26:16.876Z"
 
     BadRequestError:
       summary: Bad Request Error Example
