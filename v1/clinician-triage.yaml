@@ -66,6 +66,8 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/BadRequestError"
+                DuplicateResource:
+                  $ref: "#/components/examples/DuplicateResource"
         '404':
           description: Resource Not Found
           content:
@@ -322,7 +324,7 @@ paths:
             type: string
       responses:
         '200':
-          description: Successful signing of care team response
+          description: Successfully updated the care team response as "read"
           content:
             application/json:
               schema:
@@ -570,6 +572,7 @@ components:
           type: string
         triage_dash_label_icon:
           type: boolean
+
     SymptomEducation:
       type: object
       properties:
