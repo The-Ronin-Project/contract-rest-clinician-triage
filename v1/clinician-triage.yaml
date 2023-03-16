@@ -35,14 +35,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                option:
-                  type: string
-                comment:
-                  type: string
-              required:
-                - option
+              $ref: "#/components/schemas/CareTeamResponseRequestBody"
             example:
               option: schedule_visit
               comment: You should get in to see the doctor this week
@@ -55,14 +48,7 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/Error"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/BadRequestError"
@@ -73,14 +59,7 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/Error"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/NotFoundError"
@@ -89,14 +68,7 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/Error"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
@@ -120,14 +92,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                option:
-                  type: string
-                comment:
-                  type: string
-              required:
-                - option
+              $ref: "#/components/schemas/CareTeamResponseRequestBody"
             example:
               option: schedule_visit
               comment: You should get in to see the doctor this week
@@ -138,12 +103,7 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/CareTeamResponse'
+                $ref: '#/components/schemas/CareTeamResponse'
               examples:
                 CreateCareTeamResponseExample:
                   $ref: '#/components/examples/CreateCareTeamResponseExample'
@@ -152,14 +112,7 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/Error"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/BadRequestError"
@@ -170,14 +123,7 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/Error"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/NotFoundError"
@@ -186,18 +132,64 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/Error"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
-
+    get:
+      tags:
+        - Care Team Response
+      summary: Fetch Care Team Response
+      description: Fetch care team response for the patient app
+      operationId: fetchCareTeamResponse
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: survey_response_id
+          in: query
+          schema:
+            type: string
+          required: true
+          example: fa3b78ce-c27b-11ed-afa1-0242ac120002
+      responses:
+        '200':
+          description: Successfully fetch care team response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CareTeamResponse'
+              examples:
+                CreateCareTeamResponseExample:
+                  $ref: '#/components/examples/CreateCareTeamResponseExample'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/BadRequestError"
+                DuplicateResource:
+                  $ref: "#/components/examples/DuplicateResource"
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/NotFoundError"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/InternalServerError"
   /care_team_response/{careTeamResponseId}/sign:
     patch:
       tags:
@@ -212,17 +204,14 @@ paths:
         - name: careTeamResponseId
           in: path
           required: true
-          example: '543346'
+          example: a608bf12-8fa2-404c-ad99-163a487ffbb0
           schema:
             type: string
       requestBody:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                internal_note:
-                  type: string
+              $ref: "#/components/schemas/SignCareTeamResponseRequestBody"
             example:
               internal_note: Patient needs blood drawn
         required: true
@@ -232,12 +221,7 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/CareTeamResponse'
+                $ref: '#/components/schemas/CareTeamResponse'
               examples:
                 CareTeamResponseExample:
                   $ref: '#/components/examples/SignCareTeamResponseExample'
@@ -328,12 +312,7 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/CareTeamResponse'
+                 $ref: '#/components/schemas/CareTeamResponse'
               examples:
                 CareTeamResponseExample:
                   $ref: '#/components/examples/MarkCareTeamResponseAsReadExample'
@@ -342,14 +321,7 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/Error"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/BadRequestError"
@@ -358,14 +330,7 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/Error"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/NotFoundError"
@@ -374,14 +339,7 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/Error"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
@@ -407,14 +365,7 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/PatientReportedSymptomsResponse'
+                $ref: '#/components/schemas/PatientReportedSymptomsResponse'
               examples:
                 CareTeamResponseExample:
                   $ref: '#/components/examples/PatientReportedSymptomsResponseExample'
@@ -423,14 +374,7 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/Error"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/BadRequestError"
@@ -439,14 +383,7 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/Error"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/NotFoundError"
@@ -455,14 +392,7 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: "#/components/schemas/AbstractResponse"
-                  - type: object
-                    properties:
-                      errors:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/Error"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
@@ -485,57 +415,76 @@ components:
             version:
               type: string
               description: Semver version of the API
+    CareTeamResponseRequestBody:
+      type: object
+      properties:
+        option:
+          type: string
+        comment:
+          type: string
+      required:
+        - option
+    SignCareTeamResponseRequestBody:
+      type: object
+      properties:
+        internal_note:
+          type: string
     CareTeamResponse:
       description: >-
         Data pertaining to the messages that clinicians send to the patients,
         and notes that are stored for internal use
-      type: object
-      properties:
-        id:
-          type: string
-        is_draft:
-          type: boolean
-        responder:
-          $ref: "#/components/schemas/Responder"
-        patient_message:
-          type: object
+      allOf:
+        - $ref: "#/components/schemas/AbstractResponse"
+        - type: object
           properties:
-            option:
-              type: string
-              description: >-
-                Message sent from the clinician to the patient. Chosen from a
-                set number of options
-            display:
-              type: string
-              description: >-
-                The display value of the `option` enum
-              nullable: true
-            comment:
-              type: string
-              description: Custom comment sent to patient from the clinician
-              nullable: true
-        internal_note:
-          type: string
-          description: Optional note that the clinician can store for internal use
-          nullable: true
-        signed_at:
-          type: string
-          format: date-time
-          description: >-
-            The date/time that the clinician signed the communication with the
-            customer (if it was signed)
-          nullable: true
-        read_at:
-          type: string
-          format: date-time
-          description: The date/time that the patient read the response
-          nullable: true
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
+            data:
+              type: object
+              properties:
+                id:
+                  type: string
+                is_draft:
+                  type: boolean
+                responder:
+                  $ref: "#/components/schemas/Responder"
+                patient_message:
+                  type: object
+                  properties:
+                    option:
+                      type: string
+                      description: >-
+                        Message sent from the clinician to the patient. Chosen from a
+                        set number of options
+                    display:
+                      type: string
+                      description: >-
+                        The display value of the `option` enum
+                      nullable: true
+                    comment:
+                      type: string
+                      description: Custom comment sent to patient from the clinician
+                      nullable: true
+                internal_note:
+                  type: string
+                  description: Optional note that the clinician can store for internal use
+                  nullable: true
+                signed_at:
+                  type: string
+                  format: date-time
+                  description: >-
+                    The date/time that the clinician signed the communication with the
+                    customer (if it was signed)
+                  nullable: true
+                read_at:
+                  type: string
+                  format: date-time
+                  description: The date/time that the patient read the response
+                  nullable: true
+                created_at:
+                  type: string
+                  format: date-time
+                updated_at:
+                  type: string
+                  format: date-time
 
     Responder:
       type: object
@@ -594,94 +543,103 @@ components:
               url:
                 type: string
     PatientReportedSymptomsResponse:
-      type: object
-      properties:
-        permissions:
-          description: Per-patient permissions granted to the provider
-          type: object
+      allOf:
+        - $ref: "#/components/schemas/AbstractResponse"
+        - type: object
           properties:
-            write_enabled:
-              type: boolean
-              description: Whether the provider is able to send a care team response message
-            allowed_responses:
-              type: object
-              additionalProperties:
-                type: string
-              description: Key-value pairs where keys are an enum of allowed responses a provider may send to a patient, and the values are the display values of the enum
-        questionnaire_responses:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              is_alerted:
-                type: boolean
-                description: >-
-                  Whether the symptoms reported by the patient triggered an
-                  alert
-              alert_tier:
-                $ref: '#/components/schemas/AlertTier'
-              care_team_response:
-                $ref: '#/components/schemas/CareTeamResponse'
-              symptoms:
+            data:
+              type: array
+              items:
                 type: object
-                description: The symptoms reported by the patient via the phone app
                 properties:
-                  severe:
+                  permissions:
+                    description: Per-patient permissions granted to the provider
                     type: object
-                    additionalProperties:
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/SymptomResponse'
-                  non_severe:
-                    type: object
-                    additionalProperties:
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/SymptomResponse'
-              write_in:
-                type: string
-                description: >-
-                  Custom string entered by the patient while reporting
-                  symptoms
-                nullable: true
-              symptom_educations:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SymptomEducation'
-                nullable: true
-              completed_on:
-                type: string
-                format: date-time
-              created_at:
-                type: string
-                format: date-time
+                    properties:
+                      write_enabled:
+                        type: boolean
+                        description: Whether the provider is able to send a care team response message
+                      allowed_responses:
+                        type: object
+                        additionalProperties:
+                          type: string
+                        description: Key-value pairs where keys are an enum of allowed responses a provider may send to a patient, and the values are the display values of the enum
+                  questionnaire_responses:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        is_alerted:
+                          type: boolean
+                          description: >-
+                            Whether the symptoms reported by the patient triggered an
+                            alert
+                        alert_tier:
+                          $ref: '#/components/schemas/AlertTier'
+                        care_team_response:
+                          $ref: '#/components/schemas/CareTeamResponse'
+                        symptoms:
+                          type: object
+                          description: The symptoms reported by the patient via the phone app
+                          properties:
+                            severe:
+                              type: object
+                              additionalProperties:
+                                type: array
+                                items:
+                                  $ref: '#/components/schemas/SymptomResponse'
+                            non_severe:
+                              type: object
+                              additionalProperties:
+                                type: array
+                                items:
+                                  $ref: '#/components/schemas/SymptomResponse'
+                        write_in:
+                          type: string
+                          description: >-
+                            Custom string entered by the patient while reporting
+                            symptoms
+                          nullable: true
+                        symptom_educations:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/SymptomEducation'
+                          nullable: true
+                        completed_on:
+                          type: string
+                          format: date-time
+                        created_at:
+                          type: string
+                          format: date-time
 
     Error:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique identifier for the error
-        title:
-          type: string
-          description: Human readable message the describes the type of failure
-        detail_message:
-          type: string
-          description: Human readable message that describes the specific failure
-        detail:
-          type: object
-          additionalProperties: true
-          description: An object that can convey structured information to the client. The schema of the object MUST be definable based on the code attribute
-          nullable: true
-        code:
-          type: string
-          description: An application specific error code string. This MAY be included if there is value providing an opaque error classification that can be used to lookup relevant documentation
-          nullable: true
-        status:
-          type: string
-          description: HTTP status of the response
+      allOf:
+        - $ref: "#/components/schemas/AbstractResponse"
+        - type: object
+          properties:
+            id:
+              type: string
+              description: Unique identifier for the error
+            title:
+              type: string
+              description: Human readable message the describes the type of failure
+            detail_message:
+              type: string
+              description: Human readable message that describes the specific failure
+            detail:
+              type: object
+              additionalProperties: true
+              description: An object that can convey structured information to the client. The schema of the object MUST be definable based on the code attribute
+              nullable: true
+            code:
+              type: string
+              description: An application specific error code string. This MAY be included if there is value providing an opaque error classification that can be used to lookup relevant documentation
+              nullable: true
+            status:
+              type: string
+              description: HTTP status of the response
   examples:
     CreateCareTeamResponseExample:
       summary: Create Care Team Response Example
