@@ -437,51 +437,54 @@ components:
         - $ref: "#/components/schemas/AbstractResponse"
         - type: object
           properties:
-            id:
-              type: string
-            is_draft:
-              type: boolean
-            responder:
-              $ref: "#/components/schemas/Responder"
-            patient_message:
+            data:
               type: object
               properties:
-                option:
+                id:
                   type: string
-                  description: >-
-                    Message sent from the clinician to the patient. Chosen from a
-                    set number of options
-                display:
+                is_draft:
+                  type: boolean
+                responder:
+                  $ref: "#/components/schemas/Responder"
+                patient_message:
+                  type: object
+                  properties:
+                    option:
+                      type: string
+                      description: >-
+                        Message sent from the clinician to the patient. Chosen from a
+                        set number of options
+                    display:
+                      type: string
+                      description: >-
+                        The display value of the `option` enum
+                      nullable: true
+                    comment:
+                      type: string
+                      description: Custom comment sent to patient from the clinician
+                      nullable: true
+                internal_note:
                   type: string
-                  description: >-
-                    The display value of the `option` enum
+                  description: Optional note that the clinician can store for internal use
                   nullable: true
-                comment:
+                signed_at:
                   type: string
-                  description: Custom comment sent to patient from the clinician
+                  format: date-time
+                  description: >-
+                    The date/time that the clinician signed the communication with the
+                    customer (if it was signed)
                   nullable: true
-            internal_note:
-              type: string
-              description: Optional note that the clinician can store for internal use
-              nullable: true
-            signed_at:
-              type: string
-              format: date-time
-              description: >-
-                The date/time that the clinician signed the communication with the
-                customer (if it was signed)
-              nullable: true
-            read_at:
-              type: string
-              format: date-time
-              description: The date/time that the patient read the response
-              nullable: true
-            created_at:
-              type: string
-              format: date-time
-            updated_at:
-              type: string
-              format: date-time
+                read_at:
+                  type: string
+                  format: date-time
+                  description: The date/time that the patient read the response
+                  nullable: true
+                created_at:
+                  type: string
+                  format: date-time
+                updated_at:
+                  type: string
+                  format: date-time
 
     Responder:
       type: object
@@ -544,67 +547,72 @@ components:
         - $ref: "#/components/schemas/AbstractResponse"
         - type: object
           properties:
-            permissions:
-              description: Per-patient permissions granted to the provider
-              type: object
-              properties:
-                write_enabled:
-                  type: boolean
-                  description: Whether the provider is able to send a care team response message
-                allowed_responses:
-                  type: object
-                  additionalProperties:
-                    type: string
-                  description: Key-value pairs where keys are an enum of allowed responses a provider may send to a patient, and the values are the display values of the enum
-            questionnaire_responses:
+            data:
               type: array
               items:
                 type: object
                 properties:
-                  id:
-                    type: string
-                  is_alerted:
-                    type: boolean
-                    description: >-
-                      Whether the symptoms reported by the patient triggered an
-                      alert
-                  alert_tier:
-                    $ref: '#/components/schemas/AlertTier'
-                  care_team_response:
-                    $ref: '#/components/schemas/CareTeamResponse'
-                  symptoms:
+                  permissions:
+                    description: Per-patient permissions granted to the provider
                     type: object
-                    description: The symptoms reported by the patient via the phone app
                     properties:
-                      severe:
+                      write_enabled:
+                        type: boolean
+                        description: Whether the provider is able to send a care team response message
+                      allowed_responses:
                         type: object
                         additionalProperties:
-                          type: array
-                          items:
-                            $ref: '#/components/schemas/SymptomResponse'
-                      non_severe:
-                        type: object
-                        additionalProperties:
-                          type: array
-                          items:
-                            $ref: '#/components/schemas/SymptomResponse'
-                  write_in:
-                    type: string
-                    description: >-
-                      Custom string entered by the patient while reporting
-                      symptoms
-                    nullable: true
-                  symptom_educations:
+                          type: string
+                        description: Key-value pairs where keys are an enum of allowed responses a provider may send to a patient, and the values are the display values of the enum
+                  questionnaire_responses:
                     type: array
                     items:
-                      $ref: '#/components/schemas/SymptomEducation'
-                    nullable: true
-                  completed_on:
-                    type: string
-                    format: date-time
-                  created_at:
-                    type: string
-                    format: date-time
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        is_alerted:
+                          type: boolean
+                          description: >-
+                            Whether the symptoms reported by the patient triggered an
+                            alert
+                        alert_tier:
+                          $ref: '#/components/schemas/AlertTier'
+                        care_team_response:
+                          $ref: '#/components/schemas/CareTeamResponse'
+                        symptoms:
+                          type: object
+                          description: The symptoms reported by the patient via the phone app
+                          properties:
+                            severe:
+                              type: object
+                              additionalProperties:
+                                type: array
+                                items:
+                                  $ref: '#/components/schemas/SymptomResponse'
+                            non_severe:
+                              type: object
+                              additionalProperties:
+                                type: array
+                                items:
+                                  $ref: '#/components/schemas/SymptomResponse'
+                        write_in:
+                          type: string
+                          description: >-
+                            Custom string entered by the patient while reporting
+                            symptoms
+                          nullable: true
+                        symptom_educations:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/SymptomEducation'
+                          nullable: true
+                        completed_on:
+                          type: string
+                          format: date-time
+                        created_at:
+                          type: string
+                          format: date-time
 
     Error:
       allOf:
