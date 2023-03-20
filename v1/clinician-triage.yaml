@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.0.1
+  version: 1.1.0
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -103,7 +103,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CareTeamResponse'
+                $ref: '#/components/schemas/CareTeamResponseResponse'
               examples:
                 CreateCareTeamResponseExample:
                   $ref: '#/components/examples/CreateCareTeamResponseExample'
@@ -157,7 +157,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CareTeamResponse'
+                $ref: '#/components/schemas/CareTeamResponseResponse'
               examples:
                 CreateCareTeamResponseExample:
                   $ref: '#/components/examples/CreateCareTeamResponseExample'
@@ -221,7 +221,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CareTeamResponse'
+                $ref: '#/components/schemas/CareTeamResponseResponse'
               examples:
                 CareTeamResponseExample:
                   $ref: '#/components/examples/SignCareTeamResponseExample'
@@ -312,7 +312,7 @@ paths:
           content:
             application/json:
               schema:
-                 $ref: '#/components/schemas/CareTeamResponse'
+                $ref: '#/components/schemas/CareTeamResponseResponse'
               examples:
                 CareTeamResponseExample:
                   $ref: '#/components/examples/MarkCareTeamResponseAsReadExample'
@@ -361,13 +361,13 @@ paths:
           example: b02cadd0-c27f-11ed-afa1-0242ac120002
       responses:
         '200':
-          description: Successful creation of care team response
+          description: Successful fetch of patient reported symptoms
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PatientReportedSymptomsResponse'
               examples:
-                CareTeamResponseExample:
+                PatientReportedSymptomsResponseExample:
                   $ref: '#/components/examples/PatientReportedSymptomsResponseExample'
         '400':
           description: Bad request
@@ -429,7 +429,7 @@ components:
       properties:
         internal_note:
           type: string
-    CareTeamResponse:
+    CareTeamResponseResponse:
       description: >-
         Data pertaining to the messages that clinicians send to the patients,
         and notes that are stored for internal use
@@ -438,54 +438,56 @@ components:
         - type: object
           properties:
             data:
-              type: object
-              properties:
-                id:
-                  type: string
-                is_draft:
-                  type: boolean
-                responder:
-                  $ref: "#/components/schemas/Responder"
-                patient_message:
-                  type: object
-                  properties:
-                    option:
-                      type: string
-                      description: >-
-                        Message sent from the clinician to the patient. Chosen from a
-                        set number of options
-                    display:
-                      type: string
-                      description: >-
-                        The display value of the `option` enum
-                      nullable: true
-                    comment:
-                      type: string
-                      description: Custom comment sent to patient from the clinician
-                      nullable: true
-                internal_note:
-                  type: string
-                  description: Optional note that the clinician can store for internal use
-                  nullable: true
-                signed_at:
-                  type: string
-                  format: date-time
-                  description: >-
-                    The date/time that the clinician signed the communication with the
-                    customer (if it was signed)
-                  nullable: true
-                read_at:
-                  type: string
-                  format: date-time
-                  description: The date/time that the patient read the response
-                  nullable: true
-                created_at:
-                  type: string
-                  format: date-time
-                updated_at:
-                  type: string
-                  format: date-time
-
+              $ref: '#/components/schemas/CareTeamResponse'
+    CareTeamResponse:
+      type: object
+      nullable: true
+      properties:
+        id:
+          type: string
+        is_draft:
+          type: boolean
+        responder:
+          $ref: "#/components/schemas/Responder"
+        patient_message:
+          type: object
+          properties:
+            option:
+              type: string
+              description: >-
+                Message sent from the clinician to the patient. Chosen from a
+                set number of options
+            display:
+              type: string
+              description: >-
+                The display value of the `option` enum
+              nullable: true
+            comment:
+              type: string
+              description: Custom comment sent to patient from the clinician
+              nullable: true
+        internal_note:
+          type: string
+          description: Optional note that the clinician can store for internal use
+          nullable: true
+        signed_at:
+          type: string
+          format: date-time
+          description: >-
+            The date/time that the clinician signed the communication with the
+            customer (if it was signed)
+          nullable: true
+        read_at:
+          type: string
+          format: date-time
+          description: The date/time that the patient read the response
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
     Responder:
       type: object
       properties:
@@ -493,7 +495,6 @@ components:
           type: string
         name:
           type: string
-
     SymptomResponse:
       type: object
       properties:
@@ -521,7 +522,6 @@ components:
           type: string
         triage_dash_label_icon:
           type: boolean
-
     SymptomEducation:
       type: object
       properties:
@@ -542,78 +542,81 @@ components:
                 type: string
               url:
                 type: string
+    QuestionnaireResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        is_alerted:
+          type: boolean
+          description: >-
+            Whether the symptoms reported by the patient triggered an
+            alert
+        alert_tier:
+          $ref: '#/components/schemas/AlertTier'
+        care_team_response:
+          $ref: '#/components/schemas/CareTeamResponse'
+        symptoms:
+          type: object
+          description: The symptoms reported by the patient via the phone app
+          properties:
+            severe:
+              type: object
+              additionalProperties:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SymptomResponse'
+            non_severe:
+              type: object
+              additionalProperties:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SymptomResponse'
+        write_in:
+          type: string
+          description: >-
+            Custom string entered by the patient while reporting
+            symptoms
+          nullable: true
+        symptom_educations:
+          type: array
+          items:
+            $ref: '#/components/schemas/SymptomEducation'
+          nullable: true
+        completed_on:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
     PatientReportedSymptomsResponse:
       allOf:
         - $ref: "#/components/schemas/AbstractResponse"
         - type: object
           properties:
             data:
-              type: array
-              items:
-                type: object
-                properties:
-                  permissions:
-                    description: Per-patient permissions granted to the provider
-                    type: object
-                    properties:
-                      write_enabled:
-                        type: boolean
-                        description: Whether the provider is able to send a care team response message
-                      allowed_responses:
-                        type: object
-                        additionalProperties:
-                          type: string
-                        description: Key-value pairs where keys are an enum of allowed responses a provider may send to a patient, and the values are the display values of the enum
-                  questionnaire_responses:
-                    type: array
-                    items:
+              type: object
+              properties:
+                permissions:
+                  description: Per-patient permissions granted to the provider
+                  type: object
+                  properties:
+                    write_enabled:
+                      type: boolean
+                      description: Whether the provider is able to send a care team response message
+                    allowed_responses:
                       type: object
-                      properties:
-                        id:
-                          type: string
-                        is_alerted:
-                          type: boolean
-                          description: >-
-                            Whether the symptoms reported by the patient triggered an
-                            alert
-                        alert_tier:
-                          $ref: '#/components/schemas/AlertTier'
-                        care_team_response:
-                          $ref: '#/components/schemas/CareTeamResponse'
-                        symptoms:
-                          type: object
-                          description: The symptoms reported by the patient via the phone app
-                          properties:
-                            severe:
-                              type: object
-                              additionalProperties:
-                                type: array
-                                items:
-                                  $ref: '#/components/schemas/SymptomResponse'
-                            non_severe:
-                              type: object
-                              additionalProperties:
-                                type: array
-                                items:
-                                  $ref: '#/components/schemas/SymptomResponse'
-                        write_in:
-                          type: string
-                          description: >-
-                            Custom string entered by the patient while reporting
-                            symptoms
-                          nullable: true
-                        symptom_educations:
-                          type: array
-                          items:
-                            $ref: '#/components/schemas/SymptomEducation'
-                          nullable: true
-                        completed_on:
-                          type: string
-                          format: date-time
-                        created_at:
-                          type: string
-                          format: date-time
-
+                      additionalProperties:
+                        type: string
+                      description: Key-value pairs where keys are an enum of allowed responses a provider may send to a patient, and the values are the display values of the enum
+                active_responses:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/QuestionnaireResponse'
+                inactive_responses:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/QuestionnaireResponse'
     Error:
       allOf:
         - $ref: "#/components/schemas/AbstractResponse"
@@ -718,38 +721,55 @@ components:
             self: /v1/symptoms/27ce169e-c280-11ed-afa1-0242ac120002
           version: 1.0.0
         data:
-          - id: 27ce169e-c280-11ed-afa1-0242ac120002
-            permissions:
-              write_enabled: true
-              allowed_responses:
-                address_before : "Will address: Before next appt"
-                address_next: "Will address: At next appt"
-                address_unneeded: "No need to address: Alert not needed"
-                addressed_already: "No need to address: Already discussed"
-            questionnaire_responses:
-              - id: 27ce169e-c280-11ed-afa1-0242ac120002
-                is_alerted: true
-                alert_tier:
-                  tier: 4
-                  automatic_alert: true
-                  triage_dash_tag: Patient told to call 911
-                  triage_dash_label: Urgent Response Required
-                  triage_dash_label_icon: true
-                care_team_response:
-                  id: 1f82b782-c281-11ed-afa1-0242ac120002
-                  responder:
-                    id: 2cc29228-c281-11ed-afa1-0242ac120002
-                    name: Susan Smith
-                  patient_message:
-                    option: address_next
-                    display: "Will address: At next appt"
-                    comment: "You'll be able to discuss this with the doctor at your next visit"
-                  internal_note: "Patient would like to discuss their vomitting with the doctor"
-                  signed_at: "2022-02-11T02:45:03.246Z"
-                  read_at: "2022-02-11T03:26:16.876Z"
-                  created_at: "2022-02-11T02:34:56.356"
-                  updated_at: "2022-02-11T03:26:16.876Z"
-
+          permissions:
+            write_enabled: true
+            allowed_responses:
+              address_before : "Will address: Before next appt"
+              address_next: "Will address: At next appt"
+              address_unneeded: "No need to address: Alert not needed"
+              addressed_already: "No need to address: Already discussed"
+          active_responses:
+            - id: eef1b220-c754-11ed-afa1-0242ac120002
+              is_alerted: true
+              alert_tier:
+                tier: 4
+                automatic_alert: true
+                triage_dash_tag: Patient told to call 911
+                triage_dash_label: Urgent Response Required
+                triage_dash_label_icon: true
+              care_team_response: null
+          inactive_responses:
+            - id: 27ce169e-c280-11ed-afa1-0242ac120002
+              is_alerted: true
+              alert_tier:
+                tier: 4
+                automatic_alert: true
+                triage_dash_tag: Patient told to call 911
+                triage_dash_label: Urgent Response Required
+                triage_dash_label_icon: true
+              care_team_response:
+                id: 1f82b782-c281-11ed-afa1-0242ac120002
+                responder:
+                  id: 2cc29228-c281-11ed-afa1-0242ac120002
+                  name: Susan Smith
+                patient_message:
+                  option: address_next
+                  display: "Will address: At next appt"
+                  comment: "You'll be able to discuss this with the doctor at your next visit"
+                internal_note: "Patient would like to discuss their vomitting with the doctor"
+                signed_at: "2022-02-11T02:45:03.246Z"
+                read_at: "2022-02-11T03:26:16.876Z"
+                created_at: "2022-02-11T02:34:56.356"
+                updated_at: "2022-02-11T03:26:16.876Z"
+            - id: 36f5b5f4-c754-11ed-afa1-0242ac120002
+              is_alerted: false
+              alert_tier:
+                tier: 1
+                automatic_alert: false
+                triage_dash_tag: ""
+                triage_dash_label: "Mild, Non-Alerted Symptom"
+                triage_dash_label_icon: false
+              care_team_response: null
     BadRequestError:
       summary: Bad Request Error Example
       value:
