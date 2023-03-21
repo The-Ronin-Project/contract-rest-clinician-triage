@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.1.0
+  version: 1.1.1
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -48,7 +48,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorResponse"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/BadRequestError"
@@ -59,7 +59,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorResponse"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/NotFoundError"
@@ -68,7 +68,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorResponse"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
@@ -112,7 +112,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorResponse"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/BadRequestError"
@@ -123,7 +123,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorResponse"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/NotFoundError"
@@ -132,7 +132,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorResponse"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
@@ -166,7 +166,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorResponse"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/BadRequestError"
@@ -177,7 +177,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorResponse"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/NotFoundError"
@@ -186,7 +186,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorResponse"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
@@ -237,7 +237,7 @@ paths:
                       errors:
                         type: array
                         items:
-                          $ref: "#/components/schemas/Error"
+                          $ref: "#/components/schemas/ErrorResponse"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/BadRequestError"
@@ -253,7 +253,7 @@ paths:
                       errors:
                         type: array
                         items:
-                          $ref: "#/components/schemas/Error"
+                          $ref: "#/components/schemas/ErrorResponse"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/NotFoundError"
@@ -269,7 +269,7 @@ paths:
                       errors:
                         type: array
                         items:
-                          $ref: "#/components/schemas/Error"
+                          $ref: "#/components/schemas/ErrorResponse"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/DuplicateSignature"
@@ -285,7 +285,7 @@ paths:
                       errors:
                         type: array
                         items:
-                          $ref: "#/components/schemas/Error"
+                          $ref: "#/components/schemas/ErrorResponse"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
@@ -321,7 +321,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorResponse"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/BadRequestError"
@@ -330,7 +330,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorResponse"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/NotFoundError"
@@ -339,7 +339,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorResponse"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
@@ -374,7 +374,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorResponse"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/BadRequestError"
@@ -383,7 +383,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorResponse"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/NotFoundError"
@@ -392,7 +392,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/ErrorResponse"
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
@@ -617,32 +617,41 @@ components:
                   type: array
                   items:
                     $ref: '#/components/schemas/QuestionnaireResponse'
-    Error:
+    ErrorResponse:
       allOf:
         - $ref: "#/components/schemas/AbstractResponse"
         - type: object
           properties:
-            id:
-              type: string
-              description: Unique identifier for the error
-            title:
-              type: string
-              description: Human readable message the describes the type of failure
-            detail_message:
-              type: string
-              description: Human readable message that describes the specific failure
-            detail:
-              type: object
-              additionalProperties: true
-              description: An object that can convey structured information to the client. The schema of the object MUST be definable based on the code attribute
-              nullable: true
-            code:
-              type: string
-              description: An application specific error code string. This MAY be included if there is value providing an opaque error classification that can be used to lookup relevant documentation
-              nullable: true
-            status:
-              type: string
-              description: HTTP status of the response
+            errors:
+              type: array
+              items:
+                $ref: "#/components/schemas/Error"
+
+    Error:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the error
+        title:
+          type: string
+          description: Human readable message the describes the type of failure
+        detail_message:
+          type: string
+          description: Human readable message that describes the specific failure
+        detail:
+          type: object
+          additionalProperties: true
+          description: An object that can convey structured information to the client. The schema of the object MUST be definable based on the code attribute
+          nullable: true
+        code:
+          type: string
+          description: An application specific error code string. This MAY be included if there is value providing an opaque error classification that can be used to lookup relevant documentation
+          nullable: true
+        status:
+          type: string
+          description: HTTP status of the response
+
   examples:
     CreateCareTeamResponseExample:
       summary: Create Care Team Response Example
