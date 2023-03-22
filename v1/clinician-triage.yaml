@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.1.1
+  version: 1.1.2
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -747,6 +747,60 @@ components:
                 triage_dash_label: Urgent Response Required
                 triage_dash_label_icon: true
               care_team_response: null
+              symptoms:
+                severe:
+                  Nausea:
+                    - id: cc6bc003-08b8-4a85-a06c-dfd5a12eb9f7
+                      name: "[Nausea] Severity: Severe"
+                      severity: Severe
+                      value: "3"
+                      recorded_on: "2022-12-02T19:26:52.000Z"
+                    - id: f848c2fd-daa2-4e0a-92e8-9aa4ac169242
+                      name: "[Nausea] Frequency: Almost constantly"
+                      severity: Severe
+                      value: "4"
+                      recorded_on: "2022-12-02T19:26:52.000Z"
+                    - id: 60db9298-1966-4562-a50c-1d4435addbde
+                      name: "[Nausea] Diet affected: No"
+                      severity: Mild/Moderate
+                      value: "0"
+                      recorded_on: "2022-12-02T19:26:52.000Z"
+                    - id: 98d1d3ec-d132-4edb-a6bb-e659ad7ec4e3
+                      name: "[Nausea] Weight loss: Yes"
+                      severity: Mild/Moderate
+                      value: "1"
+                      recorded_on: "2022-12-02T19:26:52.000Z"
+                    - id: a3b5bc05-9f7c-4385-b7c8-17e4d6bc350d
+                      name: "[Nausea] Weight loss >10%: No"
+                      severity: Mild/Moderate
+                      value: "0"
+                      recorded_on: "2022-12-02T19:26:52.000Z"
+                  Diarrhea:
+                    - id: fc1d2ebb-36c2-4cb3-8818-03ecee747b09
+                      name: "Frequency: Occasionally"
+                      severity: Mild/Moderate
+                      value: "2"
+                      recorded_on: "2022-12-02T19:52:48.000Z"
+                    - id: 08cfce77-e2a6-4538-901d-5037cb22827a
+                      name: "Daily episodes at worst: 2-3"
+                      severity: Mild/Moderate
+                      value: "2"
+                      recorded_on: "2022-12-02T19:52:48.000Z"
+                    - id: 61ac3531-dde6-4139-9c32-495602ef0c27
+                      name: "Blood or mucus in stool: No"
+                      severity: Mild/Moderate
+                      value: "0"
+                      recorded_on: "2022-12-02T19:52:48.000Z"
+                    - id: 3afb500a-3098-4aff-86fc-6205192f5c55
+                      name: "Instrumental ADL interference: Yes"
+                      severity: Severe
+                      value: "1"
+                      recorded_on: "2022-12-02T19:52:48.000Z"
+                    - id: 1295425d-3be6-48d5-a534-eefe421a657a
+                      name: "Self care ADL interference: Yes"
+                      severity: Severe
+                      value: "1"
+                      recorded_on: "2022-12-02T19:52:48.000Z"
           inactive_responses:
             - id: 27ce169e-c280-11ed-afa1-0242ac120002
               is_alerted: true
@@ -770,6 +824,60 @@ components:
                 read_at: "2022-02-11T03:26:16.876Z"
                 created_at: "2022-02-11T02:34:56.356"
                 updated_at: "2022-02-11T03:26:16.876Z"
+              symptoms:
+                severe:
+                  Nausea:
+                   - id: 6237dfdc-bf42-43e3-a126-d8d4926b452d
+                     name: "[Nausea] Severity: Severe"
+                     severity: Severe
+                     value: "3"
+                     recorded_on: "2022-12-02T19:26:52.000Z"
+                   - id: 3e553eaa-c1e7-4560-b274-10392a9fb4a7
+                     name: "[Nausea] Frequency: Almost constantly"
+                     severity: Severe
+                     value: "4"
+                     recorded_on: "2022-12-02T19:26:52.000Z"
+                   - id: 44a00f27-067c-4eb6-a3ec-2cabc1414348
+                     name: "[Nausea] Diet affected: No"
+                     severity: Mild/Moderate
+                     value: "0"
+                     recorded_on: "2022-12-02T19:26:52.000Z"
+                   - id: f4fb79ef-1be9-4749-a378-a7876f42c268
+                     name: "[Nausea] Weight loss: Yes"
+                     severity: Mild/Moderate
+                     value: "1"
+                     recorded_on: "2022-12-02T19:26:52.000Z"
+                   - id: 3158bf2c-7858-4106-b503-f7b7a54b5628
+                     name: "[Nausea] Weight loss >10%: No"
+                     severity: Mild/Moderate
+                     value: "0"
+                     recorded_on: "2022-12-02T19:26:52.000Z"
+                  Diarrhea:
+                   - id: cc542451-8f42-4376-8fc5-b61933f2c40e
+                     name: "Frequency: Occasionally"
+                     severity: Mild/Moderate
+                     value: "2"
+                     recorded_on: "2022-12-02T19:52:48.000Z"
+                   - id: 388b8023-f1d9-499d-8816-3e7e18be5145
+                     name: "Daily episodes at worst: 2-3"
+                     severity: Mild/Moderate
+                     value: "2"
+                     recorded_on: "2022-12-02T19:52:48.000Z"
+                   - id: b700f1c1-9b50-406c-8456-a78a6e351b02
+                     name: "Blood or mucus in stool: No"
+                     severity: Mild/Moderate
+                     value: "0"
+                     recorded_on: "2022-12-02T19:52:48.000Z"
+                   - id: d9ec9f76-ef97-4dd7-8fcb-f07b9970a918
+                     name: "Instrumental ADL interference: Yes"
+                     severity: Severe
+                     value: "1"
+                     recorded_on: "2022-12-02T19:52:48.000Z"
+                   - id: fb50f8f5-d424-436b-b625-39f1a06fc55c
+                     name: "Self care ADL interference: Yes"
+                     severity: Severe
+                     value: "1"
+                     recorded_on: "2022-12-02T19:52:48.000Z"
             - id: 36f5b5f4-c754-11ed-afa1-0242ac120002
               is_alerted: false
               alert_tier:
@@ -779,6 +887,14 @@ components:
                 triage_dash_label: "Mild, Non-Alerted Symptom"
                 triage_dash_label_icon: false
               care_team_response: null
+              symptoms:
+                non_severe:
+                  Vomiting:
+                    - id: 83e4ec3b-34d6-461f-8260-505c407867d4
+                      name: "[Vomiting] Present: No"
+                      severity: "Mild/Moderate"
+                      value: "0"
+                      recorded_on: "2022-12-02T19:26:52.000Z"
     BadRequestError:
       summary: Bad Request Error Example
       value:
