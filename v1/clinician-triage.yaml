@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.2.0
+  version: 1.2.1
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -539,19 +539,16 @@ components:
         recorded_on:
           type: string
           format: date-time
-    AlertTier:
+    Alert:
       type: object
       properties:
+        is_alert:
+          type: boolean
+          description: >-
+            Whether the symptoms reported by the patient triggered an
+            alert
         tier:
-          type: number
-        automatic_alert:
-          type: boolean
-        triage_dash_tag:
-          type: string
-        triage_dash_label:
-          type: string
-        triage_dash_label_icon:
-          type: boolean
+          type: integer
     SymptomEducation:
       type: object
       properties:
@@ -577,13 +574,8 @@ components:
       properties:
         id:
           type: string
-        is_alerted:
-          type: boolean
-          description: >-
-            Whether the symptoms reported by the patient triggered an
-            alert
-        alert_tier:
-          $ref: '#/components/schemas/AlertTier'
+        alert:
+          $ref: '#/components/schemas/Alert'
         care_team_response:
           $ref: '#/components/schemas/CareTeamResponse'
         symptoms:
@@ -770,13 +762,9 @@ components:
               addressed_already: "No need to address: Already discussed"
           active_responses:
             - id: eef1b220-c754-11ed-afa1-0242ac120002
-              is_alerted: true
-              alert_tier:
+              alert:
+                is_alert: true
                 tier: 4
-                automatic_alert: true
-                triage_dash_tag: Patient told to call 911
-                triage_dash_label: Urgent Response Required
-                triage_dash_label_icon: true
               care_team_response: null
               symptoms:
                 severe:
@@ -835,13 +823,9 @@ components:
               created_at: '2023-01-12T07:23:13.837Z'
               completed_on: '2023-01-12T07:45:23.534Z'
             - id: 0d2791a1-39d5-4355-bafd-cdbf0448627e
-              is_alerted: true
-              alert_tier:
+              alert:
                 tier: 2
-                automatic_alert: true
-                triage_dash_tag: ""
-                triage_dash_label: "Response Required"
-                triage_dash_label_icon: true
+                is_alert: true
               care_team_response: null
               symptoms:
                 severe:
@@ -901,13 +885,9 @@ components:
               completed_on: '2023-01-11T07:43:52.523Z'
           inactive_responses:
             - id: 27ce169e-c280-11ed-afa1-0242ac120002
-              is_alerted: true
-              alert_tier:
+              alert:
                 tier: 4
-                automatic_alert: true
-                triage_dash_tag: Patient told to call 911
-                triage_dash_label: Urgent Response Required
-                triage_dash_label_icon: true
+                is_alert: true
               care_team_response:
                 id: 1f82b782-c281-11ed-afa1-0242ac120002
                 responder:
@@ -979,13 +959,9 @@ components:
               created_at: '2023-01-12T07:23:13.837Z'
               completed_on: '2023-01-12T07:45:23.534Z'
             - id: 36f5b5f4-c754-11ed-afa1-0242ac120002
-              is_alerted: false
-              alert_tier:
+              alert:
                 tier: 1
-                automatic_alert: false
-                triage_dash_tag: ""
-                triage_dash_label: "Mild, Non-Alerted Symptom"
-                triage_dash_label_icon: false
+                is_alert: false
               care_team_response: null
               symptoms: null
               created_at: "2022-02-11T02:34:56.356"
