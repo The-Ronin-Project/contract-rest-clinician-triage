@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.1.4
+  version: 1.2.0
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -359,6 +359,36 @@ paths:
             type: string
           required: true
           example: b02cadd0-c27f-11ed-afa1-0242ac120002
+        - in: query
+          name: symptoms
+          description: "Comma delimited list of systems. Available options: `diarrhea, fatigue, nausea, shortness_of_breath, write_in`"
+          schema:
+            type: string
+          required: false
+          example: diarrhea,nausea
+        - in: query
+          name: alert_types
+          description: "Comma delimited list of alert types: Available options: `no_alert, alert, high_alert`"
+          schema:
+            type: string
+          required: false
+          example: no_alert
+        - in: query
+          name: date_from
+          description: Required if `date_to` is present
+          schema:
+            type: string
+            format: date
+          required: false
+          example: 2023-03-01
+        - in: query
+          name: date_to
+          description: Required if `date_from` is present
+          schema:
+            type: string
+            format: date
+          required: false
+          example: 2023-03-05
       responses:
         '200':
           description: Successful fetch of patient reported symptoms
