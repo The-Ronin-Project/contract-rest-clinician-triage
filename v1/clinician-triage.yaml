@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.2.3
+  version: 1.2.4
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -950,7 +950,8 @@ components:
                     display_name: Diarrhea
                     responses:
                     - id: cc542451-8f42-4376-8fc5-b61933f2c40e
-                      name: "Frequency: Occasionally"
+                      question: "Frequency"
+                      answer: "Occasionally"
                       tier: 2
                       recorded_on: "2022-12-02T19:52:48.000Z"
                     - id: 388b8023-f1d9-499d-8816-3e7e18be5145
