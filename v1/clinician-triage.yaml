@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.2.4
+  version: 1.2.5
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -15,7 +15,7 @@ tags:
     description: Endpoints for fetching questionnaires that have been completed by a patient
 
 paths:
-  /care_team_response/draft:
+  /care_team_responses/draft:
     put:
       tags:
         - Care Team Response
@@ -24,20 +24,16 @@ paths:
       operationId: upsertCareTeamResponse
       security:
         - bearerAuth: []
-      parameters:
-        - in: query
-          schema:
-            type: string
-          name: survey_response_id
-          required: true
-          example: fa3b78ce-c27b-11ed-afa1-0242ac120002
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/CareTeamResponseRequestBody"
             example:
+              questionnaire_response_id: fa3b78ce-c27b-11ed-afa1-0242ac120002
+              patient_id: 89a7a2d9-d382-484a-8b1b-cf64bb1efb58
               option: schedule_visit
+              display: Schedule a Visit
               comment: You should get in to see the doctor this week
         required: true
       responses:
@@ -72,29 +68,25 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
-  /care_team_response:
+  /care_team_responses:
     post:
       tags:
         - Care Team Response
-      description: Create a care team response for the associated survey response
+      description: Create a care team response for the associated questionnaire response
       summary: Create Care Team Response
       operationId: createCareTeamResponse
       security:
         - bearerAuth: []
-      parameters:
-        - in: query
-          name: survey_response_id
-          schema:
-            type: string
-          required: true
-          example: fa3b78ce-c27b-11ed-afa1-0242ac120002
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/CareTeamResponseRequestBody"
             example:
+              questionnaire_response_id: fa3b78ce-c27b-11ed-afa1-0242ac120002
+              patient_id: 89a7a2d9-d382-484a-8b1b-cf64bb1efb58
               option: schedule_visit
+              display: Schedule Visit
               comment: You should get in to see the doctor this week
         required: true
       responses:
@@ -145,7 +137,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: survey_response_id
+        - name: questionnaire_response_id
           in: query
           schema:
             type: string
@@ -190,7 +182,7 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
-  /care_team_response/{careTeamResponseId}/sign:
+  /care_team_responses/{care_team_response_id}/sign:
     patch:
       tags:
         - Care Team Response
@@ -201,7 +193,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: careTeamResponseId
+        - name: care_team_response_id
           in: path
           required: true
           example: a608bf12-8fa2-404c-ad99-163a487ffbb0
@@ -289,7 +281,7 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
-  /care_team_response/{careTeamResponseId}/read:
+  /care_team_responses/{care_team_response_id}/read:
     patch:
       tags:
         - Care Team Response
@@ -300,7 +292,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: careTeamResponseId
+        - name: care_team_response_id
           in: path
           required: true
           example: 25e4822e-c289-11ed-afa1-0242ac120002
@@ -343,7 +335,7 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
-  /symptoms:
+  /patients/{patient_id}/questionnaire_responses:
     get:
       tags:
         - Patient Reported Symptoms
@@ -353,7 +345,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - in: query
+        - in: path
           name: patient_id
           schema:
             type: string
@@ -448,12 +440,21 @@ components:
     CareTeamResponseRequestBody:
       type: object
       properties:
+        questionnaire_response_id:
+          type: string
+        patient_id:
+          type: string
         option:
+          type: string
+        display:
           type: string
         comment:
           type: string
       required:
+        - questionnaire_response_id
+        - patient_id
         - option
+        - display
     SignCareTeamResponseRequestBody:
       type: object
       properties:
@@ -474,6 +475,8 @@ components:
       nullable: true
       properties:
         id:
+          type: string
+        questionnaire_response_id:
           type: string
         is_draft:
           type: boolean
@@ -690,7 +693,7 @@ components:
           version: 1.0.0
         data:
           id: 25e4822e-c289-11ed-afa1-0242ac120002
-          survey_response_id: 9970ca54-c289-11ed-afa1-0242ac120002
+          questionnaire_response_id: 9970ca54-c289-11ed-afa1-0242ac120002
           responder:
             id: 2cc29228-c281-11ed-afa1-0242ac120002
             name: Susan Smith
@@ -713,7 +716,7 @@ components:
           version: 1.0.0
         data:
           id: 25e4822e-c289-11ed-afa1-0242ac120002
-          survey_response_id: 9970ca54-c289-11ed-afa1-0242ac120002
+          questionnaire_response_id: 9970ca54-c289-11ed-afa1-0242ac120002
           responder:
             id: 2cc29228-c281-11ed-afa1-0242ac120002
             name: Susan Smith
@@ -736,7 +739,7 @@ components:
           version: 1.0.0
         data:
           id: 25e4822e-c289-11ed-afa1-0242ac120002
-          survey_response_id: 9970ca54-c289-11ed-afa1-0242ac120002
+          questionnaire_response_id: 9970ca54-c289-11ed-afa1-0242ac120002
           responder:
             id: 2cc29228-c281-11ed-afa1-0242ac120002
             name: Susan Smith
@@ -904,6 +907,7 @@ components:
                 is_alert: true
               care_team_response:
                 id: 1f82b782-c281-11ed-afa1-0242ac120002
+                questionnaire_response_id: 77aa5a62-d914-4d08-aa66-da130fb29096
                 responder:
                   id: 2cc29228-c281-11ed-afa1-0242ac120002
                   name: Susan Smith
@@ -1037,7 +1041,7 @@ components:
         errors:
           - id: 179F5161-D264-422B-8E2E-72B721739922
             title: Resource Not Found
-            detail_message: No survey response with the ID "10256" found
+            detail_message: No questionnaire response with the ID "10256" found
             status: '404'
     InternalServerError:
       summary: Internal Server Error
