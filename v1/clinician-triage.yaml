@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.2.5
+  version: 1.2.6
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -425,18 +425,33 @@ components:
       type: object
       properties:
         meta:
+          $ref: "#/components/schemas/Metadata"
+    Metadata:
+      type: object
+      properties:
+        links:
           type: object
           properties:
-            links:
-              type: object
-              properties:
-                self:
-                  type: string
-                  description: Path of the API request
-              additionalProperties: true
-            version:
+            self:
               type: string
-              description: Semver version of the API
+              description: Path of the API request
+            pagination:
+              type: object
+              nullable: true
+              properties:
+                first_page:
+                  type: string
+                  description: link to first page of paginated search results
+                next_page:
+                  type: string
+                  description: link to next page of paginated search results
+                prev_page:
+                  type: string
+                  description: link to previous page of paginated search results
+          additionalProperties: true
+        version:
+          type: string
+          description: SemVer version of the API
     CareTeamResponseRequestBody:
       type: object
       properties:
