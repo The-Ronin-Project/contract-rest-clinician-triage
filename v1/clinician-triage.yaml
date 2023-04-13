@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.3.1
+  version: 1.4.0
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -573,12 +573,15 @@ components:
       properties:
         display_name:
           type: string
+        alert:
+          $ref: "#/components/schemas/Alert"
         responses:
           type: array
           items:
             $ref: "#/components/schemas/SymptomResponse"
       required:
         - display_name
+        - alert
         - responses
     SymptomResponse:
       type: object
@@ -589,8 +592,8 @@ components:
           type: string
         answer:
           type: string
-        tier:
-          type: integer
+        alert:
+          $ref: "#/components/schemas/Alert"
         recorded_on:
           type: string
           format: date-time
@@ -598,7 +601,7 @@ components:
         - id
         - question
         - answer
-        - tier
+        - alert
         - recorded_on
     Alert:
       type: object
@@ -851,59 +854,85 @@ components:
                 severe:
                   nausea:
                     display_name: Nausea
+                    alert:
+                      tier: 4
+                      level: HIGH_ALERT
                     responses:
                       - id: cc6bc003-08b8-4a85-a06c-dfd5a12eb9f7
                         question: "Severity"
                         answer: "Severe"
-                        tier: 3
+                        alert:
+                          tier: 3
+                          level: ALERT
                         recorded_on: "2022-12-02T19:26:52.000Z"
                       - id: f848c2fd-daa2-4e0a-92e8-9aa4ac169242
                         question: "Frequency"
                         answer: "Almost constantly"
-                        tier: 4
+                        alert:
+                          tier: 4
+                          level: HIGH_ALERT
                         recorded_on: "2022-12-02T19:26:52.000Z"
                       - id: 60db9298-1966-4562-a50c-1d4435addbde
                         question: "Diet affected"
                         answer: "No"
-                        tier: 0
+                        alert:
+                          tier: 0
+                          level: NON_ALERT
                         recorded_on: "2022-12-02T19:26:52.000Z"
                       - id: 98d1d3ec-d132-4edb-a6bb-e659ad7ec4e3
                         question: "Weight loss"
                         answer: "Yes"
-                        tier: 1
+                        alert:
+                          tier: 1
+                          level: NON_ALERT
                         recorded_on: "2022-12-02T19:26:52.000Z"
                       - id: a3b5bc05-9f7c-4385-b7c8-17e4d6bc350d
                         question: "Weight loss > 10%"
                         answer: "No"
-                        tier: 0
+                        alert:
+                          tier: 0
+                          level: NON_ALERT
                         recorded_on: "2022-12-02T19:26:52.000Z"
                   diarrhea:
                     display_name: Diarrhea
+                    alert:
+                      tier: 2
+                      level: ALERT
                     responses:
                       - id: fc1d2ebb-36c2-4cb3-8818-03ecee747b09
                         question: "Frequency"
                         answer: "Occasionally"
-                        tier: 2
+                        alert:
+                          tier: 2
+                          level: ALERT
                         recorded_on: "2022-12-02T19:52:48.000Z"
                       - id: 08cfce77-e2a6-4538-901d-5037cb22827a
                         question: "Daily episodes at worst"
                         answer: "2-3"
-                        tier: 2
+                        alert:
+                          tier: 2
+                          level: ALERT
                         recorded_on: "2022-12-02T19:52:48.000Z"
                       - id: 61ac3531-dde6-4139-9c32-495602ef0c27
                         question: "Blood or mucus in stool"
                         answer: "No"
-                        tier: 0
+                        alert:
+                          tier: 0
+                          level: NON_ALERT
                         recorded_on: "2022-12-02T19:52:48.000Z"
                       - id: 3afb500a-3098-4aff-86fc-6205192f5c55
                         question: "Instrumental ADL interference"
                         answer: "Yes"
-                        tier: 1
+                        alert:
+                          tier: 1
+                          level: NON_ALERT
                         recorded_on: "2022-12-02T19:52:48.000Z"
                       - id: 1295425d-3be6-48d5-a534-eefe421a657a
                         question: "Self care ADL interference"
                         answer: "Yes"
-                        tier: 1
+                        alert:
+                          tier: 1
+                          level: NON_ALERT
                         recorded_on: "2022-12-02T19:52:48.000Z"
                 write_in: Nausea is preventing me from getting out of bed
               created_at: '2023-01-12T07:23:13.837Z'
@@ -917,59 +946,85 @@ components:
                 severe:
                   nausea:
                     display_name: Nausea
+                    alert:
+                      tier: 4
+                      level: HIGH_ALERT
                     responses:
                       - id: cc6bc003-08b8-4a85-a06c-dfd5a12eb9f7
-                        question: "[Nausea] Severity"
+                        question: "Severity"
                         answer: "Severe"
-                        tier: 3
+                        alert:
+                          tier: 3
+                          level: ALERT
                         recorded_on: "2022-12-02T19:26:52.000Z"
                       - id: f848c2fd-daa2-4e0a-92e8-9aa4ac169242
-                        question: "[Nausea] Frequency"
+                        question: "Frequency"
                         answer: "Almost constantly"
-                        tier: 4
+                        alert:
+                          tier: 4
+                          level: HIGH_ALERT
                         recorded_on: "2022-12-02T19:26:52.000Z"
                       - id: 60db9298-1966-4562-a50c-1d4435addbde
-                        question: "[Nausea] Diet affected"
+                        question: "Diet affected"
                         answer: "No"
-                        tier: 0
+                        alert:
+                          tier: 0
+                          level: NON_ALERT
                         recorded_on: "2022-12-02T19:26:52.000Z"
                       - id: 98d1d3ec-d132-4edb-a6bb-e659ad7ec4e3
-                        question: "[Nausea] Weight loss"
+                        question: "Weight loss"
                         answer: "Yes"
-                        tier: 1
+                        alert:
+                          tier: 1
+                          level: NON_ALERT
                         recorded_on: "2022-12-02T19:26:52.000Z"
                       - id: a3b5bc05-9f7c-4385-b7c8-17e4d6bc350d
-                        question: "[Nausea] Weight loss >10%"
+                        question: "Weight loss >10%"
                         answer: "No"
-                        tier: 0
+                        alert:
+                          tier: 0
+                          level: NON_ALERT
                         recorded_on: "2022-12-02T19:26:52.000Z"
                   diarrhea:
                     display_name: Diarrhea
+                    alert:
+                      tier: 2
+                      level: ALERT
                     responses:
                       - id: fc1d2ebb-36c2-4cb3-8818-03ecee747b09
                         question: "Frequency"
                         answer: "Occasionally"
-                        tier: 2
+                        alert:
+                          tier: 2
+                          level: ALERT
                         recorded_on: "2022-12-02T19:52:48.000Z"
                       - id: 08cfce77-e2a6-4538-901d-5037cb22827a
                         question: "Daily episodes at worst"
                         answer: "2-3"
-                        tier: 2
+                        alert:
+                          tier: 2
+                          level: ALERT
                         recorded_on: "2022-12-02T19:52:48.000Z"
                       - id: 61ac3531-dde6-4139-9c32-495602ef0c27
                         question: "Blood or mucus in stool"
                         answer: "No"
-                        tier: 0
+                        alert:
+                          tier: 0
+                          level: NON_ALERT
                         recorded_on: "2022-12-02T19:52:48.000Z"
                       - id: 3afb500a-3098-4aff-86fc-6205192f5c55
                         question: "Instrumental ADL interference"
                         answer: "Yes"
-                        tier: 1
+                        alert:
+                          tier: 1
+                          level: NON_ALERT
                         recorded_on: "2022-12-02T19:52:48.000Z"
                       - id: 1295425d-3be6-48d5-a534-eefe421a657a
                         question: "Self care ADL interference"
                         answer: "Yes"
-                        tier: 1
+                        alert:
+                          tier: 1
+                          level: NON_ALERT
                         recorded_on: "2022-12-02T19:52:48.000Z"
               created_at: '2023-01-11T07:21:34.735Z'
               completed_on: '2023-01-11T07:43:52.523Z'
@@ -998,65 +1053,91 @@ components:
                 severe:
                   nausea:
                     display_name: Nausea
+                    alert:
+                      tier: 4
+                      level: HIGH_ALERT
                     responses:
                       - id: 6237dfdc-bf42-43e3-a126-d8d4926b452d
-                        question: "[Nausea] Severity"
+                        question: "Severity"
                         answer: "Severe"
-                        tier: 3
+                        alert:
+                          tier: 3
+                          level: ALERT
                         recorded_on: "2022-12-02T19:26:52.000Z"
                       - id: 3e553eaa-c1e7-4560-b274-10392a9fb4a7
-                        question: "[Nausea] Frequency"
+                        question: "Frequency"
                         answer: "Almost constantly"
-                        tier: 4
+                        alert:
+                          tier: 4
+                          level: HIGH_ALERT
                         recorded_on: "2022-12-02T19:26:52.000Z"
                       - id: 44a00f27-067c-4eb6-a3ec-2cabc1414348
-                        question: "[Nausea] Diet affected"
+                        question: "Diet affected"
                         answer: "No"
-                        tier: 0
+                        alert:
+                          tier: 0
+                          level: NON_ALERT
                         recorded_on: "2022-12-02T19:26:52.000Z"
                       - id: f4fb79ef-1be9-4749-a378-a7876f42c268
-                        question: "[Nausea] Weight loss"
+                        question: "Weight loss"
                         answer: "Yes"
-                        tier: 1
+                        alert:
+                          tier: 1
+                          level: NON_ALERT
                         recorded_on: "2022-12-02T19:26:52.000Z"
                       - id: 3158bf2c-7858-4106-b503-f7b7a54b5628
-                        question: "[Nausea] Weight loss >10%"
+                        question: "Weight loss >10%"
                         answer: "No"
-                        tier: 0
+                        alert:
+                          tier: 0
+                          level: NON_ALERT
                         recorded_on: "2022-12-02T19:26:52.000Z"
                   diarrhea:
                     display_name: Diarrhea
+                    alert:
+                      tier: 2
+                      level: ALERT
                     responses:
                       - id: cc542451-8f42-4376-8fc5-b61933f2c40e
                         question: "Frequency"
                         answer: "Occasionally"
-                        tier: 2
+                        alert:
+                          tier: 2
+                          level: ALERT
                         recorded_on: "2022-12-02T19:52:48.000Z"
                       - id: 388b8023-f1d9-499d-8816-3e7e18be5145
                         question: "Daily episodes at worst"
                         answer: "2-3"
-                        tier: 2
+                        alert:
+                          tier: 2
+                          level: ALERT
                         recorded_on: "2022-12-02T19:52:48.000Z"
                       - id: b700f1c1-9b50-406c-8456-a78a6e351b02
                         question: "Blood or mucus in stool"
                         answer: "No"
-                        tier: 0
+                        alert:
+                          tier: 0
+                          level: NON_ALERT
                         recorded_on: "2022-12-02T19:52:48.000Z"
                       - id: d9ec9f76-ef97-4dd7-8fcb-f07b9970a918
                         question: "Instrumental ADL interference"
                         answer: "Yes"
-                        tier: 1
+                        alert:
+                          tier: 1
+                          level: NON_ALERT
                         recorded_on: "2022-12-02T19:52:48.000Z"
                       - id: fb50f8f5-d424-436b-b625-39f1a06fc55c
                         question: "Self care ADL interference"
                         answer: "Yes"
-                        tier: 1
+                        alert:
+                          tier: 1
+                          level: NON_ALERT
                         recorded_on: "2022-12-02T19:52:48.000Z"
               created_at: '2023-01-12T07:23:13.837Z'
               completed_on: '2023-01-12T07:45:23.534Z'
             - id: 36f5b5f4-c754-11ed-afa1-0242ac120002
               alert:
-                tier: 1
+                tier: 0
                 level: NON_ALERT
               care_team_response: null
               symptoms: null
