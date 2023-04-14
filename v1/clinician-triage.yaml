@@ -15,7 +15,7 @@ tags:
     description: Endpoints for fetching questionnaires that have been completed by a patient
 
 paths:
-  /care_team_responses/draft:
+  /tenants/{tenant_id}/patients/{patient_id}/care_team_responses/draft:
     put:
       tags:
         - Care Team Response
@@ -24,6 +24,19 @@ paths:
       operationId: upsertCareTeamResponse
       security:
         - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: tenant_id
+          required: true
+          schema:
+            type: string
+          example: apposnd
+        - in: path
+          name: patient_id
+          required: true
+          schema:
+            type: string
+          example: 9d63650e-c289-11ed-afa1-0242ac120002
       requestBody:
         content:
           application/json:
@@ -55,7 +68,7 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
-  /care_team_responses:
+  /tenants/{tenant_id}/patients/{patient_id}/care_team_responses:
     post:
       tags:
         - Care Team Response
@@ -64,6 +77,19 @@ paths:
       operationId: createCareTeamResponse
       security:
         - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: tenant_id
+          required: true
+          schema:
+            type: string
+          example: apposnd
+        - in: path
+          name: patient_id
+          required: true
+          schema:
+            type: string
+          example: 9d63650e-c289-11ed-afa1-0242ac120002
       requestBody:
         content:
           application/json:
@@ -124,6 +150,18 @@ paths:
       security:
         - bearerAuth: [ ]
       parameters:
+        - in: path
+          name: tenant_id
+          required: true
+          schema:
+            type: string
+          example: apposnd
+        - in: path
+          name: patient_id
+          required: true
+          schema:
+            type: string
+          example: 9d63650e-c289-11ed-afa1-0242ac120002
         - name: questionnaire_response_id
           in: query
           schema:
@@ -169,7 +207,7 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
-  /care_team_responses/{care_team_response_id}/sign:
+  /tenants/{tenant_id}/patients/{patient_id}/care_team_responses/{care_team_response_id}/sign:
     patch:
       tags:
         - Care Team Response
@@ -180,6 +218,18 @@ paths:
       security:
         - bearerAuth: [ ]
       parameters:
+        - in: path
+          name: tenant_id
+          required: true
+          schema:
+            type: string
+          example: apposnd
+        - in: path
+          name: patient_id
+          required: true
+          schema:
+            type: string
+          example: 9d63650e-c289-11ed-afa1-0242ac120002
         - name: care_team_response_id
           in: path
           required: true
@@ -268,7 +318,7 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
-  /care_team_responses/{care_team_response_id}/read:
+  /tenants/{tenant_id}/patients/{patient_id}/care_team_responses/{care_team_response_id}/read:
     patch:
       tags:
         - Care Team Response
@@ -279,6 +329,18 @@ paths:
       security:
         - bearerAuth: [ ]
       parameters:
+        - in: path
+          name: tenant_id
+          required: true
+          schema:
+            type: string
+          example: apposnd
+        - in: path
+          name: patient_id
+          required: true
+          schema:
+            type: string
+          example: 9d63650e-c289-11ed-afa1-0242ac120002
         - name: care_team_response_id
           in: path
           required: true
@@ -322,7 +384,7 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
-  /patients/{patient_id}/questionnaire_responses:
+  /tenants/{tenant_id}/patients/{patient_id}/questionnaire_responses:
     get:
       tags:
         - Patient Reported Symptoms
@@ -333,11 +395,17 @@ paths:
         - bearerAuth: [ ]
       parameters:
         - in: path
-          name: patient_id
+          name: tenant_id
+          required: true
           schema:
             type: string
+          example: apposnd
+        - in: path
+          name: patient_id
           required: true
-          example: b02cadd0-c27f-11ed-afa1-0242ac120002
+          schema:
+            type: string
+          example: 9d63650e-c289-11ed-afa1-0242ac120002
         - in: query
           name: symptoms
           description: "Comma delimited list of symptoms"
