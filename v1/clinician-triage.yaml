@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.4.0
+  version: 1.4.1
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -39,26 +39,13 @@ paths:
       responses:
         '202':
           description: Successful upsert of care team response draft
-        '400':
-          description: Bad request
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/CareTeamResponseResponse'
               examples:
-                BadRequestError:
-                  $ref: "#/components/examples/BadRequestError"
-                DuplicateResource:
-                  $ref: "#/components/examples/DuplicateResource"
-        '404':
-          description: Resource Not Found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              examples:
-                BadRequestError:
-                  $ref: "#/components/examples/NotFoundError"
+                CreateCareTeamResponseExample:
+                  $ref: '#/components/examples/DraftCareTeamResponseExample'
         '500':
           description: Internal Server Error
           content:
@@ -762,7 +749,7 @@ components:
       value:
         meta:
           links:
-            self: /v1/care_team_response
+            self: /v1/care_team_responses
           version: 1.0.0
         data:
           id: 25e4822e-c289-11ed-afa1-0242ac120002
@@ -781,12 +768,36 @@ components:
           signed_at: null
           created_at: '2023-01-12T07:23:13.837Z'
           updated_at: '2023-01-12T07:23:13.837Z'
+    DraftCareTeamResponseExample:
+      summary: Draft Create Care Team Response Example
+      value:
+        meta:
+          links:
+            self: /v1/care_team_responses/draft
+          version: 1.0.0
+        data:
+          id: 25e4822e-c289-11ed-afa1-0242ac120002
+          questionnaire_response_id: 9970ca54-c289-11ed-afa1-0242ac120002
+          is_draft: true
+          responder:
+            id: 2cc29228-c281-11ed-afa1-0242ac120002
+            name: Susan Smith
+          patient_id: 9d63650e-c289-11ed-afa1-0242ac120002
+          patient_message:
+            option: schedule_visit
+            display: Schedule Visit
+            comment: You should get in to see the doctor this week
+          internal_note: This is a draft
+          read_at: null
+          signed_at: null
+          created_at: '2023-01-12T07:23:13.837Z'
+          updated_at: '2023-01-12T07:23:13.837Z'
     SignCareTeamResponseExample:
       summary: Sign Care Team Response Draft Example
       value:
         meta:
           links:
-            self: /v1/care_team_response/25e4822e-c289-11ed-afa1-0242ac120002/sign
+            self: /v1/care_team_responses/25e4822e-c289-11ed-afa1-0242ac120002/sign
           version: 1.0.0
         data:
           id: 25e4822e-c289-11ed-afa1-0242ac120002
@@ -810,7 +821,7 @@ components:
       value:
         meta:
           links:
-            self: /v1/care_team_response/25e4822e-c289-11ed-afa1-0242ac120002/read
+            self: /v1/care_team_responses/25e4822e-c289-11ed-afa1-0242ac120002/read
           version: 1.0.0
         data:
           id: 25e4822e-c289-11ed-afa1-0242ac120002
@@ -1148,7 +1159,7 @@ components:
       value:
         meta:
           links:
-            self: /v1/care_team_response/10256
+            self: /v1/care_team_responses/10256
           version: 1.0.0
         errors:
           - id: 179F5161-D264-422B-8E2E-72B721739922
@@ -1165,7 +1176,7 @@ components:
       value:
         meta:
           links:
-            self: /v1/care_team_response/10256
+            self: /v1/care_team_responses/10256
           version: 1.0.0
         errors:
           - id: 179F5161-D264-422B-8E2E-72B721739922
@@ -1178,7 +1189,7 @@ components:
       value:
         meta:
           links:
-            self: /v1/care_team_response/10256
+            self: /v1/care_team_responses/10256
           version: 1.0.0
         errors:
           - id: 179F5161-D264-422B-8E2E-72B721739922
@@ -1191,7 +1202,7 @@ components:
       value:
         meta:
           links:
-            self: /v1/care_team_response/10256
+            self: /v1/care_team_responses/10256
           version: 1.0.0
         errors:
           - id: 179F5161-D264-422B-8E2E-72B721739922
@@ -1203,7 +1214,7 @@ components:
       value:
         meta:
           links:
-            self: /v1/care_team_response/10256
+            self: /v1/care_team_responses/10256
           version: 1.0.0
         errors:
           - id: 179F5161-D264-422B-8E2E-72B721739922
