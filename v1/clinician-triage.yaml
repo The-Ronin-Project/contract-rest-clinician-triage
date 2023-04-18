@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.4.2
+  version: 1.5.0
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -13,6 +13,8 @@ tags:
     description: Endpoints for creating and updating clinician communication
   - name: Patient Reported Symptoms
     description: Endpoints for fetching questionnaires that have been completed by a patient
+  - name: Patient Questionnaire Response Event
+    description: Endpoints for producing an event for patient questionnaire response
 
 paths:
   /tenants/{tenant_id}/patients/{patient_id}/care_team_responses/draft:
@@ -473,7 +475,69 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
-
+  /tenants/{tenant_id}/patients/{patient_id}/create_questionnaire_response_event:
+    post:
+      tags:
+        - Patient Questionnaire Response Event
+      description: Creates a patient questionnaire response (symptoms) event
+      summary: Create Patient Questionnaire Response Event
+      operationId: createPatientQuestionnaireResponseEvent
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: tenant_id
+          required: true
+          schema:
+            type: string
+          example: apposnd
+        - in: path
+          name: patient_id
+          required: true
+          schema:
+            type: string
+          example: b02cadd0-c27f-11ed-afa1-0242ac120002
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuestionnaireResponseEventRequestBody"
+            example:
+              survey_response_id: 19486
+              symptoms: [fatigue, nausea]
+              write_in: blurry vision, sore throat
+              alert_state: HIGH_ALERT
+              qol: 50
+              completed_on: 2022-09-13T12:14:15
+        required: true
+      responses:
+        '201':
+          description: Successful creation of questionnaire response event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionnaireResponseEventResponse'
+              examples:
+                QuestionnaireResponseEventResponseExample:
+                  $ref: '#/components/examples/QuestionnaireResponseEventResponseExample'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/BadRequestError"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/InternalServerError"
 components:
   schemas:
     AbstractResponse:
@@ -776,6 +840,68 @@ components:
                 - inactive_responses
           required:
             - data
+    QuestionnaireResponseEventResponse:
+      type: object
+      properties:
+        patient_id:
+          type: string
+        tenant_id:
+          type: string
+        survey_response_id:
+          type: integer
+          format: int64
+        symptoms:
+          type: array
+          items:
+            type: string
+        write_in:
+          type: string
+          nullable: true
+        alert_state:
+          enum: ["NON_ALERT", "ALERT", "HIGH_ALERT"]
+        qol:
+          type: integer
+          minimum: 0
+          maximum: 100
+        completed_on:
+          type: string
+          format: "date-time"
+      required:
+        - patient_id
+        - tenant_id
+        - survey_response_id
+        - symptoms
+        - alert_state
+        - qol
+        - completed_on
+    QuestionnaireResponseEventRequestBody:
+      type: object
+      properties:
+        survey_response_id:
+          type: integer
+          format: int64
+        symptoms:
+          type: array
+          items:
+            type: "string"
+        write_in:
+          type: string
+          nullable: true
+        alert_state:
+          enum: ["NON_ALERT", "ALERT", "HIGH_ALERT"]
+        qol:
+          type: integer
+          minimum: 0
+          maximum: 100
+        completed_on:
+          type: string
+          format: "date-time"
+      required:
+        - survey_response_id
+        - symptoms
+        - alert_state
+        - qol
+        - completed_on
     ErrorResponse:
       allOf:
         - $ref: "#/components/schemas/AbstractResponse"
@@ -812,6 +938,17 @@ components:
           description: HTTP status of the response
 
   examples:
+    QuestionnaireResponseEventResponseExample:
+      summary: Questionnaire Response Event Response Example
+      value:
+        patient_id: 25e4822e-c289-11ed-afa1-0242ac120002
+        tenant_id: 5jzj62vp
+        survey_response_id: 19486
+        symptoms: [ fatigue, nausea ]
+        write_in: blurry vision, sore throat
+        alert_state: HIGH_ALERT
+        qol: 50
+        completed_on: 2022-09-13T12:14:15
     CreateCareTeamResponseExample:
       summary: Create Care Team Response Example
       value:
