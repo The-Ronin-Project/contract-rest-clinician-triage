@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.5.0
+  version: 1.5.1
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -176,6 +176,13 @@ paths:
             type: integer
           example: 2
           required: false
+        - name: include_read
+          in: query
+          description: To include or filter out read care team responses
+          schema:
+            type: boolean
+          required: false
+          example: true
       responses:
         '200':
           description: Successfully fetch care team response
