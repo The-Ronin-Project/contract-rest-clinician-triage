@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.4.2
+  version: 1.5.0
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -162,22 +162,30 @@ paths:
           schema:
             type: string
           example: 9d63650e-c289-11ed-afa1-0242ac120002
-        - name: questionnaire_response_id
+        - name: limit
           in: query
+          description: Max number of care team response objects to be returned
           schema:
-            type: string
+            type: integer
           required: true
-          example: fa3b78ce-c27b-11ed-afa1-0242ac120002
+          example: 20
+        - name: page
+          in: query
+          description: Page number requested, starting at 1 as the first page
+          schema:
+            type: integer
+          example: 2
+          required: false
       responses:
         '200':
           description: Successfully fetch care team response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CareTeamResponseResponse'
+                $ref: '#/components/schemas/CareTeamResponses'
               examples:
-                CreateCareTeamResponseExample:
-                  $ref: '#/components/examples/CreateCareTeamResponseExample'
+                GetCareTeamResponseExample:
+                  $ref: '#/components/examples/CareTeamResponsesExample'
         '400':
           description: Bad request
           content:
@@ -490,23 +498,6 @@ components:
             self:
               type: string
               description: Path of the API request
-            pagination:
-              type: object
-              nullable: true
-              properties:
-                first_page:
-                  type: string
-                  description: link to first page of paginated search results
-                next_page:
-                  type: string
-                  description: link to next page of paginated search results
-                prev_page:
-                  type: string
-                  description: link to previous page of paginated search results
-              required:
-                - first_page
-                - next_page
-                - prev_page
           additionalProperties: true
           required:
             - self
@@ -540,6 +531,20 @@ components:
       properties:
         internal_note:
           type: string
+    CareTeamResponses:
+      description: >-
+        Fetch data pertaining to the messages that clinicians send to the patients,
+        and notes that are stored for internal use
+      allOf:
+        - $ref: "#/components/schemas/AbstractResponse"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/CareTeamResponse'
+          required:
+            - data
     CareTeamResponseResponse:
       description: >-
         Data pertaining to the messages that clinicians send to the patients,
@@ -565,24 +570,7 @@ components:
         responder:
           $ref: "#/components/schemas/Responder"
         patient_message:
-          type: object
-          properties:
-            option:
-              type: string
-              description: >-
-                Message sent from the clinician to the patient. Chosen from a
-                set number of options
-            display:
-              type: string
-              description: >-
-                The display value of the `option` enum
-              nullable: true
-            comment:
-              type: string
-              description: Custom comment sent to patient from the clinician
-              nullable: true
-          required:
-            - option
+          $ref: "#/components/schemas/PatientMessage"
         internal_note:
           type: string
           description: Optional note that the clinician can store for internal use
@@ -623,6 +611,17 @@ components:
       required:
         - id
         - name
+    PatientMessage:
+      type: object
+      properties:
+        option:
+          type: string
+        display:
+          type: string
+        comment:
+          type: string
+      required:
+        - option
     SymptomCategory:
       type: object
       properties:
@@ -908,6 +907,44 @@ components:
           signed_at: '2023-01-12T07:23:13.837Z'
           created_at: '2023-01-12T07:23:13.837Z'
           updated_at: '2023-01-12T07:23:13.837Z'
+    CareTeamResponsesExample:
+      summary: An array of Care Team Responses
+      value:
+        meta:
+          links:
+            self: /v1/care_team_responses
+          version: 1.0.0
+        data:
+          - id: 25e4822e-c289-11ed-afa1-0242ac120002
+            questionnaire_response_id: 2138eef5-e29b-477c-a5b4-9a585b0a4382
+            is_draft: false
+            responder:
+              id: 2cc29228-c281-11ed-afa1-0242ac120002
+              name: Susan Smith
+            patient_id: 9d63650e-c289-11ed-afa1-0242ac120002
+            patient_message:
+              option: schedule_visit
+              display: Schedule Visit
+              comment: You should get in to see the doctor this week
+            internal_note: Patient needs blood drawn
+            read_at: null
+            signed_at: null
+            created_at: '2023-01-12T07:23:13.837Z'
+            updated_at: '2023-01-12T07:23:13.837Z'
+          - id: d3be912a-b694-4312-8451-e21b762cbac9
+            questionnaire_response_id: fad0859f-5915-4434-934b-6ed355237d12
+            is_draft: true
+            responder:
+              id: 2cc29228-c281-11ed-afa1-0242ac120002
+              name: Susan Smith
+            patient_id: 9d63650e-c289-11ed-afa1-0242ac120002
+            patient_message:
+              option: monitor_at_home
+              display: Monitor at Home
+            read_at: '2023-03-10T07:23:13.837Z'
+            signed_at: null
+            created_at: '2023-02-15T07:23:13.837Z'
+            updated_at: '2023-03-10T07:23:13.837Z'
     PatientReportedSymptomsResponseExample:
       summary: Completed Questionnaire
       value:
