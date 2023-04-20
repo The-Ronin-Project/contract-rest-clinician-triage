@@ -519,7 +519,7 @@ paths:
               completed_on: 2022-09-13T12:14:15
         required: true
       responses:
-        '201':
+        '200':
           description: Successful creation of questionnaire response event
           content:
             application/json:
