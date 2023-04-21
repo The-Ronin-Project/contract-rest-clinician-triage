@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.6.0
+  version: 1.6.1
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -99,7 +99,6 @@ paths:
               $ref: "#/components/schemas/CareTeamResponseRequestBody"
             example:
               questionnaire_response_id: fa3b78ce-c27b-11ed-afa1-0242ac120002
-              patient_id: 89a7a2d9-d382-484a-8b1b-cf64bb1efb58
               option: schedule_visit
               display: Schedule Visit
               comment: You should get in to see the doctor this week
@@ -251,8 +250,9 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/SignCareTeamResponseRequestBody"
-            example:
-              internal_note: Patient needs blood drawn
+            examples:
+              SignCareTeamResponseRequestBodyExample:
+                $ref: "#/components/examples/SignCareTeamResponseRequestBodyExample"
         required: true
       responses:
         '200':
@@ -576,8 +576,6 @@ components:
       properties:
         questionnaire_response_id:
           type: string
-        patient_id:
-          type: string
         option:
           type: string
         display:
@@ -587,7 +585,6 @@ components:
           nullable: true
       required:
         - questionnaire_response_id
-        - patient_id
         - option
         - display
     SignCareTeamResponseRequestBody:
@@ -595,6 +592,11 @@ components:
       properties:
         internal_note:
           type: string
+        ehr_write_back_message:
+          type: string
+          description: Message sent to the EHR. Free text with formatted details of the care team response and associated questionnaire response
+      required:
+        - ehr_write_back_message
     CareTeamResponses:
       description: >-
         Fetch data pertaining to the messages that clinicians send to the patients,
@@ -972,6 +974,33 @@ components:
           signed_at: null
           created_at: '2023-01-12T07:23:13.837Z'
           updated_at: '2023-01-12T07:23:13.837Z'
+    SignCareTeamResponseRequestBodyExample:
+      summary: Sign Care Team Response Request Body Example
+      value:
+        internal_note: Patient needs blood tests
+        ehr_write_back_message:
+          "Diana Salazar reported symptoms through the Ronin Patient Symptom Monitoring App on 02/12/23 at 8:55pm PST
+
+           Symptoms:
+
+           Diarrhea:
+           - Frequency: Most of the time
+           - Episodes in last 24 hours: 4-6
+           - Blood in stool: No
+           - Days present: 3 days
+           - Taken Medication: Yes
+
+           Nausea:
+           - Frequency: Most of the time
+           - Severity: Severe
+           - Interference with ADLs: Somewhat
+           - Eating less: Yes
+           - Taken Medication: No
+
+           Write-in:
+           My diarrhea is continuing despite taking Imodium. I am not vomiting but I am so nauseated it hurts to move.
+
+           I responded to the patient via the Ronin Symptom Monitoring App on 02/13/23 at 11:15am PST: We will call you to discuss in more detail within 24 hours. If the message was received outside of clinic hours, you may get a call the next day."
     DraftCareTeamResponseExample:
       summary: Draft Create Care Team Response Example
       value:
