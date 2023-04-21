@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.6.0
+  version: 1.6.1
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -173,7 +173,7 @@ paths:
           example: 20
         - name: page
           in: query
-          description: Page number requested, starting at 1 as the first page
+          description: Page number requested, starting at 0 as the first page
           schema:
             type: integer
           example: 2
