@@ -172,11 +172,18 @@ paths:
           example: 20
         - name: page
           in: query
-          description: Page number requested, starting at 1 as the first page
+          description: Page number requested, starting at 0 as the first page
           schema:
             type: integer
           example: 2
           required: false
+        - name: include_read
+          in: query
+          description: To include or filter out read care team responses
+          schema:
+            type: boolean
+          required: false
+          example: true
       responses:
         '200':
           description: Successfully fetch care team response
