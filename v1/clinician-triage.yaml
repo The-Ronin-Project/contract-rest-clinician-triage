@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.6.2
+  version: 1.7.0
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -15,6 +15,8 @@ tags:
     description: Endpoints for fetching questionnaires that have been completed by a patient
   - name: Patient Questionnaire Response Event
     description: Endpoints for producing an event for patient questionnaire response
+  - name: Care Team Response - Chokuto Cut-Over
+    description: Utilities for supporting the cut-over of care team response data from Chokuto to CTS
 
 paths:
   /tenants/{tenant_id}/patients/{patient_id}/care_team_responses/draft:
@@ -401,6 +403,74 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
+  /tenants/{tenant_id}/patients/{patient_id}/care_team_responses/{care_team_response_id}/cut_over:
+    put:
+      tags:
+        - Care Team Response - Chokuto Cut-Over
+      summary: Sync Care Team Response Data
+      description: >-
+        Temporary endpoint used to sync care team response data between Chokuto and CTS during the cut-over plan
+      operationId: careTeamResponseCutOver
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: tenant_id
+          required: true
+          schema:
+            type: string
+          example: apposnd
+        - in: path
+          name: patient_id
+          required: true
+          schema:
+            type: string
+          example: 9d63650e-c289-11ed-afa1-0242ac120002
+        - name: care_team_response_id
+          in: path
+          required: true
+          example: 25e4822e-c289-11ed-afa1-0242ac120002
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CareTeamResponseCutOverRequestBody"
+            examples:
+              CareTeamRequestCutOverRequestBodyExample:
+                $ref: "#/components/examples/CareTeamRequestCutOverRequestBodyExample"
+        required: true
+      responses:
+        '200':
+          description: Successfully received care team response
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/BadRequestError"
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/NotFoundError"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/InternalServerError"
   /tenants/{tenant_id}/patients/{patient_id}/questionnaire_responses:
     get:
       tags:
@@ -594,6 +664,50 @@ components:
         - questionnaire_response_id
         - option
         - display
+    CareTeamResponseCutOverRequestBody:
+      type: object
+      properties:
+        questionnaire_response_id:
+          type: string
+        is_draft:
+          type: boolean
+        responder:
+          $ref: "#/components/schemas/Responder"
+        patient_message:
+          $ref: "#/components/schemas/PatientMessage"
+        internal_note:
+          type: string
+          description: Optional note that the clinician can store for internal use
+          nullable: true
+        ehr_write_back_message:
+          type: string
+          description: Message sent to the EHR. Free text with formatted details of the care team response and associated questionnaire response
+        signed_at:
+          type: string
+          format: date-time
+          description: >-
+            The date/time that the clinician signed the communication with the
+            customer (if it was signed)
+          nullable: true
+        read_at:
+          type: string
+          format: date-time
+          description: The date/time that the patient read the response
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - questionnaire_response_id
+        - is_draft
+        - responder
+        - patient_message
+        - created_at
+        - updated_at
+
     SignCareTeamResponseRequestBody:
       type: object
       properties:
@@ -1008,6 +1122,22 @@ components:
            My diarrhea is continuing despite taking Imodium. I am not vomiting but I am so nauseated it hurts to move.
 
            I responded to the patient via the Ronin Symptom Monitoring App on 02/13/23 at 11:15am PST: We will call you to discuss in more detail within 24 hours. If the message was received outside of clinic hours, you may get a call the next day."
+    CareTeamRequestCutOverRequestBodyExample:
+      summary: An array of Care Team Responses
+      value:
+        questionnaire_response_id: 2138eef5-e29b-477c-a5b4-9a585b0a4382
+        is_draft: false
+        responder:
+          id: 2cc29228-c281-11ed-afa1-0242ac120002
+          name: Susan Smith
+        patient_message:
+          option: schedule_visit
+          display: Schedule Visit
+          comment: You should get in to see the doctor this week
+        read_at: null
+        signed_at: null
+        created_at: '2023-01-12T07:23:13.837Z'
+        updated_at: '2023-01-12T07:23:13.837Z'
     DraftCareTeamResponseExample:
       summary: Draft Create Care Team Response Example
       value:
