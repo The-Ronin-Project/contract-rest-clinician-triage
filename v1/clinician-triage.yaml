@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.7.1
+  version: 1.7.2
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -375,9 +375,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CareTeamResponseResponse'
+                $ref: '#/components/schemas/AbstractResponse'
               examples:
-                CareTeamResponseExample:
+                MarkCareTeamResponseAsReadExample:
                   $ref: '#/components/examples/MarkCareTeamResponseAsReadExample'
         '400':
           description: Bad request
@@ -1203,29 +1203,12 @@ components:
           created_at: '2023-01-12T07:23:13.837Z'
           updated_at: '2023-01-12T07:23:13.837Z'
     MarkCareTeamResponseAsReadExample:
-      summary: Upsert Care Team Response Draft Example
+      summary: Mark Care Team Response as read example
       value:
         meta:
           links:
-            self: /v1/care_team_responses/25e4822e-c289-11ed-afa1-0242ac120002/read
+            self: /v1/care_team_responses/read
           version: 1.0.0
-        data:
-          id: 25e4822e-c289-11ed-afa1-0242ac120002
-          questionnaire_response_id: 9970ca54-c289-11ed-afa1-0242ac120002
-          is_draft: false
-          responder:
-            id: 2cc29228-c281-11ed-afa1-0242ac120002
-            name: Susan Smith
-          patient_id: 9d63650e-c289-11ed-afa1-0242ac120002
-          patient_message:
-            option: schedule_visit
-            display: Schedule Visit
-            comment: You should get in to see the doctor this week
-          internal_note: Patient needs blood drawn
-          read_at: '2023-01-12T09:48:54.826Z'
-          signed_at: '2023-01-12T07:23:13.837Z'
-          created_at: '2023-01-12T07:23:13.837Z'
-          updated_at: '2023-01-12T07:23:13.837Z'
     CareTeamResponsesExample:
       summary: An array of Care Team Responses
       value:
