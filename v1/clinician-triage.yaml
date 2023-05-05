@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.7.2
+  version: 1.7.3
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -1551,6 +1551,49 @@ components:
                           tier: 1
                           level: NON_ALERT
                         recorded_on: "2022-12-02T19:52:48.000Z"
+              created_at: '2023-01-12T07:23:13.837Z'
+              completed_on: '2023-01-12T07:45:23.534Z'
+            - id: c6cac900-4f09-4399-8d49-fb12d86e6faf
+              alert:
+                tier: 1
+                level: NON_ALERT
+              care_team_response: null
+              symptoms:
+                non_severe:
+                  nausea:
+                    display_name: Nausea
+                    alert:
+                      tier: 1
+                      level: NON_ALERT
+                    responses:
+                      - id: 6237dfdc-bf42-43e3-a126-d8d4926b452d
+                        question: "Severity"
+                        answer: "Not Severe"
+                        alert:
+                          tier: 1
+                          level: NON_ALERT
+                        recorded_on: "2022-12-02T19:26:52.000Z"
+                      - id: 3e553eaa-c1e7-4560-b274-10392a9fb4a7
+                        question: "Frequency"
+                        answer: "Almost never"
+                        alert:
+                          tier: 1
+                          level: NON_ALERT
+                        recorded_on: "2022-12-02T19:26:52.000Z"
+                      - id: 44a00f27-067c-4eb6-a3ec-2cabc1414348
+                        question: "Diet affected"
+                        answer: "No"
+                        alert:
+                          tier: 1
+                          level: NON_ALERT
+                        recorded_on: "2022-12-02T19:26:52.000Z"
+                      - id: f4fb79ef-1be9-4749-a378-a7876f42c268
+                        question: "Weight loss"
+                        answer: "No"
+                        alert:
+                          tier: 1
+                          level: NON_ALERT
+                        recorded_on: "2022-12-02T19:26:52.000Z"
               created_at: '2023-01-12T07:23:13.837Z'
               completed_on: '2023-01-12T07:45:23.534Z'
             - id: 36f5b5f4-c754-11ed-afa1-0242ac120002
