@@ -445,7 +445,7 @@ paths:
                 $ref: "#/components/examples/CareTeamRequestCutOverRequestBodyExample"
         required: true
       responses:
-        '200':
+        '204':
           description: Successfully received care team response
         '400':
           description: Bad request
