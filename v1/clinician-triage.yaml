@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.7.5
+  version: 1.7.6
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -1009,7 +1009,6 @@ components:
         - survey_response_id
         - symptoms
         - alert_state
-        - qol
         - completed_on
     QuestionnaireResponseEventRequestBody:
       type: object
@@ -1037,7 +1036,6 @@ components:
         - survey_response_id
         - symptoms
         - alert_state
-        - qol
         - completed_on
     ErrorResponse:
       allOf:
