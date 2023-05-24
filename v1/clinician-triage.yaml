@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.8.0
+  version: 1.9.0
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -17,6 +17,8 @@ tags:
     description: Endpoints for producing an event for patient questionnaire response
   - name: Care Team Response - Chokuto Cut-Over
     description: Utilities for supporting the cut-over of care team response data from Chokuto to CTS
+  - name: Tenant Configuration
+    description: Tenant-specific configuration values
 
 paths:
   /tenants/{tenant_id}/patients/{patient_id}/care_team_responses/draft:
@@ -626,6 +628,35 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
+
+  /tenants/{tenant_id}/configuration:
+    get:
+      tags:
+        - Tenant Configuration
+      description: Fetch configuration values for the tenant
+      summary: Fetch Tenant Configuration
+      operationId: fetchTenantConfiguration
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: tenant_id
+          required: true
+          schema:
+            type: string
+          example: apposnd
+      responses:
+        '200':
+          description: Successful fetch of tenant configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantConfigurationResponse'
+              examples:
+                TenantConfigurationResponseBodyExample:
+                  $ref: '#/components/examples/TenantConfigurationResponseBodyExample'
+
+
 components:
   schemas:
     AbstractResponse:
@@ -1036,6 +1067,17 @@ components:
         - symptoms
         - alert_state
         - completed_on
+    TenantConfiguration:
+      type: object
+      properties:
+        patient_not_found_copy:
+          type: string
+          description: The copy to be rendered when the selected patient has not onboarded with Ronin
+          nullable: true
+    TenantConfigurationResponse:
+      allOf:
+        - $ref: "#/components/schemas/AbstractResponse"
+        - $ref: "#/components/schemas/TenantConfiguration"
     ErrorResponse:
       allOf:
         - $ref: "#/components/schemas/AbstractResponse"
@@ -1788,6 +1830,10 @@ components:
               symptoms: null
               created_at: "2022-02-11T02:34:56.356"
               completed_on: "2022-02-11T03:26:16.876Z"
+    TenantConfigurationResponseBodyExample:
+      summary: Tenant Configuration Response Body Example
+      value:
+        patient_not_found_copy: Send a MyChart message to this patient using the dot phrase .RONINONBOARDING to begin symptom monitoring at home.
     BadRequestError:
       summary: Bad Request Error Example
       value:
