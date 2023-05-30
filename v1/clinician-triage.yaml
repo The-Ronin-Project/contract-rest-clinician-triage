@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.9.0
+  version: 1.9.1
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -1077,7 +1077,10 @@ components:
     TenantConfigurationResponse:
       allOf:
         - $ref: "#/components/schemas/AbstractResponse"
-        - $ref: "#/components/schemas/TenantConfiguration"
+        - type: object
+          properties:
+            data:
+              $ref: "#/components/schemas/TenantConfiguration"
     ErrorResponse:
       allOf:
         - $ref: "#/components/schemas/AbstractResponse"
@@ -1833,7 +1836,12 @@ components:
     TenantConfigurationResponseBodyExample:
       summary: Tenant Configuration Response Body Example
       value:
-        patient_not_found_copy: Send a MyChart message to this patient using the dot phrase .RONINONBOARDING to begin symptom monitoring at home.
+        meta:
+          links:
+            self: /v1/tenants/apposnd/configuration
+          version: 1.0.0
+        data:
+          patient_not_found_copy: Send a MyChart message to this patient using the dot phrase .RONINONBOARDING to begin symptom monitoring at home.
     BadRequestError:
       summary: Bad Request Error Example
       value:
