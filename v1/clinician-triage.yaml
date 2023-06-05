@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.9.1
+  version: 1.10.0
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -899,6 +899,9 @@ components:
             - ALERT
             - HIGH_ALERT
           description: Severity level of alert - less granular than `tier`
+        additional_info_copy:
+          type: string
+          description: Message to show on UI when the user hovers over an alert
       required:
         - tier
         - level
@@ -1496,6 +1499,7 @@ components:
               alert:
                 tier: 4
                 level: HIGH_ALERT
+                additional_info_copy: Patient told to call 911 or go to ER
               care_team_response: null
               symptoms:
                 severe:
@@ -1504,6 +1508,7 @@ components:
                     alert:
                       tier: 4
                       level: HIGH_ALERT
+                      additional_info_copy: Patient told to call 911 or go to ER
                     responses:
                       - id: cc6bc003-08b8-4a85-a06c-dfd5a12eb9f7
                         question: "Severity"
@@ -1545,6 +1550,7 @@ components:
                     alert:
                       tier: 2
                       level: ALERT
+                      additional_info_copy: Follow up within 24 hours
                     responses:
                       - id: fc1d2ebb-36c2-4cb3-8818-03ecee747b09
                         question: "Frequency"
@@ -1588,6 +1594,7 @@ components:
               alert:
                 tier: 2
                 level: ALERT
+                additional_info_copy: Follow up within 24 hours
               care_team_response: null
               symptoms:
                 severe:
@@ -1596,6 +1603,7 @@ components:
                     alert:
                       tier: 4
                       level: HIGH_ALERT
+                      additional_info_copy: Patient told to call 911 or go to ER
                     responses:
                       - id: cc6bc003-08b8-4a85-a06c-dfd5a12eb9f7
                         question: "Severity"
@@ -1637,6 +1645,7 @@ components:
                     alert:
                       tier: 2
                       level: ALERT
+                      additional_info_copy: Follow up within 24 hours
                     responses:
                       - id: fc1d2ebb-36c2-4cb3-8818-03ecee747b09
                         question: "Frequency"
@@ -1680,6 +1689,7 @@ components:
               alert:
                 tier: 4
                 level: HIGH_ALERT
+                additional_info_copy: Patient told to call 911 or go to ER
               care_team_response:
                 id: 1f82b782-c281-11ed-afa1-0242ac120002
                 questionnaire_response: null
@@ -1703,6 +1713,7 @@ components:
                     alert:
                       tier: 4
                       level: HIGH_ALERT
+                      additional_info_copy: Patient told to call 911 or go to ER
                     responses:
                       - id: 6237dfdc-bf42-43e3-a126-d8d4926b452d
                         question: "Severity"
@@ -1744,6 +1755,7 @@ components:
                     alert:
                       tier: 2
                       level: ALERT
+                      additional_info_copy: Follow up within 24 hours
                     responses:
                       - id: cc542451-8f42-4376-8fc5-b61933f2c40e
                         question: "Frequency"
