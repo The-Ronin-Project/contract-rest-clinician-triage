@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 1.11.0
+  version: 1.12.0
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -1588,8 +1588,8 @@ components:
                           level: NON_ALERT
                         recorded_on: "2022-12-02T19:52:48.000Z"
                 write_in: Nausea is preventing me from getting out of bed
-              created_at: '2023-01-12T07:23:13.837Z'
-              completed_on: '2023-01-12T07:45:23.534Z'
+              created_at: '2023-06-01T07:23:13.837Z'
+              completed_on: '2023-06-01T07:45:23.534Z'
             - id: 0d2791a1-39d5-4355-bafd-cdbf0448627e
               alert:
                 tier: 2
@@ -1682,8 +1682,8 @@ components:
                           tier: 1
                           level: NON_ALERT
                         recorded_on: "2022-12-02T19:52:48.000Z"
-              created_at: '2023-01-11T07:21:34.735Z'
-              completed_on: '2023-01-11T07:43:52.523Z'
+              created_at: '2023-06-02T07:21:34.735Z'
+              completed_on: '2023-06-02T07:43:52.523Z'
           inactive_responses:
             - id: 27ce169e-c280-11ed-afa1-0242ac120002
               alert:
@@ -1792,8 +1792,8 @@ components:
                           tier: 1
                           level: NON_ALERT
                         recorded_on: "2022-12-02T19:52:48.000Z"
-              created_at: '2023-01-12T07:23:13.837Z'
-              completed_on: '2023-01-12T07:45:23.534Z'
+              created_at: '2023-06-02T07:23:13.837Z'
+              completed_on: '2023-06-02T07:45:23.534Z'
             - id: c6cac900-4f09-4399-8d49-fb12d86e6faf
               alert:
                 tier: 1
@@ -1835,16 +1835,16 @@ components:
                           tier: 1
                           level: NON_ALERT
                         recorded_on: "2022-12-02T19:26:52.000Z"
-              created_at: '2023-01-12T07:23:13.837Z'
-              completed_on: '2023-01-12T07:45:23.534Z'
+              created_at: '2023-06-03T07:23:13.837Z'
+              completed_on: '2023-06-03T07:45:23.534Z'
             - id: 36f5b5f4-c754-11ed-afa1-0242ac120002
               alert:
                 tier: 0
                 level: NON_ALERT
               care_team_response: null
               symptoms: null
-              created_at: "2022-02-11T02:34:56.356"
-              completed_on: "2022-02-11T03:26:16.876Z"
+              created_at: "2023-06-04T02:34:56.356"
+              completed_on: "2023-06-04T03:26:16.876Z"
     TenantConfigurationResponseBodyExample:
       summary: Tenant Configuration Response Body Example
       value:
