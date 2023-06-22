@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 2.0.0
+  version: 3.0.0
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -1005,8 +1005,18 @@ components:
                     allowed_responses:
                       type: object
                       additionalProperties:
-                        type: string
-                      description: Key-value pairs where keys are an enum of allowed responses a provider may send to a patient, and the values are the display values of the enum
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                            description: Display value of the response
+                          default_comment:
+                            type: string
+                            description: Default value for the free-text comment to the patient
+                            nullable: true
+                        required:
+                          - name
+                      description: Key-value pairs where keys are an enum of allowed responses a provider may send to a patient, and the values are the display values of the enum with default copy for the comment
                   required:
                     - write_enabled
                     - allowed_responses
@@ -1380,10 +1390,16 @@ components:
           permissions:
             write_enabled: true
             allowed_responses:
-              address_before: "Will address: Before next appt"
-              address_next: "Will address: At next appt"
-              address_unneeded: "No need to address: Alert not needed"
-              addressed_already: "No need to address: Already discussed"
+              address_before:
+                name: "Will address: Before next appt"
+                default_comment: "Please call at your earliest convenience"
+              address_next:
+                name: "Will address: At next appt"
+                default_comment: "We'll discuss this at your next appointment"
+              address_unneeded:
+                name: "No need to address: Alert not needed"
+              addressed_already:
+                name: "No need to address: Already discussed"
           active_response_count: 2
           active_responses:
             - id: eef1b220-c754-11ed-afa1-0242ac120002
