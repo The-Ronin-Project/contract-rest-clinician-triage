@@ -1020,6 +1020,12 @@ components:
                   required:
                     - write_enabled
                     - allowed_responses
+                patient:
+                  type: object
+                  properties:
+                    onboarded_date:
+                      type: string
+                      description: the date the patient was created
                 active_response_count:
                   type: integer
                 active_responses:
@@ -1032,6 +1038,7 @@ components:
                     $ref: '#/components/schemas/QuestionnaireResponse'
               required:
                 - permissions
+                - patient
                 - active_response_count
                 - active_responses
                 - inactive_responses
@@ -1400,6 +1407,8 @@ components:
                 name: "No need to address: Alert not needed"
               addressed_already:
                 name: "No need to address: Already discussed"
+          patient:
+            onboarded_date: "December 2, 2022"
           active_response_count: 2
           active_responses:
             - id: eef1b220-c754-11ed-afa1-0242ac120002
