@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 3.0.0
+  version: 3.1.0
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -797,6 +797,8 @@ components:
           type: boolean
         responder:
           $ref: "#/components/schemas/Responder"
+        signer:
+          $ref: "#/components/schemas/OptionalResponder"
         patient_message:
           $ref: "#/components/schemas/PatientMessage"
         internal_note:
@@ -847,6 +849,19 @@ components:
         - id
         - completed_on
         - created_at
+    # OpenAPI 3.0 does not play well with nullable refs, so optional type for responder
+    OptionalResponder:
+      type: object
+      description: Indicates who signed this CareTeamResponse; may be different than the responder
+      nullable: true
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+        - id
+        - name
     Responder:
       type: object
       properties:
@@ -1227,6 +1242,7 @@ components:
           internal_note: Patient needs blood drawn
           read_at: null
           signed_at: null
+          signer: null
           created_at: '2023-01-12T07:23:13.837Z'
           updated_at: '2023-01-12T07:23:13.837Z'
     MarkCareTeamResponseAsReadRequestBodyExample:
@@ -1300,6 +1316,7 @@ components:
           internal_note: This is a draft
           read_at: null
           signed_at: null
+          signer: null
           created_at: '2023-01-12T07:23:13.837Z'
           updated_at: '2023-01-12T07:23:13.837Z'
     SignCareTeamResponseExample:
@@ -1316,6 +1333,9 @@ components:
           responder:
             id: 2cc29228-c281-11ed-afa1-0242ac120002
             name: Susan Smith
+          signer:
+            id: 2cc29228-c281-11ed-afa1-0242ac121111
+            name: John Zoidberg
           patient_id: 9d63650e-c289-11ed-afa1-0242ac120002
           patient_message:
             option: schedule_visit
@@ -1359,6 +1379,7 @@ components:
             internal_note: Patient needs blood drawn
             read_at: null
             signed_at: null
+            signer: null
             created_at: '2023-01-12T07:23:13.837Z'
             updated_at: '2023-01-12T07:23:13.837Z'
           - id: d3be912a-b694-4312-8451-e21b762cbac9
@@ -1377,6 +1398,7 @@ components:
               display: Monitor at Home
             read_at: '2023-03-10T07:23:13.837Z'
             signed_at: null
+            signer: null
             created_at: '2023-02-15T07:23:13.837Z'
             updated_at: '2023-03-10T07:23:13.837Z'
     QuestionnaireResponsesResponseExample:
