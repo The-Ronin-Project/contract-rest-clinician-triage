@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 3.1.0
+  version: 3.2.0
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -1166,6 +1166,10 @@ components:
           type: string
           description: The copy to be rendered when the selected patient has not onboarded with Ronin
           nullable: true
+        write_back_enabled:
+          type: boolean
+          description: Whether a tenant is configured to allow for EHR write back.
+          nullable: false
     TenantConfigurationResponse:
       allOf:
         - $ref: "#/components/schemas/AbstractResponse"
@@ -1783,6 +1787,7 @@ components:
           version: 1.0.0
         data:
           patient_not_found_copy: Send a MyChart message to this patient using the dot phrase .RONINONBOARDING to begin symptom monitoring at home.
+          write_back_enabled: true
     BadRequestError:
       summary: Bad Request Error Example
       value:
