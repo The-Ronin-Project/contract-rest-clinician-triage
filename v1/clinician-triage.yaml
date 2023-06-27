@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 3.3.0
+  version: 4.0.0
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -623,7 +623,7 @@ paths:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
 
-  /tenants/{tenant_id}/configuration:
+  /tenants/{tenant_id}/triage_configuration:
     get:
       tags:
         - Tenant Configuration
