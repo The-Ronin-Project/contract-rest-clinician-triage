@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 4.0.0
+  version: 5.0.0
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -735,7 +735,7 @@ components:
       required:
         - questionnaire_response_id
         - is_draft
-        - responder
+        - responders
         - patient_message
         - created_at
         - updated_at
@@ -795,10 +795,10 @@ components:
           $ref: "#/components/schemas/CareTeamResponseQuestionnaireResponse"
         is_draft:
           type: boolean
-        responder:
-          $ref: "#/components/schemas/Responder"
-        signer:
-          $ref: "#/components/schemas/OptionalResponder"
+        responders:
+          type: array
+          items:
+            $ref: "#/components/schemas/Responder"
         patient_message:
           $ref: "#/components/schemas/PatientMessage"
         internal_note:
@@ -826,7 +826,7 @@ components:
       required:
         - id
         - is_draft
-        - responder
+        - responders
         - patient_message
         - created_at
         - updated_at
@@ -849,19 +849,7 @@ components:
         - id
         - completed_on
         - created_at
-    # OpenAPI 3.0 does not play well with nullable refs, so optional type for responder
-    OptionalResponder:
-      type: object
-      description: Indicates who signed this CareTeamResponse; may be different than the responder
-      nullable: true
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-      required:
-        - id
-        - name
+
     Responder:
       type: object
       properties:
@@ -869,9 +857,16 @@ components:
           type: string
         name:
           type: string
+        action:
+          type: string
+          enum:
+            - PATIENT_MESSAGE
+            - SIGN
+            - SAVE
       required:
         - id
         - name
+        - action
     PatientMessage:
       type: object
       properties:
@@ -1071,8 +1066,10 @@ components:
           type: string
         is_draft:
           type: boolean
-        responder:
-          $ref: "#/components/schemas/Responder"
+        responders:
+          type: array
+          items:
+            $ref: "#/components/schemas/Responder"
         patient_message:
           $ref: "#/components/schemas/PatientMessage"
         internal_note:
@@ -1101,7 +1098,7 @@ components:
         - id
         - questionnaire_response_id
         - is_draft
-        - responder
+        - responders
         - patient_message
         - created_at
         - updated_at
@@ -1242,9 +1239,10 @@ components:
           id: 25e4822e-c289-11ed-afa1-0242ac120002
           questionnaire_response_id: 9970ca54-c289-11ed-afa1-0242ac120002
           is_draft: false
-          responder:
-            id: 2cc29228-c281-11ed-afa1-0242ac120002
-            name: Susan Smith
+          responders:
+            - id: 2cc29228-c281-11ed-afa1-0242ac120002
+              name: Susan Smith
+              action: PATIENT_MESSAGE
           patient_id: 9d63650e-c289-11ed-afa1-0242ac120002
           patient_message:
             option: schedule_visit
@@ -1294,9 +1292,10 @@ components:
         alert_feedback_id: 2138eef5-e29b-477c-a5b4-9a585b0a4382
         care_team_response_id: 2138eef5-e29b-477c-a5b4-9a585b0a4382
         is_draft: false
-        responder:
-          id: 2cc29228-c281-11ed-afa1-0242ac120002
-          name: Susan Smith
+        responders:
+          - id: 2cc29228-c281-11ed-afa1-0242ac120002
+            name: Susan Smith
+            action: PATIENT_MESSAGE
         patient_message:
           option: schedule_visit
           display: Schedule Visit
@@ -1316,9 +1315,10 @@ components:
           id: 25e4822e-c289-11ed-afa1-0242ac120002
           questionnaire_response_id: 9970ca54-c289-11ed-afa1-0242ac120002
           is_draft: true
-          responder:
-            id: 2cc29228-c281-11ed-afa1-0242ac120002
-            name: Susan Smith
+          responders:
+            - id: 2cc29228-c281-11ed-afa1-0242ac120002
+              name: Susan Smith
+              action: PATIENT_MESSAGE
           patient_id: 9d63650e-c289-11ed-afa1-0242ac120002
           patient_message:
             option: schedule_visit
@@ -1341,9 +1341,13 @@ components:
           id: 25e4822e-c289-11ed-afa1-0242ac120002
           questionnaire_response_id: 9970ca54-c289-11ed-afa1-0242ac120002
           is_draft: false
-          responder:
-            id: 2cc29228-c281-11ed-afa1-0242ac120002
-            name: Susan Smith
+          responders:
+            - id: 2cc29228-c281-11ed-afa1-0242ac120002
+              name: Susan Smith
+              action: PATIENT_MESSAGE
+            - id: 2cc29228-c281-11ed-afa1-0242ac120002
+              name: Susan Smith
+              action: SIGN
           signer:
             id: 2cc29228-c281-11ed-afa1-0242ac121111
             name: John Zoidberg
@@ -1379,9 +1383,10 @@ components:
               created_at: '2023-01-12T07:23:13.837Z'
               completed_on: '2023-01-12T07:45:23.534Z'
             is_draft: false
-            responder:
-              id: 2cc29228-c281-11ed-afa1-0242ac120002
-              name: Susan Smith
+            responders:
+              - id: 2cc29228-c281-11ed-afa1-0242ac120002
+                name: Susan Smith
+                action: PATIENT_MESSAGE
             patient_id: 9d63650e-c289-11ed-afa1-0242ac120002
             patient_message:
               option: schedule_visit
@@ -1390,7 +1395,6 @@ components:
             internal_note: Patient needs blood drawn
             read_at: null
             signed_at: null
-            signer: null
             created_at: '2023-01-12T07:23:13.837Z'
             updated_at: '2023-01-12T07:23:13.837Z'
           - id: d3be912a-b694-4312-8451-e21b762cbac9
@@ -1400,16 +1404,19 @@ components:
               created_at: '2023-01-12T07:23:13.837Z'
               completed_on: '2023-01-12T07:45:23.534Z'
             is_draft: true
-            responder:
-              id: 2cc29228-c281-11ed-afa1-0242ac120002
-              name: Susan Smith
+            responders:
+              - id: 2cc29228-c281-11ed-afa1-0242ac120002
+                name: Susan Smith
+                action: PATIENT_MESSAGE
+              - id: e1a4798f-a036-4e7b-ac80-fd8b959f57af
+                name: Carson Johnson
+                action: SIGN
             patient_id: 9d63650e-c289-11ed-afa1-0242ac120002
             patient_message:
               option: monitor_at_home
               display: Monitor at Home
             read_at: '2023-03-10T07:23:13.837Z'
-            signed_at: null
-            signer: null
+            signed_at: '2023-03-09T04:13:22.234Z'
             created_at: '2023-02-15T07:23:13.837Z'
             updated_at: '2023-03-10T07:23:13.837Z'
     QuestionnaireResponsesResponseExample:
@@ -1636,9 +1643,13 @@ components:
                 id: 1f82b782-c281-11ed-afa1-0242ac120002
                 questionnaire_response_id: 27ce169e-c280-11ed-afa1-0242ac120002
                 is_draft: false
-                responder:
-                  id: 2cc29228-c281-11ed-afa1-0242ac120002
-                  name: Susan Smith
+                responders:
+                  - id: 2cc29228-c281-11ed-afa1-0242ac120002
+                    name: Susan Smith
+                    action: PATIENT_MESSAGE
+                  - id: 2cc29228-c281-11ed-afa1-0242ac120002
+                    name: Susan Smith
+                    action: SIGN
                 patient_message:
                   option: address_next
                   display: "Will address: At next appt"
