@@ -227,14 +227,14 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
-  /tenants/{tenant_id}/patients/{patient_id}/care_team_responses/{care_team_response_id}/sign:
+  /tenants/{tenant_id}/patients/{patient_id}/care_team_responses/{care_team_response_id}/finalize:
     patch:
       tags:
         - Care Team Response
-      summary: Sign Care Team Response
+      summary: Finalize Care Team Response
       description: >-
-        Sign a care team response. May include an internal note
-      operationId: signCareTeamResponse
+        Finalize a care team response. May include an internal note
+      operationId: finalizeCareTeamResponse
       security:
         - bearerAuth: [ ]
       parameters:
@@ -260,21 +260,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SignCareTeamResponseRequestBody"
+              $ref: "#/components/schemas/FinalizeCareTeamResponseRequestBody"
             examples:
-              SignCareTeamResponseRequestBodyExample:
-                $ref: "#/components/examples/SignCareTeamResponseRequestBodyExample"
+              FinalizeCareTeamResponseRequestBodyExample:
+                $ref: "#/components/examples/FinalizeCareTeamResponseRequestBodyExample"
         required: true
       responses:
         '200':
-          description: Successful signing of care team response
+          description: Successful completion of care team response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CareTeamResponseResponse'
               examples:
                 CareTeamResponseExample:
-                  $ref: '#/components/examples/SignCareTeamResponseExample'
+                  $ref: '#/components/examples/FinalizeCareTeamResponseExample'
         '400':
           description: Bad request
           content:
@@ -308,7 +308,7 @@ paths:
                 BadRequestError:
                   $ref: "#/components/examples/NotFoundError"
         '409':
-          description: Duplicate Signature
+          description: Duplicate Completion
           content:
             application/json:
               schema:
@@ -322,7 +322,7 @@ paths:
                           $ref: "#/components/schemas/ErrorResponse"
               examples:
                 BadRequestError:
-                  $ref: "#/components/examples/DuplicateSignature"
+                  $ref: "#/components/examples/DuplicateFinalization"
         '500':
           description: Internal Server Error
           content:
@@ -714,12 +714,12 @@ components:
         ehr_write_back_message:
           type: string
           description: Message sent to the EHR. Free text with formatted details of the care team response and associated questionnaire response
-        signed_at:
+        finalized_at:
           type: string
           format: date-time
           description: >-
-            The date/time that the clinician signed the communication with the
-            customer (if it was signed)
+            The date/time that the clinician finalized the communication with the
+            patient
           nullable: true
         read_at:
           type: string
@@ -749,7 +749,7 @@ components:
             type: string
       required:
         - care_team_response_ids
-    SignCareTeamResponseRequestBody:
+    FinalizeCareTeamResponseRequestBody:
       type: object
       properties:
         internal_note:
@@ -805,12 +805,12 @@ components:
           type: string
           description: Optional note that the clinician can store for internal use
           nullable: true
-        signed_at:
+        finalized_at:
           type: string
           format: date-time
           description: >-
-            The date/time that the clinician signed the communication with the
-            customer (if it was signed)
+            The date/time that the clinician finalized the communication with the
+            patient
           nullable: true
         read_at:
           type: string
@@ -1076,12 +1076,12 @@ components:
           type: string
           description: Optional note that the clinician can store for internal use
           nullable: true
-        signed_at:
+        finalized_at:
           type: string
           format: date-time
           description: >-
-            The date/time that the clinician signed the communication with the
-            customer (if it was signed)
+            The date/time that the clinician finalized the communication with the
+            patient
           nullable: true
         read_at:
           type: string
@@ -1250,16 +1250,15 @@ components:
             comment: You should get in to see the doctor this week
           internal_note: Patient needs blood drawn
           read_at: null
-          signed_at: null
-          signer: null
+          finalized_at: null
           created_at: '2023-01-12T07:23:13.837Z'
           updated_at: '2023-01-12T07:23:13.837Z'
     MarkCareTeamResponseAsReadRequestBodyExample:
       summary: Mark Care Team Response as Read Request Body Example
       value:
         care_team_response_ids: [ 25e4822e-c289-11ed-afa1-0242ac120002 ]
-    SignCareTeamResponseRequestBodyExample:
-      summary: Sign Care Team Response Request Body Example
+    FinalizeCareTeamResponseRequestBodyExample:
+      summary: Finalize Care Team Response Request Body Example
       value:
         internal_note: Patient needs blood tests
         ehr_write_back_message:
@@ -1301,7 +1300,7 @@ components:
           display: Schedule Visit
           comment: You should get in to see the doctor this week
         read_at: null
-        signed_at: null
+        finalized_at: null
         created_at: '2023-01-12T07:23:13.837Z'
         updated_at: '2023-01-12T07:23:13.837Z'
     DraftCareTeamResponseExample:
@@ -1326,16 +1325,15 @@ components:
             comment: You should get in to see the doctor this week
           internal_note: This is a draft
           read_at: null
-          signed_at: null
-          signer: null
+          finalized_at: null
           created_at: '2023-01-12T07:23:13.837Z'
           updated_at: '2023-01-12T07:23:13.837Z'
-    SignCareTeamResponseExample:
-      summary: Sign Care Team Response Draft Example
+    FinalizeCareTeamResponseExample:
+      summary: Finalize Care Team Response Example
       value:
         meta:
           links:
-            self: /v1/care_team_responses/25e4822e-c289-11ed-afa1-0242ac120002/sign
+            self: /v1/care_team_responses/25e4822e-c289-11ed-afa1-0242ac120002/finalize
           version: 1.0.0
         data:
           id: 25e4822e-c289-11ed-afa1-0242ac120002
@@ -1348,9 +1346,6 @@ components:
             - id: 2cc29228-c281-11ed-afa1-0242ac120002
               name: Susan Smith
               action: SIGN
-          signer:
-            id: 2cc29228-c281-11ed-afa1-0242ac121111
-            name: John Zoidberg
           patient_id: 9d63650e-c289-11ed-afa1-0242ac120002
           patient_message:
             option: schedule_visit
@@ -1358,7 +1353,7 @@ components:
             comment: You should get in to see the doctor this week
           internal_note: Patient needs blood drawn
           read_at: null
-          signed_at: '2023-01-12T07:23:13.837Z'
+          finalized_at: '2023-01-12T07:23:13.837Z'
           created_at: '2023-01-12T07:23:13.837Z'
           updated_at: '2023-01-12T07:23:13.837Z'
     MarkCareTeamResponseAsReadExample:
@@ -1394,7 +1389,7 @@ components:
               comment: You should get in to see the doctor this week
             internal_note: Patient needs blood drawn
             read_at: null
-            signed_at: null
+            finalized_at: null
             created_at: '2023-01-12T07:23:13.837Z'
             updated_at: '2023-01-12T07:23:13.837Z'
           - id: d3be912a-b694-4312-8451-e21b762cbac9
@@ -1416,7 +1411,7 @@ components:
               option: monitor_at_home
               display: Monitor at Home
             read_at: '2023-03-10T07:23:13.837Z'
-            signed_at: '2023-03-09T04:13:22.234Z'
+            finalized_at: '2023-03-09T04:13:22.234Z'
             created_at: '2023-02-15T07:23:13.837Z'
             updated_at: '2023-03-10T07:23:13.837Z'
     QuestionnaireResponsesResponseExample:
@@ -1655,7 +1650,7 @@ components:
                   display: "Will address: At next appt"
                   comment: "You'll be able to discuss this with the doctor at your next visit"
                 internal_note: "Patient would like to discuss their vomitting with the doctor"
-                signed_at: "2022-02-11T02:45:03.246Z"
+                finalized_at: "2022-02-11T02:45:03.246Z"
                 read_at: "2022-02-11T03:26:16.876Z"
                 created_at: "2022-02-11T02:34:56.356"
                 updated_at: "2022-02-11T03:26:16.876Z"
@@ -1838,8 +1833,7 @@ components:
             detail_message: The care team response has already been stored and sent to the patient
             code: DUPLICATE
             status: '400'
-    DuplicateSignature:
-      summary: Duplicate Signature
+    DuplicateFinalization:
       value:
         meta:
           links:
@@ -1847,9 +1841,9 @@ components:
           version: 1.0.0
         errors:
           - id: 179F5161-D264-422B-8E2E-72B721739922
-            title: Response Already Signed
-            detail_message: The care team response has already been signed by a provider
-            code: DUP_SIGNATURE
+            title: Response Already Finalized
+            detail_message: The care team response has already been finalized by a provider
+            code: DUP_COMPLETION
             status: '409'
     NotFoundError:
       summary: Resource Not Found Error Example
