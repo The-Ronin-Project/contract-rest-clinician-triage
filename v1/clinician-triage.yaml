@@ -735,7 +735,7 @@ components:
       required:
         - questionnaire_response_id
         - is_draft
-        - responders
+        - responder
         - patient_message
         - created_at
         - updated_at
@@ -1304,10 +1304,10 @@ components:
         alert_feedback_id: 2138eef5-e29b-477c-a5b4-9a585b0a4382
         care_team_response_id: 2138eef5-e29b-477c-a5b4-9a585b0a4382
         is_draft: false
-        responders:
-          - id: 2cc29228-c281-11ed-afa1-0242ac120002
-            name: Susan Smith
-            action: PATIENT_MESSAGE
+        responder:
+          id: 2cc29228-c281-11ed-afa1-0242ac120002
+          name: Susan Smith
+          action: PATIENT_MESSAGE
         patient_message:
           option: schedule_visit
           display: Schedule Visit
