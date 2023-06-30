@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 5.0.0
+  version: 5.0.1
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -884,12 +884,12 @@ components:
         - SAVE
         - SIGN
     ResponderAction:
+      type: string
+      enum:
+        - PATIENT_MESSAGE
+        - SAVE
+        - SIGN
       description: Action taken by a responder on a CareTeamResponse
-      oneOf:
-        - $ref: '#/components/schemas/FinalizeAction'
-        - type: string
-          enum:
-            - PATIENT_MESSAGE
     SymptomCategory:
       type: object
       properties:
