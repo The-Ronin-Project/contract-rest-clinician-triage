@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 5.0.1
+  version: 5.0.2
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -704,7 +704,15 @@ components:
         is_draft:
           type: boolean
         responder:
-          $ref: "#/components/schemas/Responder"
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+          required:
+            - id
+            - name
         patient_message:
           $ref: "#/components/schemas/PatientMessage"
         internal_note:
@@ -714,7 +722,7 @@ components:
         ehr_write_back_message:
           type: string
           description: Message sent to the EHR. Free text with formatted details of the care team response and associated questionnaire response
-        finalized_at:
+        signed_at:
           type: string
           format: date-time
           description: >-
@@ -735,7 +743,7 @@ components:
       required:
         - questionnaire_response_id
         - is_draft
-        - responders
+        - responder
         - patient_message
         - created_at
         - updated_at
@@ -1304,16 +1312,15 @@ components:
         alert_feedback_id: 2138eef5-e29b-477c-a5b4-9a585b0a4382
         care_team_response_id: 2138eef5-e29b-477c-a5b4-9a585b0a4382
         is_draft: false
-        responders:
-          - id: 2cc29228-c281-11ed-afa1-0242ac120002
-            name: Susan Smith
-            action: PATIENT_MESSAGE
+        responder:
+          id: 2cc29228-c281-11ed-afa1-0242ac120002
+          name: Susan Smith
         patient_message:
           option: schedule_visit
           display: Schedule Visit
           comment: You should get in to see the doctor this week
         read_at: null
-        finalized_at: null
+        signed_at: null
         created_at: '2023-01-12T07:23:13.837Z'
         updated_at: '2023-01-12T07:23:13.837Z'
     DraftCareTeamResponseExample:
