@@ -894,7 +894,6 @@ components:
       type: object
       properties:
         display_name:
-      type
           type: string
         alert:
           $ref: "#/components/schemas/Alert"
@@ -1306,9 +1305,9 @@ components:
         care_team_response_id: 2138eef5-e29b-477c-a5b4-9a585b0a4382
         is_draft: false
         responders:
-          -id: 2cc29228-c281-11ed-afa1-0242ac120002
-          name: Susan Smith
-          action: PATIENT_MESSAGE
+          - id: 2cc29228-c281-11ed-afa1-0242ac120002
+            name: Susan Smith
+            action: PATIENT_MESSAGE
         patient_message:
           option: schedule_visit
           display: Schedule Visit
