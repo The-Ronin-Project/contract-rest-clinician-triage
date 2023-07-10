@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 5.0.2
+  version: 5.1.0
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -847,6 +847,10 @@ components:
       properties:
         id:
           type: string
+        alerted_symptoms:
+          type: array
+          items:
+            $ref: "#/components/schemas/AlertedSymptom"
         write_in:
           type: string
           nullable: true
@@ -858,8 +862,29 @@ components:
           format: date-time
       required:
         - id
+        - alerted_symptoms
         - completed_on
         - created_at
+
+    AlertedSymptom:
+      type: object
+      properties:
+        category:
+          $ref: "#/components/schemas/CategoryName"
+      required:
+        - category
+
+    CategoryName:
+      type: object
+      properties:
+        name:
+          type: string
+        patient_display_name:
+          type: string
+          description: "Patient friendly description of the category if available"
+      required:
+        - name
+        - patient_display_name
 
     Responder:
       type: object
@@ -956,10 +981,7 @@ components:
       type: object
       properties:
         category:
-          type: object
-          properties:
-            name:
-              type: string
+          $ref: "#/components/schemas/CategoryName"
         body:
           type: string
           description: String containing the symptom education
@@ -1394,6 +1416,13 @@ components:
           - id: 25e4822e-c289-11ed-afa1-0242ac120002
             questionnaire_response:
               id: eef1b220-c754-11ed-afa1-0242ac120002
+              alerted_symptoms:
+                - category:
+                    name: "Nausea"
+                    patient_display_name: "Nausea"
+                - category:
+                    name: "Diarrhea"
+                    patient_display_name: "Diarrhea"
               write_in: Feeling better
               created_at: '2023-01-12T07:23:13.837Z'
               completed_on: '2023-01-12T07:45:23.534Z'
@@ -1415,6 +1444,7 @@ components:
           - id: d3be912a-b694-4312-8451-e21b762cbac9
             questionnaire_response:
               id: 27ce169e-c280-11ed-afa1-0242ac120002
+              alerted_symptoms: []
               write_in: null
               created_at: '2023-01-12T07:23:13.837Z'
               completed_on: '2023-01-12T07:45:23.534Z'
