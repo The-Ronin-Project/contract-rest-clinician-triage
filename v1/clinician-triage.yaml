@@ -23,6 +23,8 @@ tags:
 paths:
   /tenants/{tenant_id}/patients/{patient_id}/care_team_responses/draft:
     put:
+      security:
+        - Seki: []
       tags:
         - Care Team Response
       description: Create or update a care team response draft
@@ -76,6 +78,8 @@ paths:
                   $ref: "#/components/examples/InternalServerError"
   /tenants/{tenant_id}/patients/{patient_id}/care_team_responses:
     post:
+      security:
+        - Seki: []
       tags:
         - Care Team Response
       description: Create a care team response for the associated questionnaire response
@@ -147,6 +151,8 @@ paths:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
     get:
+      security:
+        - Seki: []
       tags:
         - Care Team Response
       summary: Fetch Care Team Response
@@ -229,6 +235,8 @@ paths:
                   $ref: "#/components/examples/InternalServerError"
   /tenants/{tenant_id}/patients/{patient_id}/care_team_responses/{care_team_response_id}/finalize:
     patch:
+      security:
+        - Seki: []
       tags:
         - Care Team Response
       summary: Finalize Care Team Response
@@ -341,6 +349,8 @@ paths:
                   $ref: "#/components/examples/InternalServerError"
   /tenants/{tenant_id}/patients/{patient_id}/care_team_responses/read:
     patch:
+      security:
+        - Seki: []
       tags:
         - Care Team Response
       summary: Mark Care Team Response as Read
@@ -410,6 +420,8 @@ paths:
                   $ref: "#/components/examples/InternalServerError"
   /tenants/{tenant_id}/patients/{patient_id}/care_team_responses/cut_over:
     put:
+      security:
+        - Seki: []
       tags:
         - Care Team Response - Chokuto Cut-Over
       summary: Sync Care Team Response Data
@@ -472,6 +484,8 @@ paths:
                   $ref: "#/components/examples/InternalServerError"
   /tenants/{tenant_id}/patients/{patient_id}/questionnaire_responses:
     get:
+      security:
+        - Seki: []
       tags:
         - Questionnaire Responses
       description: Fetch questionnaires that have been completed by a patient
@@ -561,6 +575,8 @@ paths:
                   $ref: "#/components/examples/InternalServerError"
   /tenants/{tenant_id}/patients/{patient_id}/questionnaire_responses/event:
     post:
+      security:
+        - Seki: []
       tags:
         - Patient Questionnaire Response Event
       description: Creates a patient questionnaire response (symptoms) event
@@ -625,6 +641,8 @@ paths:
 
   /tenants/{tenant_id}/triage_configuration:
     get:
+      security:
+        - Seki: []
       tags:
         - Tenant Configuration
       description: Fetch configuration values for the tenant
@@ -1920,7 +1938,7 @@ components:
             detail_message: Lost connection with DB
             status: '500'
   securitySchemes:
-    bearerAuth:
+    Seki:
       type: http
       scheme: bearer
       bearerFormat: JWT
