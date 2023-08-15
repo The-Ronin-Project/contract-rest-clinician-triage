@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Clinician Triage Service Contract
   description: API contract for the Clinician Triage Service
-  version: 5.1.0
+  version: 5.1.1
   contact:
     name: David Dionise
     email: ddionise@projectronin.com
@@ -982,6 +982,9 @@ components:
       properties:
         category:
           $ref: "#/components/schemas/CategoryName"
+        id:
+          type: string
+          description: Chokuto ID of the symptom education
         body:
           type: string
           description: String containing the symptom education
@@ -994,6 +997,8 @@ components:
                 type: string
               url:
                 type: string
+      required:
+        - id
     QuestionnaireResponse:
       type: object
       properties:
@@ -1582,6 +1587,32 @@ components:
                           level: NON_ALERT
                         recorded_on: "2022-12-02T19:52:48.000Z"
                 write_in: Nausea is preventing me from getting out of bed
+              symptom_educations:
+                - id: "218"
+                  category:
+                    name: "Nausea"
+                    patient_display_name: "Nausea"
+                  body: "**Nausea**
+Nausea is a common side effect of cancer treatment that may lead to vomiting.
+
+**Medicine**
+* If your care team gave you nausea medicines (antiemetics), follow the instructions on how to take them
+
+**Food/Fluids**
+* Eat small meals often to keep something in your stomach
+* Eat dry foods (such as crackers or toast) when you wake up, before you start to move around
+* Drink 64 to 80 ounces of fluids every day
+    - Fluids include clear soups, flavored gelatin, carbonated drinks, popsicles, tea, and ice chips made of any kind of liquid
+* Sip room temperature carbonated drinks such as cola or ginger ale
+* Try tart or sour flavored foods, hard candies, or liquids
+
+**Other Tips**
+Put a cool wet cloth on your forehead or neck
+Open a window or use a fan to feel fresh air movement
+"
+                  external_links:
+                    - title: "MD Anderson: Patient Education Nausea and Vomiting"
+                      url: "https://www.mdanderson.org/patient-education/Nutrition/Nausea-and-Vomiting-Tips-for-Coping.pdf"
               created_at: '2023-06-01T07:23:13.837Z'
               completed_on: '2023-06-01T07:45:23.534Z'
             - id: 0d2791a1-39d5-4355-bafd-cdbf0448627e
