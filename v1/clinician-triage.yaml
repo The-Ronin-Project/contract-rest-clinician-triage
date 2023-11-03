@@ -844,7 +844,7 @@ components:
                   type: integer
                   description: Value representing the number of unread care team responses for the patient
           required:
-            - count
+            - data
     CareTeamResponses:
       description: >-
         Fetch data pertaining to the messages that clinicians send to the patients,
