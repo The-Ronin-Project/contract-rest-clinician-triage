@@ -408,6 +408,67 @@ paths:
               examples:
                 BadRequestError:
                   $ref: "#/components/examples/InternalServerError"
+  /tenants/{tenant_id}/patients/{patient_id}/care_team_responses/unread:
+    get:
+      tags:
+        - Unread Care Team Response Count
+      summary: Fetch Unread Care Team Response Count
+      description: Fetch unread care team response count for the patient app
+      operationId: fetchUnreadCareTeamResponseCount
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: tenant_id
+          required: true
+          schema:
+            type: string
+          example: apposnd
+        - in: path
+          name: patient_id
+          required: true
+          schema:
+            type: string
+          example: 9d63650e-c289-11ed-afa1-0242ac120002
+      responses:
+        '200':
+          description: Successfully fetch unread care team response count
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnreadCareTeamResponseCount'
+              examples:
+                GetCareTeamResponseExample:
+                  $ref: '#/components/examples/UnreadCareTeamResponseCountExample'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/BadRequestError"
+                DuplicateResource:
+                  $ref: "#/components/examples/DuplicateResource"
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/NotFoundError"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                BadRequestError:
+                  $ref: "#/components/examples/InternalServerError"
   /tenants/{tenant_id}/patients/{patient_id}/care_team_responses/cut_over:
     put:
       tags:
@@ -770,6 +831,20 @@ components:
       required:
         - ehr_write_back_message
         - action
+    UnreadCareTeamResponseCount:
+      description: >-
+        Fetch number of unread care team responses for patient
+      allOf:
+        - $ref: "#/components/schemas/AbstractResponse"
+        - type: object
+          properties:
+            data:
+              properties:
+                count:
+                  type: integer
+                  description: Value representing the number of unread care team responses for the patient
+          required:
+            - count
     CareTeamResponses:
       description: >-
         Fetch data pertaining to the messages that clinicians send to the patients,
@@ -1418,6 +1493,15 @@ components:
           links:
             self: /v1/care_team_responses/read
           version: 1.0.0
+    UnreadCareTeamResponseCountExample:
+      summary: Unread Care Team Response Count Example
+      value:
+        meta:
+          links:
+            self: /v1/care_team_responses/unread
+          version: 1.0.0
+        data:
+          count: 1
     CareTeamResponsesExample:
       summary: An array of Care Team Responses
       value:
