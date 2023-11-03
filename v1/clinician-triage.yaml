@@ -11,6 +11,8 @@ servers:
 tags:
   - name: Care Team Response
     description: Endpoints for creating and updating clinician communication
+  - name: Unread Care Team Response Count
+    description: Unread care team response count for app message badge
   - name: Questionnaire Responses
     description: Endpoints for fetching questionnaires that have been completed by a patient
   - name: Patient Questionnaire Response Event
