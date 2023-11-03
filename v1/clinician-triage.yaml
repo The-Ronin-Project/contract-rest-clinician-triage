@@ -436,7 +436,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnreadCareTeamResponseCount'
+                $ref: '#/components/schemas/UnreadCareTeamResponseCountResponse'
               examples:
                 GetCareTeamResponseExample:
                   $ref: '#/components/examples/UnreadCareTeamResponseCountExample'
@@ -831,20 +831,20 @@ components:
       required:
         - ehr_write_back_message
         - action
-    UnreadCareTeamResponseCount:
-      description: >-
-        Fetch number of unread care team responses for patient
+    UnreadCareTeamResponseCountResponse:
       allOf:
         - $ref: "#/components/schemas/AbstractResponse"
         - type: object
           properties:
             data:
-              properties:
-                count:
-                  type: integer
-                  description: Value representing the number of unread care team responses for the patient
-          required:
-            - data
+              $ref: "#/components/schemas/Count"
+    Count:
+      type: object
+      properties:
+        count:
+          type: integer
+      required:
+        - count
     CareTeamResponses:
       description: >-
         Fetch data pertaining to the messages that clinicians send to the patients,
