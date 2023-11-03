@@ -11,8 +11,6 @@ servers:
 tags:
   - name: Care Team Response
     description: Endpoints for creating and updating clinician communication
-  - name: Unread Care Team Response Count
-    description: Unread care team response count for app message badge
   - name: Questionnaire Responses
     description: Endpoints for fetching questionnaires that have been completed by a patient
   - name: Patient Questionnaire Response Event
@@ -413,7 +411,7 @@ paths:
   /tenants/{tenant_id}/patients/{patient_id}/care_team_responses/unread:
     get:
       tags:
-        - Unread Care Team Response Count
+        - Care Team Response
       summary: Fetch Unread Care Team Response Count
       description: Fetch unread care team response count for the patient app
       operationId: fetchUnreadCareTeamResponseCount
