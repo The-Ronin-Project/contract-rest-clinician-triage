@@ -895,8 +895,12 @@ components:
           type: string
           format: date-time
           description: >-
-            The date/time that the clinician finalized the communication with the
-            patient
+            The date/time that the clinician finalized the documentation
+          nullable: true
+        submitted_at:
+          type: string
+          format: date-time
+          description: The date/time that the clinician sent the response to the patient
           nullable: true
         read_at:
           type: string
@@ -1202,13 +1206,17 @@ components:
           type: string
           format: date-time
           description: >-
-            The date/time that the clinician finalized the communication with the
-            patient
+            The date/time that the clinician finalized the documentation
           nullable: true
         read_at:
           type: string
           format: date-time
           description: The date/time that the patient read the response
+          nullable: true
+        submitted_at:
+          type: string
+          format: date-time
+          description: The date/time that the clinician submitted the response to the patient
           nullable: true
         created_at:
           type: string
@@ -1373,8 +1381,9 @@ components:
           internal_note: Patient needs blood drawn
           read_at: null
           finalized_at: null
+          submitted_at: '2023-01-12T07:24:13.837Z'
           created_at: '2023-01-12T07:23:13.837Z'
-          updated_at: '2023-01-12T07:23:13.837Z'
+          updated_at: '2023-01-12T07:24:13.837Z'
     MarkCareTeamResponseAsReadRequestBodyExample:
       summary: Mark Care Team Response as Read Request Body Example
       value:
@@ -1456,6 +1465,7 @@ components:
           internal_note: This is a draft
           read_at: null
           finalized_at: null
+          submitted_at: null
           created_at: '2023-01-12T07:23:13.837Z'
           updated_at: '2023-01-12T07:23:13.837Z'
     FinalizeCareTeamResponseExample:
@@ -1484,6 +1494,7 @@ components:
           internal_note: Patient needs blood drawn
           read_at: null
           finalized_at: '2023-01-12T07:23:13.837Z'
+          submitted_at: '2023-01-12T07:23:13.837Z'
           created_at: '2023-01-12T07:23:13.837Z'
           updated_at: '2023-01-12T07:23:13.837Z'
     MarkCareTeamResponseAsReadExample:
@@ -1536,6 +1547,7 @@ components:
             internal_note: Patient needs blood drawn
             read_at: null
             finalized_at: null
+            submitted_at: null
             created_at: '2023-01-12T07:23:13.837Z'
             updated_at: '2023-01-12T07:23:13.837Z'
           - id: d3be912a-b694-4312-8451-e21b762cbac9
@@ -1559,6 +1571,7 @@ components:
               display: Monitor at Home
             read_at: '2023-03-10T07:23:13.837Z'
             finalized_at: '2023-03-09T04:13:22.234Z'
+            submitted_at: '2023-03-09T04:13:22.234Z'
             created_at: '2023-02-15T07:23:13.837Z'
             updated_at: '2023-03-10T07:23:13.837Z'
     QuestionnaireResponsesResponseExample:
@@ -1825,6 +1838,7 @@ Open a window or use a fan to feel fresh air movement
                 internal_note: "Patient would like to discuss their vomitting with the doctor"
                 finalized_at: "2022-02-11T02:45:03.246Z"
                 read_at: "2022-02-11T03:26:16.876Z"
+                submitted_at: "2022-02-11T02:44:03.246Z"
                 created_at: "2022-02-11T02:34:56.356"
                 updated_at: "2022-02-11T03:26:16.876Z"
               symptoms:
