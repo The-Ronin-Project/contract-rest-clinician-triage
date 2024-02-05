@@ -3,7 +3,7 @@
   "info": {
     "title": "Clinician Triage Service Contract",
     "description": "API contract for the Clinician Triage Service",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "contact": {
       "name": "David Dionise",
       "email": "ddionise@projectronin.com"
@@ -11,7 +11,7 @@
   },
   "servers": [
     {
-      "url": "/api/v1"
+      "url": "/api/v2"
     }
   ],
   "tags": [
@@ -20,24 +20,16 @@
       "description": "Endpoints for creating and updating clinician communication"
     },
     {
-      "name": "Questionnaire Responses",
-      "description": "Endpoints for fetching questionnaires that have been completed by a patient"
-    },
-    {
-      "name": "Patient Questionnaire Response Event",
-      "description": "Endpoints for producing an event for patient questionnaire response"
+      "name": "Tenant Configuration",
+      "description": "Tenant-specific configuration values"
     },
     {
       "name": "Care Team Response - Chokuto Cut-Over",
       "description": "Utilities for supporting the cut-over of care team response data from Chokuto to CTS"
-    },
-    {
-      "name": "Tenant Configuration",
-      "description": "Tenant-specific configuration values"
     }
   ],
   "paths": {
-    "/tenants/{tenant_id}/patients/{patient_id}/care_team_responses/draft": {
+    "/tenants/{tenantId}/patients/{patientId}/care-team-responses/draft": {
       "put": {
         "tags": [
           "Care Team Response"
@@ -53,7 +45,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "tenant_id",
+            "name": "tenantId",
             "required": true,
             "schema": {
               "type": "string"
@@ -62,7 +54,7 @@
           },
           {
             "in": "path",
-            "name": "patient_id",
+            "name": "patientId",
             "required": true,
             "schema": {
               "type": "string"
@@ -74,14 +66,12 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CareTeamResponseRequestBody"
+                "$ref": "#/components/schemas/CareTeamResponse_RequestBody"
               },
-              "example": {
-                "questionnaire_response_id": "fa3b78ce-c27b-11ed-afa1-0242ac120002",
-                "patient_id": "89a7a2d9-d382-484a-8b1b-cf64bb1efb58",
-                "option": "schedule_visit",
-                "display": "Schedule a Visit",
-                "comment": "You should get in to see the doctor this week"
+              "examples": {
+                "CareTeamResponse_RequestBody": {
+                  "$ref": "#/components/examples/CareTeamResponse_RequestBody"
+                }
               }
             }
           },
@@ -93,11 +83,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CareTeamResponseResponse"
+                  "$ref": "#/components/schemas/CareTeamResponse_ResponseBody"
                 },
                 "examples": {
-                  "CreateCareTeamResponseExample": {
-                    "$ref": "#/components/examples/DraftCareTeamResponseExample"
+                  "CreateCareTeamResponse_ResponseBody": {
+                    "$ref": "#/components/examples/DraftCareTeamResponse_ResponseBody"
                   }
                 }
               }
@@ -121,7 +111,7 @@
         }
       }
     },
-    "/tenants/{tenant_id}/patients/{patient_id}/care_team_responses": {
+    "/tenants/{tenantId}/patients/{patientId}/care-team-responses": {
       "post": {
         "tags": [
           "Care Team Response"
@@ -137,7 +127,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "tenant_id",
+            "name": "tenantId",
             "required": true,
             "schema": {
               "type": "string"
@@ -146,7 +136,7 @@
           },
           {
             "in": "path",
-            "name": "patient_id",
+            "name": "patientId",
             "required": true,
             "schema": {
               "type": "string"
@@ -158,13 +148,12 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CareTeamResponseRequestBody"
+                "$ref": "#/components/schemas/CareTeamResponse_RequestBody"
               },
-              "example": {
-                "questionnaire_response_id": "fa3b78ce-c27b-11ed-afa1-0242ac120002",
-                "option": "schedule_visit",
-                "display": "Schedule Visit",
-                "comment": "You should get in to see the doctor this week"
+              "examples": {
+                "CareTeamResponse_RequestBody": {
+                  "$ref": "#/components/examples/CareTeamResponse_RequestBody"
+                }
               }
             }
           },
@@ -176,11 +165,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CareTeamResponseResponse"
+                  "$ref": "#/components/schemas/CareTeamResponse_ResponseBody"
                 },
                 "examples": {
-                  "CreateCareTeamResponseExample": {
-                    "$ref": "#/components/examples/CreateCareTeamResponseExample"
+                  "CreateCareTeamResponse_ResponseBody": {
+                    "$ref": "#/components/examples/CreateCareTeamResponse_ResponseBody"
                   }
                 }
               }
@@ -240,8 +229,8 @@
         "tags": [
           "Care Team Response"
         ],
-        "summary": "Fetch Care Team Response",
-        "description": "Fetch care team response for the patient app",
+        "summary": "Fetch Care Team Responses",
+        "description": "Fetch care team responses for the patient app",
         "operationId": "fetchCareTeamResponse",
         "security": [
           {
@@ -251,7 +240,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "tenant_id",
+            "name": "tenantId",
             "required": true,
             "schema": {
               "type": "string"
@@ -260,7 +249,7 @@
           },
           {
             "in": "path",
-            "name": "patient_id",
+            "name": "patientId",
             "required": true,
             "schema": {
               "type": "string"
@@ -288,7 +277,7 @@
             "required": false
           },
           {
-            "name": "include_read",
+            "name": "includeRead",
             "in": "query",
             "description": "To include or filter out read care team responses",
             "schema": {
@@ -304,11 +293,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CareTeamResponses"
+                  "$ref": "#/components/schemas/FetchCareTeamResponses_ResponseBody"
                 },
                 "examples": {
                   "GetCareTeamResponseExample": {
-                    "$ref": "#/components/examples/CareTeamResponsesExample"
+                    "$ref": "#/components/examples/FetchCareTeamResponses_ResponseBody"
                   }
                 }
               }
@@ -365,7 +354,7 @@
         }
       }
     },
-    "/tenants/{tenant_id}/patients/{patient_id}/care_team_responses/{care_team_response_id}/finalize": {
+    "/tenants/{tenantId}/patients/{patientId}/care-team-responses/{careTeamResponseId}/finalize": {
       "patch": {
         "tags": [
           "Care Team Response"
@@ -381,7 +370,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "tenant_id",
+            "name": "tenantId",
             "required": true,
             "schema": {
               "type": "string"
@@ -390,7 +379,7 @@
           },
           {
             "in": "path",
-            "name": "patient_id",
+            "name": "patientId",
             "required": true,
             "schema": {
               "type": "string"
@@ -398,7 +387,7 @@
             "example": "9d63650e-c289-11ed-afa1-0242ac120002"
           },
           {
-            "name": "care_team_response_id",
+            "name": "careTeamResponseId",
             "in": "path",
             "required": true,
             "example": "a608bf12-8fa2-404c-ad99-163a487ffbb0",
@@ -411,11 +400,11 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/FinalizeCareTeamResponseRequestBody"
+                "$ref": "#/components/schemas/FinalizeCareTeamResponse_RequestBody"
               },
               "examples": {
-                "FinalizeCareTeamResponseRequestBodyExample": {
-                  "$ref": "#/components/examples/FinalizeCareTeamResponseRequestBodyExample"
+                "FinalizeCareTeamResponse_RequestBody": {
+                  "$ref": "#/components/examples/FinalizeCareTeamResponse_RequestBody"
                 }
               }
             }
@@ -428,11 +417,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CareTeamResponseResponse"
+                  "$ref": "#/components/schemas/CareTeamResponse_ResponseBody"
                 },
                 "examples": {
                   "CareTeamResponseExample": {
-                    "$ref": "#/components/examples/FinalizeCareTeamResponseExample"
+                    "$ref": "#/components/examples/FinalizeCareTeamResponse_ResponsBody"
                   }
                 }
               }
@@ -443,22 +432,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/AbstractResponse"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "errors": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/ErrorResponse"
-                          }
-                        }
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ErrorResponse"
                       }
                     }
-                  ]
+                  }
                 },
                 "examples": {
                   "BadRequestError": {
@@ -473,22 +455,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/AbstractResponse"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "errors": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/ErrorResponse"
-                          }
-                        }
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ErrorResponse"
                       }
                     }
-                  ]
+                  }
                 },
                 "examples": {
                   "BadRequestError": {
@@ -503,22 +478,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/AbstractResponse"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "errors": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/ErrorResponse"
-                          }
-                        }
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ErrorResponse"
                       }
                     }
-                  ]
+                  }
                 },
                 "examples": {
                   "BadRequestError": {
@@ -533,22 +501,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/AbstractResponse"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "errors": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/ErrorResponse"
-                          }
-                        }
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ErrorResponse"
                       }
                     }
-                  ]
+                  }
                 },
                 "examples": {
                   "BadRequestError": {
@@ -561,14 +522,14 @@
         }
       }
     },
-    "/tenants/{tenant_id}/patients/{patient_id}/care_team_responses/read": {
+    "/tenants/{tenantId}/patients/{patientId}/care-team-responses/read": {
       "patch": {
         "tags": [
           "Care Team Response"
         ],
         "summary": "Mark Care Team Response as Read",
         "description": "Mark a list of Care Team Responses as having been read by the patient",
-        "operationId": "markCareTeamResponseAsRead",
+        "operationId": "markCareTeamResponsesAsRead",
         "security": [
           {
             "bearerAuth": []
@@ -577,7 +538,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "tenant_id",
+            "name": "tenantId",
             "required": true,
             "schema": {
               "type": "string"
@@ -586,7 +547,7 @@
           },
           {
             "in": "path",
-            "name": "patient_id",
+            "name": "patientId",
             "required": true,
             "schema": {
               "type": "string"
@@ -598,11 +559,11 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/MarkCareTeamResponseAsReadRequestBody"
+                "$ref": "#/components/schemas/MarkCareTeamResponsesAsRead_RequestBody"
               },
               "examples": {
-                "MarkCareTeamResponseAsReadRequestBodyExample": {
-                  "$ref": "#/components/examples/MarkCareTeamResponseAsReadRequestBodyExample"
+                "MarkCareTeamResponsesAsRead_RequestBody": {
+                  "$ref": "#/components/examples/MarkCareTeamResponsesAsRead_RequestBody"
                 }
               }
             }
@@ -610,20 +571,8 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "Successfully updated the care team response as \"read\"",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AbstractResponse"
-                },
-                "examples": {
-                  "MarkCareTeamResponseAsReadExample": {
-                    "$ref": "#/components/examples/MarkCareTeamResponseAsReadExample"
-                  }
-                }
-              }
-            }
+          "204": {
+            "description": "Successfully updated the care team response as \"read\""
           },
           "400": {
             "description": "Bad request",
@@ -673,7 +622,7 @@
         }
       }
     },
-    "/tenants/{tenant_id}/patients/{patient_id}/care_team_responses/unread": {
+    "/tenants/{tenantId}/patients/{patientId}/care-team-responses/unread": {
       "get": {
         "tags": [
           "Care Team Response"
@@ -689,7 +638,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "tenant_id",
+            "name": "tenantId",
             "required": true,
             "schema": {
               "type": "string"
@@ -698,7 +647,7 @@
           },
           {
             "in": "path",
-            "name": "patient_id",
+            "name": "patientId",
             "required": true,
             "schema": {
               "type": "string"
@@ -712,11 +661,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnreadCareTeamResponseCountResponse"
+                  "$ref": "#/components/schemas/UnreadCareTeamResponseCount_ResponseBody"
                 },
                 "examples": {
                   "GetCareTeamResponseExample": {
-                    "$ref": "#/components/examples/UnreadCareTeamResponseCountExample"
+                    "$ref": "#/components/examples/UnreadCareTeamResponseCount_ResponseBody"
                   }
                 }
               }
@@ -773,7 +722,7 @@
         }
       }
     },
-    "/tenants/{tenant_id}/patients/{patient_id}/care_team_responses/cut_over": {
+    "/tenants/{tenantId}/patients/{patientId}/care-team-responses/cut-over": {
       "put": {
         "tags": [
           "Care Team Response - Chokuto Cut-Over"
@@ -789,7 +738,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "tenant_id",
+            "name": "tenantId",
             "required": true,
             "schema": {
               "type": "string"
@@ -798,7 +747,7 @@
           },
           {
             "in": "path",
-            "name": "patient_id",
+            "name": "patientId",
             "required": true,
             "schema": {
               "type": "string"
@@ -810,11 +759,11 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CareTeamResponseCutOverRequestBody"
+                "$ref": "#/components/schemas/CareTeamResponseCutOver_RequestBody"
               },
               "examples": {
-                "CareTeamRequestCutOverRequestBodyExample": {
-                  "$ref": "#/components/examples/CareTeamRequestCutOverRequestBodyExample"
+                "CareTeamRequestCutOver_RequestBody": {
+                  "$ref": "#/components/examples/CareTeamRequestCutOver_RequestBody"
                 }
               }
             }
@@ -873,247 +822,7 @@
         }
       }
     },
-    "/tenants/{tenant_id}/patients/{patient_id}/questionnaire_responses": {
-      "get": {
-        "tags": [
-          "Questionnaire Responses"
-        ],
-        "description": "Fetch questionnaires that have been completed by a patient",
-        "summary": "Fetch Questionnaire Responses",
-        "operationId": "fetchPatientReportedSymptoms",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "tenant_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "apposnd"
-          },
-          {
-            "in": "path",
-            "name": "patient_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "9d63650e-c289-11ed-afa1-0242ac120002"
-          },
-          {
-            "in": "query",
-            "name": "symptoms",
-            "description": "Comma delimited list of symptoms",
-            "schema": {
-              "type": "string"
-            },
-            "required": false,
-            "example": "diarrhea,nausea"
-          },
-          {
-            "in": "query",
-            "name": "alert_types",
-            "description": "Comma delimited list of alert types: Available options: `non_alert, alert, high_alert`",
-            "schema": {
-              "type": "string"
-            },
-            "required": false,
-            "example": "non_alert"
-          },
-          {
-            "in": "query",
-            "name": "date_from",
-            "description": "Required if `date_to` is present",
-            "schema": {
-              "type": "string",
-              "format": "date"
-            },
-            "required": false
-          },
-          {
-            "in": "query",
-            "name": "date_to",
-            "description": "Required if `date_from` is present",
-            "schema": {
-              "type": "string",
-              "format": "date"
-            },
-            "required": false
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful fetch of patient reported symptoms",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QuestionnaireResponsesResponse"
-                },
-                "examples": {
-                  "PatientReportedSymptomsResponseExample": {
-                    "$ref": "#/components/examples/QuestionnaireResponsesResponseExample"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "examples": {
-                  "BadRequestError": {
-                    "$ref": "#/components/examples/BadRequestError"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Resource Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "examples": {
-                  "BadRequestError": {
-                    "$ref": "#/components/examples/NotFoundError"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "examples": {
-                  "BadRequestError": {
-                    "$ref": "#/components/examples/InternalServerError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/tenants/{tenant_id}/patients/{patient_id}/questionnaire_responses/event": {
-      "post": {
-        "tags": [
-          "Patient Questionnaire Response Event"
-        ],
-        "description": "Creates a patient questionnaire response (symptoms) event",
-        "summary": "Create Patient Questionnaire Response Event",
-        "operationId": "createPatientQuestionnaireResponseEvent",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "tenant_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "apposnd"
-          },
-          {
-            "in": "path",
-            "name": "patient_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "b02cadd0-c27f-11ed-afa1-0242ac120002"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/QuestionnaireResponseEventRequestBody"
-              },
-              "example": {
-                "survey_response_id": 19486,
-                "symptoms": [
-                  "fatigue",
-                  "nausea"
-                ],
-                "write_in": "blurry vision, sore throat",
-                "alert_state": "HIGH_ALERT",
-                "qol": 50,
-                "completed_on": "2022-09-13T12:14:15.000Z"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Successful creation of questionnaire response event",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QuestionnaireResponseEventResponse"
-                },
-                "examples": {
-                  "QuestionnaireResponseEventResponseExample": {
-                    "$ref": "#/components/examples/QuestionnaireResponseEventResponseExample"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "examples": {
-                  "BadRequestError": {
-                    "$ref": "#/components/examples/BadRequestError"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "examples": {
-                  "BadRequestError": {
-                    "$ref": "#/components/examples/InternalServerError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/tenants/{tenant_id}/triage_configuration": {
+    "/tenants/{tenantId}/triage-configuration": {
       "get": {
         "tags": [
           "Tenant Configuration"
@@ -1129,7 +838,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "tenant_id",
+            "name": "tenantId",
             "required": true,
             "schema": {
               "type": "string"
@@ -1143,11 +852,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TenantConfigurationResponse"
+                  "$ref": "#/components/schemas/TenantConfiguration_ResponseBody"
                 },
                 "examples": {
-                  "TenantConfigurationResponseBodyExample": {
-                    "$ref": "#/components/examples/TenantConfigurationResponseBodyExample"
+                  "TenantConfiguration_ResponseBody": {
+                    "$ref": "#/components/examples/TenantConfiguration_ResponseBody"
                   }
                 }
               }
@@ -1159,76 +868,48 @@
   },
   "components": {
     "schemas": {
-      "AbstractResponse": {
+      "CareTeamResponse_RequestBody": {
         "type": "object",
         "properties": {
-          "meta": {
-            "$ref": "#/components/schemas/Metadata"
-          }
-        }
-      },
-      "Metadata": {
-        "type": "object",
-        "properties": {
-          "links": {
+          "questionnaireResponseId": {
+            "type": "string"
+          },
+          "patientMessage": {
             "type": "object",
             "properties": {
-              "self": {
-                "type": "string",
-                "description": "Path of the API request"
+              "code": {
+                "type": "string"
+              },
+              "display": {
+                "type": "string"
+              },
+              "comment": {
+                "type": "string"
               }
             },
-            "additionalProperties": true,
             "required": [
-              "self"
+              "code"
             ]
-          },
-          "version": {
-            "type": "string",
-            "description": "SemVer version of the API"
           }
         },
         "required": [
-          "links",
-          "version"
+          "questionnaireResponseId",
+          "patientMessage"
         ]
       },
-      "CareTeamResponseRequestBody": {
+      "CareTeamResponseCutOver_RequestBody": {
         "type": "object",
         "properties": {
-          "questionnaire_response_id": {
+          "questionnaireResponseId": {
             "type": "string"
           },
-          "option": {
+          "alertFeedbackId": {
             "type": "string"
           },
-          "display": {
+          "careTeamResponseId": {
             "type": "string"
           },
-          "comment": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "required": [
-          "questionnaire_response_id",
-          "option",
-          "display"
-        ]
-      },
-      "CareTeamResponseCutOverRequestBody": {
-        "type": "object",
-        "properties": {
-          "questionnaire_response_id": {
-            "type": "string"
-          },
-          "alert_feedback_id": {
-            "type": "string"
-          },
-          "care_team_response_id": {
-            "type": "string"
-          },
-          "is_draft": {
+          "isDraft": {
             "type": "boolean"
           },
           "responder": {
@@ -1246,52 +927,52 @@
               "name"
             ]
           },
-          "patient_message": {
+          "patientMessage": {
             "$ref": "#/components/schemas/PatientMessage"
           },
-          "internal_note": {
+          "internalNote": {
             "type": "string",
             "description": "Optional note that the clinician can store for internal use",
             "nullable": true
           },
-          "ehr_write_back_message": {
+          "ehrWriteBackMessage": {
             "type": "string",
             "description": "Message sent to the EHR. Free text with formatted details of the care team response and associated questionnaire response"
           },
-          "signed_at": {
+          "signedAt": {
             "type": "string",
             "format": "date-time",
             "description": "The date/time that the clinician finalized the communication with the patient",
             "nullable": true
           },
-          "read_at": {
+          "readAt": {
             "type": "string",
             "format": "date-time",
             "description": "The date/time that the patient read the response",
             "nullable": true
           },
-          "created_at": {
+          "createdAt": {
             "type": "string",
             "format": "date-time"
           },
-          "updated_at": {
+          "updatedAt": {
             "type": "string",
             "format": "date-time"
           }
         },
         "required": [
-          "questionnaire_response_id",
-          "is_draft",
+          "questionnaireResponseId",
+          "isDraft",
           "responder",
-          "patient_message",
-          "created_at",
-          "updated_at"
+          "patientMessage",
+          "createdAt",
+          "updatedAt"
         ]
       },
-      "MarkCareTeamResponseAsReadRequestBody": {
+      "MarkCareTeamResponsesAsRead_RequestBody": {
         "type": "object",
         "properties": {
-          "care_team_response_ids": {
+          "careTeamResponseIds": {
             "description": "List of Care Team Response ids to mark as read",
             "type": "array",
             "items": {
@@ -1300,16 +981,16 @@
           }
         },
         "required": [
-          "care_team_response_ids"
+          "careTeamResponseIds"
         ]
       },
-      "FinalizeCareTeamResponseRequestBody": {
+      "FinalizeCareTeamResponse_RequestBody": {
         "type": "object",
         "properties": {
-          "internal_note": {
+          "internalNote": {
             "type": "string"
           },
-          "ehr_write_back_message": {
+          "ehrWriteBackMessage": {
             "type": "string",
             "description": "Message sent to the EHR. Free text with formatted details of the care team response and associated questionnaire response"
           },
@@ -1318,24 +999,17 @@
           }
         },
         "required": [
-          "ehr_write_back_message",
+          "ehrWriteBackMessage",
           "action"
         ]
       },
-      "UnreadCareTeamResponseCountResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AbstractResponse"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "data": {
-                "$ref": "#/components/schemas/Count"
-              }
-            }
+      "UnreadCareTeamResponseCount_ResponseBody": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Count"
           }
-        ]
+        }
       },
       "Count": {
         "type": "object",
@@ -1348,58 +1022,59 @@
           "count"
         ]
       },
-      "CareTeamResponses": {
+      "FetchCareTeamResponses_ResponseBody": {
         "description": "Fetch data pertaining to the messages that clinicians send to the patients, and notes that are stored for internal use",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AbstractResponse"
-          },
-          {
+        "type": "object",
+        "properties": {
+          "paging": {
             "type": "object",
             "properties": {
-              "data": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/CareTeamResponse"
-                }
+              "page": {
+                "type": "integer"
+              },
+              "limit": {
+                "type": "integer"
               }
             },
             "required": [
-              "data"
+              "page",
+              "limit"
             ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CareTeamResponse"
+            }
           }
+        },
+        "required": [
+          "paging",
+          "data"
         ]
       },
-      "CareTeamResponseResponse": {
+      "CareTeamResponse_ResponseBody": {
         "description": "Data pertaining to the messages that clinicians send to the patients, and notes that are stored for internal use",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AbstractResponse"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "data": {
-                "$ref": "#/components/schemas/CareTeamResponse"
-              }
-            },
-            "required": [
-              "data"
-            ]
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/CareTeamResponse"
           }
+        },
+        "required": [
+          "data"
         ]
       },
       "CareTeamResponse": {
         "type": "object",
-        "nullable": true,
         "properties": {
           "id": {
             "type": "string"
           },
-          "questionnaire_response": {
-            "$ref": "#/components/schemas/CareTeamResponseQuestionnaireResponse"
+          "questionnaireResponseId": {
+            "type": "string"
           },
-          "is_draft": {
+          "isDraft": {
             "type": "boolean"
           },
           "responders": {
@@ -1408,107 +1083,49 @@
               "$ref": "#/components/schemas/Responder"
             }
           },
-          "patient_message": {
+          "patientMessage": {
             "$ref": "#/components/schemas/PatientMessage"
           },
-          "internal_note": {
+          "internalNote": {
             "type": "string",
             "description": "Optional note that the clinician can store for internal use",
             "nullable": true
           },
-          "finalized_at": {
+          "finalizedAt": {
             "type": "string",
             "format": "date-time",
             "description": "The date/time that the clinician finalized the documentation",
             "nullable": true
           },
-          "submitted_at": {
+          "submittedAt": {
             "type": "string",
             "format": "date-time",
             "description": "The date/time that the clinician sent the response to the patient",
             "nullable": true
           },
-          "read_at": {
+          "readAt": {
             "type": "string",
             "format": "date-time",
             "description": "The date/time that the patient read the response",
             "nullable": true
           },
-          "created_at": {
+          "createdAt": {
             "type": "string",
             "format": "date-time"
           },
-          "updated_at": {
+          "updatedAt": {
             "type": "string",
             "format": "date-time"
           }
         },
         "required": [
           "id",
-          "is_draft",
+          "questionnaireResponseId",
+          "isDraft",
           "responders",
-          "patient_message",
-          "created_at",
-          "updated_at"
-        ]
-      },
-      "CareTeamResponseQuestionnaireResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "alerted_symptoms": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AlertedSymptom"
-            }
-          },
-          "write_in": {
-            "type": "string",
-            "nullable": true
-          },
-          "completed_on": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "required": [
-          "id",
-          "alerted_symptoms",
-          "completed_on",
-          "created_at"
-        ]
-      },
-      "AlertedSymptom": {
-        "type": "object",
-        "properties": {
-          "category": {
-            "$ref": "#/components/schemas/CategoryName"
-          }
-        },
-        "required": [
-          "category"
-        ]
-      },
-      "CategoryName": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "patient_display_name": {
-            "type": "string",
-            "description": "Patient friendly description of the category if available"
-          }
-        },
-        "required": [
-          "name",
-          "patient_display_name"
+          "patientMessage",
+          "createdAt",
+          "updatedAt"
         ]
       },
       "Responder": {
@@ -1537,7 +1154,7 @@
       "PatientMessage": {
         "type": "object",
         "properties": {
-          "option": {
+          "code": {
             "type": "string"
           },
           "display": {
@@ -1548,7 +1165,7 @@
           }
         },
         "required": [
-          "option"
+          "code"
         ]
       },
       "FinalizeAction": {
@@ -1568,462 +1185,61 @@
         ],
         "description": "Action taken by a responder on a CareTeamResponse"
       },
-      "SymptomCategory": {
+      "TenantConfiguration": {
         "type": "object",
         "properties": {
-          "display_name": {
-            "type": "string"
-          },
-          "alert": {
-            "$ref": "#/components/schemas/Alert"
-          },
-          "responses": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SymptomResponse"
-            }
-          }
-        },
-        "required": [
-          "display_name",
-          "alert",
-          "responses"
-        ]
-      },
-      "SymptomResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "question": {
-            "type": "string"
-          },
-          "answer": {
-            "type": "string"
-          },
-          "alert": {
-            "$ref": "#/components/schemas/Alert"
-          },
-          "recorded_on": {
+          "patientNotFoundCopy": {
             "type": "string",
-            "format": "date-time"
-          }
-        },
-        "required": [
-          "id",
-          "question",
-          "answer",
-          "alert",
-          "recorded_on"
-        ]
-      },
-      "Alert": {
-        "type": "object",
-        "properties": {
-          "tier": {
-            "type": "integer",
-            "description": "Value representing the severity of an alert. Configurable per tenant. Should be the max of all `alert_tier` values in the associated `SymptomResponse` object"
+            "description": "The copy to be rendered when the selected patient has not onboarded with Ronin"
           },
-          "level": {
-            "type": "string",
-            "enum": [
-              "NON_ALERT",
-              "ALERT",
-              "HIGH_ALERT"
-            ],
-            "description": "Severity level of alert - less granular than `tier`"
+          "writeBackEnabled": {
+            "type": "boolean",
+            "description": "Whether a tenant is configured to allow for EHR write back."
           },
-          "additional_info_copy": {
-            "type": "string",
-            "description": "Message to show on UI when the user hovers over an alert"
-          }
-        },
-        "required": [
-          "tier",
-          "level"
-        ]
-      },
-      "SymptomEducation": {
-        "type": "object",
-        "properties": {
-          "category": {
-            "$ref": "#/components/schemas/CategoryName"
-          },
-          "id": {
-            "type": "string",
-            "description": "Chokuto ID of the symptom education"
-          },
-          "body": {
-            "type": "string",
-            "description": "String containing the symptom education"
-          },
-          "external_links": {
+          "triageActions": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "title": {
-                  "type": "string"
+                "code": {
+                  "type": "string",
+                  "description": "Computer-friendly representation of the triage action"
                 },
-                "url": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "required": [
-          "id"
-        ]
-      },
-      "QuestionnaireResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "alert": {
-            "$ref": "#/components/schemas/Alert"
-          },
-          "care_team_response": {
-            "$ref": "#/components/schemas/QuestionnaireResponseCareTeamResponse"
-          },
-          "symptoms": {
-            "type": "object",
-            "nullable": true,
-            "description": "The symptoms reported by the patient via the phone app",
-            "properties": {
-              "severe": {
-                "type": "object",
-                "additionalProperties": {
-                  "$ref": "#/components/schemas/SymptomCategory"
+                "display": {
+                  "type": "string",
+                  "description": "Human-friendly representation of the triage action"
                 }
               },
-              "non_severe": {
-                "type": "object",
-                "additionalProperties": {
-                  "$ref": "#/components/schemas/SymptomCategory"
-                }
-              },
-              "write_in": {
-                "type": "string",
-                "description": "Custom string entered by the patient while reporting symptoms",
-                "nullable": true
-              }
+              "required": [
+                "code",
+                "display"
+              ]
             }
-          },
-          "symptom_educations": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SymptomEducation"
-            },
-            "nullable": true
-          },
-          "completed_on": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time"
           }
         },
         "required": [
-          "id",
-          "alert",
-          "symptoms",
-          "completed_on",
-          "created_at"
+          "writeBackEnabled",
+          "triageActions"
         ]
       },
-      "QuestionnaireResponsesResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AbstractResponse"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "data": {
-                "type": "object",
-                "properties": {
-                  "permissions": {
-                    "description": "Per-patient permissions granted to the provider",
-                    "type": "object",
-                    "properties": {
-                      "write_enabled": {
-                        "type": "boolean",
-                        "description": "Whether the provider is able to send a care team response message"
-                      },
-                      "allowed_responses": {
-                        "type": "object",
-                        "additionalProperties": {
-                          "type": "object",
-                          "properties": {
-                            "name": {
-                              "type": "string",
-                              "description": "Display value of the response"
-                            },
-                            "default_comment": {
-                              "type": "string",
-                              "description": "Default value for the free-text comment to the patient",
-                              "nullable": true
-                            }
-                          },
-                          "required": [
-                            "name"
-                          ]
-                        },
-                        "description": "Key-value pairs where keys are an enum of allowed responses a provider may send to a patient, and the values are the display values of the enum with default copy for the comment"
-                      }
-                    },
-                    "required": [
-                      "write_enabled",
-                      "allowed_responses"
-                    ]
-                  },
-                  "patient": {
-                    "type": "object",
-                    "properties": {
-                      "onboarded_date": {
-                        "type": "string",
-                        "description": "the date the patient was created"
-                      }
-                    }
-                  },
-                  "active_response_count": {
-                    "type": "integer"
-                  },
-                  "active_responses": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/QuestionnaireResponse"
-                    }
-                  },
-                  "inactive_responses": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/QuestionnaireResponse"
-                    }
-                  }
-                },
-                "required": [
-                  "permissions",
-                  "patient",
-                  "active_response_count",
-                  "active_responses",
-                  "inactive_responses"
-                ]
-              }
-            },
-            "required": [
-              "data"
-            ]
-          }
-        ]
-      },
-      "QuestionnaireResponseCareTeamResponse": {
-        "type": "object",
-        "nullable": true,
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "questionnaire_response_id": {
-            "type": "string"
-          },
-          "is_draft": {
-            "type": "boolean"
-          },
-          "responders": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Responder"
-            }
-          },
-          "patient_message": {
-            "$ref": "#/components/schemas/PatientMessage"
-          },
-          "internal_note": {
-            "type": "string",
-            "description": "Optional note that the clinician can store for internal use",
-            "nullable": true
-          },
-          "finalized_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "The date/time that the clinician finalized the documentation",
-            "nullable": true
-          },
-          "read_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "The date/time that the patient read the response",
-            "nullable": true
-          },
-          "submitted_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "The date/time that the clinician submitted the response to the patient",
-            "nullable": true
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "required": [
-          "id",
-          "questionnaire_response_id",
-          "is_draft",
-          "responders",
-          "patient_message",
-          "created_at",
-          "updated_at"
-        ]
-      },
-      "QuestionnaireResponseEventResponse": {
+      "TenantConfiguration_ResponseBody": {
         "type": "object",
         "properties": {
-          "patient_id": {
-            "type": "string"
-          },
-          "tenant_id": {
-            "type": "string"
-          },
-          "survey_response_id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "symptoms": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "write_in": {
-            "type": "string",
-            "nullable": true
-          },
-          "alert_state": {
-            "enum": [
-              "NON_ALERT",
-              "ALERT",
-              "HIGH_ALERT"
-            ]
-          },
-          "qol": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 100
-          },
-          "completed_on": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "required": [
-          "patient_id",
-          "tenant_id",
-          "survey_response_id",
-          "symptoms",
-          "alert_state",
-          "completed_on"
-        ]
-      },
-      "QuestionnaireResponseEventRequestBody": {
-        "type": "object",
-        "properties": {
-          "survey_response_id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "symptoms": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "write_in": {
-            "type": "string",
-            "nullable": true
-          },
-          "alert_state": {
-            "enum": [
-              "NON_ALERT",
-              "ALERT",
-              "HIGH_ALERT"
-            ]
-          },
-          "qol": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 100
-          },
-          "completed_on": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "required": [
-          "survey_response_id",
-          "symptoms",
-          "alert_state",
-          "completed_on"
-        ]
-      },
-      "TenantConfiguration": {
-        "type": "object",
-        "properties": {
-          "patient_not_found_copy": {
-            "type": "string",
-            "description": "The copy to be rendered when the selected patient has not onboarded with Ronin",
-            "nullable": true
-          },
-          "write_back_enabled": {
-            "type": "boolean",
-            "description": "Whether a tenant is configured to allow for EHR write back.",
-            "nullable": false
+          "data": {
+            "$ref": "#/components/schemas/TenantConfiguration"
           }
         }
       },
-      "TenantConfigurationResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AbstractResponse"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "data": {
-                "$ref": "#/components/schemas/TenantConfiguration"
-              }
-            }
-          }
-        ]
-      },
       "ErrorResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AbstractResponse"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "errors": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Error"
             }
           }
-        ]
+        }
       },
       "Error": {
         "type": "object",
@@ -2036,7 +1252,7 @@
             "type": "string",
             "description": "Human readable message the describes the type of failure"
           },
-          "detail_message": {
+          "detailMessage": {
             "type": "string",
             "description": "Human readable message that describes the specific failure"
           },
@@ -2062,32 +1278,26 @@
       "QuestionnaireResponseEventResponseExample": {
         "summary": "Questionnaire Response Event Response Example",
         "value": {
-          "patient_id": "25e4822e-c289-11ed-afa1-0242ac120002",
-          "tenant_id": "5jzj62vp",
-          "survey_response_id": 19486,
+          "patientId": "25e4822e-c289-11ed-afa1-0242ac120002",
+          "tenantId": "5jzj62vp",
+          "surveyResponseId": 19486,
           "symptoms": [
             "fatigue",
             "nausea"
           ],
-          "write_in": "blurry vision, sore throat",
-          "alert_state": "HIGH_ALERT",
+          "writeIn": "blurry vision, sore throat",
+          "alertState": "HIGH_ALERT",
           "qol": 50,
-          "completed_on": "2022-09-13T12:14:15.000Z"
+          "completedOn": "2022-09-13T12:14:15.000Z"
         }
       },
-      "CreateCareTeamResponseExample": {
+      "CreateCareTeamResponse_ResponseBody": {
         "summary": "Create Care Team Response Example",
         "value": {
-          "meta": {
-            "links": {
-              "self": "/v1/care_team_responses"
-            },
-            "version": "1.0.0"
-          },
           "data": {
             "id": "25e4822e-c289-11ed-afa1-0242ac120002",
-            "questionnaire_response_id": "9970ca54-c289-11ed-afa1-0242ac120002",
-            "is_draft": false,
+            "questionnaireResponseId": "9970ca54-c289-11ed-afa1-0242ac120002",
+            "isDraft": false,
             "responders": [
               {
                 "id": "2cc29228-c281-11ed-afa1-0242ac120002",
@@ -2095,85 +1305,66 @@
                 "action": "PATIENT_MESSAGE"
               }
             ],
-            "patient_id": "9d63650e-c289-11ed-afa1-0242ac120002",
-            "patient_message": {
-              "option": "schedule_visit",
+            "patientId": "9d63650e-c289-11ed-afa1-0242ac120002",
+            "patientMessage": {
+              "code": "schedule_visit",
               "display": "Schedule Visit",
               "comment": "You should get in to see the doctor this week"
             },
-            "internal_note": "Patient needs blood drawn",
-            "read_at": null,
-            "finalized_at": null,
-            "submitted_at": "2023-01-12T07:24:13.837Z",
-            "created_at": "2023-01-12T07:23:13.837Z",
-            "updated_at": "2023-01-12T07:24:13.837Z"
+            "internalNote": "Patient needs blood drawn",
+            "readAt": null,
+            "finalizedAt": null,
+            "submittedAt": "2023-01-12T07:24:13.837Z",
+            "createdAt": "2023-01-12T07:23:13.837Z",
+            "updatedAt": "2023-01-12T07:24:13.837Z"
           }
         }
       },
-      "MarkCareTeamResponseAsReadRequestBodyExample": {
+      "MarkCareTeamResponsesAsRead_RequestBody": {
         "summary": "Mark Care Team Response as Read Request Body Example",
         "value": {
-          "care_team_response_ids": [
+          "careTeamResponseIds": [
             "25e4822e-c289-11ed-afa1-0242ac120002"
           ]
         }
       },
-      "FinalizeCareTeamResponseRequestBodyExample": {
+      "FinalizeCareTeamResponse_RequestBody": {
         "summary": "Finalize Care Team Response Request Body Example",
         "value": {
-          "internal_note": "Patient needs blood tests",
+          "internalNote": "Patient needs blood tests",
           "action": "SIGN",
-          "ehr_write_back_message": "Diana Salazar reported symptoms through the Ronin Patient Symptom Monitoring App on 02/12/23 at 8:55pm PST\nSymptoms:\nDiarrhea: - Frequency: Most of the time - Episodes in last 24 hours: 4-6 - Blood in stool: No - Days present: 3 days - Taken Medication: Yes\nNausea: - Frequency: Most of the time - Severity: Severe - Interference with ADLs: Somewhat - Eating less: Yes - Taken Medication: No\nWrite-in: My diarrhea is continuing despite taking Imodium. I am not vomiting but I am so nauseated it hurts to move.\nI responded to the patient via the Ronin Symptom Monitoring App on 02/13/23 at 11:15am PST: We will call you to discuss in more detail within 24 hours. If the message was received outside of clinic hours, you may get a call the next day."
+          "ehrWriteBackMessage": "Diana Salazar reported symptoms through the Ronin Patient Symptom Monitoring App on 02/12/23 at 8:55pm PST\nSymptoms:\nDiarrhea: - Frequency: Most of the time - Episodes in last 24 hours: 4-6 - Blood in stool: No - Days present: 3 days - Taken Medication: Yes\nNausea: - Frequency: Most of the time - Severity: Severe - Interference with ADLs: Somewhat - Eating less: Yes - Taken Medication: No\nWrite-in: My diarrhea is continuing despite taking Imodium. I am not vomiting but I am so nauseated it hurts to move.\nI responded to the patient via the Ronin Symptom Monitoring App on 02/13/23 at 11:15am PST: We will call you to discuss in more detail within 24 hours. If the message was received outside of clinic hours, you may get a call the next day."
         }
       },
-      "CareTeamRequestCutOverRequestBodyExample": {
+      "CareTeamRequestCutOver_RequestBody": {
         "summary": "An array of Care Team Responses",
         "value": {
-          "questionnaire_response_id": "2138eef5-e29b-477c-a5b4-9a585b0a4382",
-          "alert_feedback_id": "2138eef5-e29b-477c-a5b4-9a585b0a4382",
-          "care_team_response_id": "2138eef5-e29b-477c-a5b4-9a585b0a4382",
-          "is_draft": false,
+          "questionnaireResponseId": "2138eef5-e29b-477c-a5b4-9a585b0a4382",
+          "alertFeedbackId": "2138eef5-e29b-477c-a5b4-9a585b0a4382",
+          "careTeamResponseId": "2138eef5-e29b-477c-a5b4-9a585b0a4382",
+          "isDraft": false,
           "responder": {
             "id": "2cc29228-c281-11ed-afa1-0242ac120002",
             "name": "Susan Smith"
           },
-          "patient_message": {
-            "option": "schedule_visit",
+          "patientMessage": {
+            "code": "schedule_visit",
             "display": "Schedule Visit",
             "comment": "You should get in to see the doctor this week"
           },
-          "read_at": null,
-          "signed_at": null,
-          "created_at": "2023-01-12T07:23:13.837Z",
-          "updated_at": "2023-01-12T07:23:13.837Z"
+          "readAt": null,
+          "signedAt": null,
+          "createdAt": "2023-01-12T07:23:13.837Z",
+          "updatedAt": "2023-01-12T07:23:13.837Z"
         }
       },
-      "DraftCareTeamResponseExample": {
+      "DraftCareTeamResponse_ResponseBody": {
         "summary": "Draft Create Care Team Response Example",
         "value": {
-          "meta": {
-            "links": {
-              "self": "/v1/care_team_responses/draft"
-            },
-            "version": "1.0.0"
-          },
           "data": {
             "id": "25e4822e-c289-11ed-afa1-0242ac120002",
-            "questionnaire_response": {
-              "id": "eef1b220-c754-11ed-afa1-0242ac120002",
-              "alerted_symptoms": [
-                {
-                  "category": {
-                    "name": "nausea",
-                    "patient_display_name": "Nausea"
-                  }
-                }
-              ],
-              "write_in": "Nausea is preventing me from getting out of bed",
-              "completed_on": "2023-06-01T07:45:23.534Z",
-              "created_at": "2023-06-01T07:23:13.837Z"
-            },
-            "is_draft": true,
+            "questionnaireResponseId": "eef1b220-c754-11ed-afa1-0242ac120002",
+            "isDraft": true,
             "responders": [
               {
                 "id": "2cc29228-c281-11ed-afa1-0242ac120002",
@@ -2181,34 +1372,28 @@
                 "action": "PATIENT_MESSAGE"
               }
             ],
-            "patient_id": "9d63650e-c289-11ed-afa1-0242ac120002",
-            "patient_message": {
-              "option": "schedule_visit",
+            "patientId": "9d63650e-c289-11ed-afa1-0242ac120002",
+            "patientMessage": {
+              "code": "schedule_visit",
               "display": "Schedule Visit",
               "comment": "You should get in to see the doctor this week"
             },
-            "internal_note": "This is a draft",
-            "read_at": null,
-            "finalized_at": null,
-            "submitted_at": null,
-            "created_at": "2023-01-12T07:23:13.837Z",
-            "updated_at": "2023-01-12T07:23:13.837Z"
+            "internalNote": null,
+            "readAt": null,
+            "finalizedAt": null,
+            "submittedAt": null,
+            "createdAt": "2023-01-12T07:23:13.837Z",
+            "updatedAt": "2023-01-12T07:23:13.837Z"
           }
         }
       },
-      "FinalizeCareTeamResponseExample": {
+      "FinalizeCareTeamResponse_ResponsBody": {
         "summary": "Finalize Care Team Response Example",
         "value": {
-          "meta": {
-            "links": {
-              "self": "/v1/care_team_responses/25e4822e-c289-11ed-afa1-0242ac120002/finalize"
-            },
-            "version": "1.0.0"
-          },
           "data": {
             "id": "25e4822e-c289-11ed-afa1-0242ac120002",
-            "questionnaire_response_id": "9970ca54-c289-11ed-afa1-0242ac120002",
-            "is_draft": false,
+            "questionnaireResponseId": "9970ca54-c289-11ed-afa1-0242ac120002",
+            "isDraft": false,
             "responders": [
               {
                 "id": "2cc29228-c281-11ed-afa1-0242ac120002",
@@ -2221,79 +1406,51 @@
                 "action": "SIGN"
               }
             ],
-            "patient_id": "9d63650e-c289-11ed-afa1-0242ac120002",
-            "patient_message": {
-              "option": "schedule_visit",
+            "patientId": "9d63650e-c289-11ed-afa1-0242ac120002",
+            "patientMessage": {
+              "code": "schedule_visit",
               "display": "Schedule Visit",
               "comment": "You should get in to see the doctor this week"
             },
-            "internal_note": "Patient needs blood drawn",
-            "read_at": null,
-            "finalized_at": "2023-01-12T07:23:13.837Z",
-            "submitted_at": "2023-01-12T07:23:13.837Z",
-            "created_at": "2023-01-12T07:23:13.837Z",
-            "updated_at": "2023-01-12T07:23:13.837Z"
+            "internalNote": "Patient needs blood drawn",
+            "readAt": null,
+            "finalizedAt": "2023-01-12T07:23:13.837Z",
+            "submittedAt": "2023-01-12T07:23:13.837Z",
+            "createdAt": "2023-01-12T07:23:13.837Z",
+            "updatedAt": "2023-01-12T07:23:13.837Z"
           }
         }
       },
-      "MarkCareTeamResponseAsReadExample": {
-        "summary": "Mark Care Team Response as read example",
-        "value": {
-          "meta": {
-            "links": {
-              "self": "/v1/care_team_responses/read"
-            },
-            "version": "1.0.0"
-          }
-        }
-      },
-      "UnreadCareTeamResponseCountExample": {
+      "UnreadCareTeamResponseCount_ResponseBody": {
         "summary": "Unread Care Team Response Count Example",
         "value": {
-          "meta": {
-            "links": {
-              "self": "/v1/care_team_responses/unread"
-            },
-            "version": "1.0.0"
-          },
           "data": {
             "count": 1
           }
         }
       },
-      "CareTeamResponsesExample": {
+      "CareTeamResponse_RequestBody": {
+        "description": "Create/update Care Team Request Body",
+        "value": {
+          "questionnaireResponseId": "fa3b78ce-c27b-11ed-afa1-0242ac120002",
+          "patientMessage": {
+            "code": "schedule_visit",
+            "comment": "You should get in to see the doctor this week"
+          }
+        }
+      },
+      "FetchCareTeamResponses_ResponseBody": {
         "summary": "An array of Care Team Responses",
         "value": {
-          "meta": {
-            "links": {
-              "self": "/v1/care_team_responses"
-            },
-            "version": "1.0.0"
+          "paging": {
+            "page": 0,
+            "limit": 20
           },
           "data": [
             {
               "id": "25e4822e-c289-11ed-afa1-0242ac120002",
-              "questionnaire_response": {
-                "id": "eef1b220-c754-11ed-afa1-0242ac120002",
-                "alerted_symptoms": [
-                  {
-                    "category": {
-                      "name": "Nausea",
-                      "patient_display_name": "Nausea"
-                    }
-                  },
-                  {
-                    "category": {
-                      "name": "Diarrhea",
-                      "patient_display_name": "Diarrhea"
-                    }
-                  }
-                ],
-                "write_in": "Feeling better",
-                "created_at": "2023-01-12T07:23:13.837Z",
-                "completed_on": "2023-01-12T07:45:23.534Z"
-              },
-              "is_draft": false,
+              "questionnaireResponseId": "eef1b220-c754-11ed-afa1-0242ac120002",
+              "isDraft": false,
               "responders": [
                 {
                   "id": "2cc29228-c281-11ed-afa1-0242ac120002",
@@ -2301,29 +1458,23 @@
                   "action": "PATIENT_MESSAGE"
                 }
               ],
-              "patient_id": "9d63650e-c289-11ed-afa1-0242ac120002",
-              "patient_message": {
-                "option": "schedule_visit",
+              "patientId": "9d63650e-c289-11ed-afa1-0242ac120002",
+              "patientMessage": {
+                "code": "schedule_visit",
                 "display": "Schedule Visit",
                 "comment": "You should get in to see the doctor this week"
               },
-              "internal_note": "Patient needs blood drawn",
-              "read_at": null,
-              "finalized_at": null,
-              "submitted_at": null,
-              "created_at": "2023-01-12T07:23:13.837Z",
-              "updated_at": "2023-01-12T07:23:13.837Z"
+              "internalNote": "Patient needs blood drawn",
+              "readAt": null,
+              "finalizedAt": null,
+              "submittedAt": null,
+              "createdAt": "2023-01-12T07:23:13.837Z",
+              "updatedAt": "2023-01-12T07:23:13.837Z"
             },
             {
               "id": "d3be912a-b694-4312-8451-e21b762cbac9",
-              "questionnaire_response": {
-                "id": "27ce169e-c280-11ed-afa1-0242ac120002",
-                "alerted_symptoms": [],
-                "write_in": null,
-                "created_at": "2023-01-12T07:23:13.837Z",
-                "completed_on": "2023-01-12T07:45:23.534Z"
-              },
-              "is_draft": true,
+              "questionnaireResponseId": "27ce169e-c280-11ed-afa1-0242ac120002",
+              "isDraft": true,
               "responders": [
                 {
                   "id": "2cc29228-c281-11ed-afa1-0242ac120002",
@@ -2336,612 +1487,47 @@
                   "action": "SIGN"
                 }
               ],
-              "patient_id": "9d63650e-c289-11ed-afa1-0242ac120002",
-              "patient_message": {
-                "option": "monitor_at_home",
+              "patientId": "9d63650e-c289-11ed-afa1-0242ac120002",
+              "patientMessage": {
+                "code": "monitor_at_home",
                 "display": "Monitor at Home"
               },
-              "read_at": "2023-03-10T07:23:13.837Z",
-              "finalized_at": "2023-03-09T04:13:22.234Z",
-              "submitted_at": "2023-03-09T04:13:22.234Z",
-              "created_at": "2023-02-15T07:23:13.837Z",
-              "updated_at": "2023-03-10T07:23:13.837Z"
+              "readAt": "2023-03-10T07:23:13.837Z",
+              "finalizedAt": "2023-03-09T04:13:22.234Z",
+              "submittedAt": "2023-03-09T04:13:22.234Z",
+              "createdAt": "2023-02-15T07:23:13.837Z",
+              "updatedAt": "2023-03-10T07:23:13.837Z"
             }
           ]
         }
       },
-      "QuestionnaireResponsesResponseExample": {
-        "summary": "Completed Questionnaire",
-        "value": {
-          "meta": {
-            "links": {
-              "self": "/v1/symptoms/27ce169e-c280-11ed-afa1-0242ac120002"
-            },
-            "version": "1.0.0"
-          },
-          "data": {
-            "permissions": {
-              "write_enabled": true,
-              "allowed_responses": {
-                "address_before": {
-                  "name": "Will address: Before next appt",
-                  "default_comment": "Please call at your earliest convenience"
-                },
-                "address_next": {
-                  "name": "Will address: At next appt",
-                  "default_comment": "We'll discuss this at your next appointment"
-                },
-                "address_unneeded": {
-                  "name": "No need to address: Alert not needed"
-                },
-                "addressed_already": {
-                  "name": "No need to address: Already discussed"
-                }
-              }
-            },
-            "patient": {
-              "onboarded_date": "December 2, 2022"
-            },
-            "active_response_count": 2,
-            "active_responses": [
-              {
-                "id": "eef1b220-c754-11ed-afa1-0242ac120002",
-                "alert": {
-                  "tier": 4,
-                  "level": "HIGH_ALERT",
-                  "additional_info_copy": "Patient told to call 911 or go to ER"
-                },
-                "care_team_response": null,
-                "symptoms": {
-                  "severe": {
-                    "nausea": {
-                      "display_name": "Nausea",
-                      "alert": {
-                        "tier": 4,
-                        "level": "HIGH_ALERT",
-                        "additional_info_copy": "Patient told to call 911 or go to ER"
-                      },
-                      "responses": [
-                        {
-                          "id": "cc6bc003-08b8-4a85-a06c-dfd5a12eb9f7",
-                          "question": "Severity",
-                          "answer": "Severe",
-                          "alert": {
-                            "tier": 3,
-                            "level": "ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:26:52.000Z"
-                        },
-                        {
-                          "id": "f848c2fd-daa2-4e0a-92e8-9aa4ac169242",
-                          "question": "Frequency",
-                          "answer": "Almost constantly",
-                          "alert": {
-                            "tier": 4,
-                            "level": "HIGH_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:26:52.000Z"
-                        },
-                        {
-                          "id": "60db9298-1966-4562-a50c-1d4435addbde",
-                          "question": "Diet affected",
-                          "answer": "No",
-                          "alert": {
-                            "tier": 0,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:26:52.000Z"
-                        },
-                        {
-                          "id": "98d1d3ec-d132-4edb-a6bb-e659ad7ec4e3",
-                          "question": "Weight loss",
-                          "answer": "Yes",
-                          "alert": {
-                            "tier": 1,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:26:52.000Z"
-                        },
-                        {
-                          "id": "a3b5bc05-9f7c-4385-b7c8-17e4d6bc350d",
-                          "question": "Weight loss > 10%",
-                          "answer": "No",
-                          "alert": {
-                            "tier": 0,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:26:52.000Z"
-                        }
-                      ]
-                    },
-                    "diarrhea": {
-                      "display_name": "Diarrhea",
-                      "alert": {
-                        "tier": 2,
-                        "level": "ALERT",
-                        "additional_info_copy": "Follow up within 24 hours"
-                      },
-                      "responses": [
-                        {
-                          "id": "fc1d2ebb-36c2-4cb3-8818-03ecee747b09",
-                          "question": "Frequency",
-                          "answer": "Occasionally",
-                          "alert": {
-                            "tier": 2,
-                            "level": "ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:52:48.000Z"
-                        },
-                        {
-                          "id": "08cfce77-e2a6-4538-901d-5037cb22827a",
-                          "question": "Daily episodes at worst",
-                          "answer": "2-3",
-                          "alert": {
-                            "tier": 2,
-                            "level": "ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:52:48.000Z"
-                        },
-                        {
-                          "id": "61ac3531-dde6-4139-9c32-495602ef0c27",
-                          "question": "Blood or mucus in stool",
-                          "answer": "No",
-                          "alert": {
-                            "tier": 0,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:52:48.000Z"
-                        },
-                        {
-                          "id": "3afb500a-3098-4aff-86fc-6205192f5c55",
-                          "question": "Instrumental ADL interference",
-                          "answer": "Yes",
-                          "alert": {
-                            "tier": 1,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:52:48.000Z"
-                        },
-                        {
-                          "id": "1295425d-3be6-48d5-a534-eefe421a657a",
-                          "question": "Self care ADL interference",
-                          "answer": "Yes",
-                          "alert": {
-                            "tier": 1,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:52:48.000Z"
-                        }
-                      ]
-                    }
-                  },
-                  "write_in": "Nausea is preventing me from getting out of bed"
-                },
-                "symptom_educations": [
-                  {
-                    "id": "218",
-                    "category": {
-                      "name": "Nausea",
-                      "patient_display_name": "Nausea"
-                    },
-                    "body": "**Nausea** Nausea is a common side effect of cancer treatment that may lead to vomiting.\n**Medicine** * If your care team gave you nausea medicines (antiemetics), follow the instructions on how to take them\n**Food/Fluids** * Eat small meals often to keep something in your stomach * Eat dry foods (such as crackers or toast) when you wake up, before you start to move around * Drink 64 to 80 ounces of fluids every day - Fluids include clear soups, flavored gelatin, carbonated drinks, popsicles, tea, and ice chips made of any kind of liquid * Sip room temperature carbonated drinks such as cola or ginger ale * Try tart or sour flavored foods, hard candies, or liquids\n**Other Tips** Put a cool wet cloth on your forehead or neck Open a window or use a fan to feel fresh air movement ",
-                    "external_links": [
-                      {
-                        "title": "MD Anderson: Patient Education Nausea and Vomiting",
-                        "url": "https://www.mdanderson.org/patient-education/Nutrition/Nausea-and-Vomiting-Tips-for-Coping.pdf"
-                      }
-                    ]
-                  }
-                ],
-                "created_at": "2023-06-01T07:23:13.837Z",
-                "completed_on": "2023-06-01T07:45:23.534Z"
-              },
-              {
-                "id": "0d2791a1-39d5-4355-bafd-cdbf0448627e",
-                "alert": {
-                  "tier": 2,
-                  "level": "ALERT",
-                  "additional_info_copy": "Follow up within 24 hours"
-                },
-                "care_team_response": null,
-                "symptoms": {
-                  "severe": {
-                    "nausea": {
-                      "display_name": "Nausea",
-                      "alert": {
-                        "tier": 4,
-                        "level": "HIGH_ALERT",
-                        "additional_info_copy": "Patient told to call 911 or go to ER"
-                      },
-                      "responses": [
-                        {
-                          "id": "cc6bc003-08b8-4a85-a06c-dfd5a12eb9f7",
-                          "question": "Severity",
-                          "answer": "Severe",
-                          "alert": {
-                            "tier": 3,
-                            "level": "ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:26:52.000Z"
-                        },
-                        {
-                          "id": "f848c2fd-daa2-4e0a-92e8-9aa4ac169242",
-                          "question": "Frequency",
-                          "answer": "Almost constantly",
-                          "alert": {
-                            "tier": 4,
-                            "level": "HIGH_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:26:52.000Z"
-                        },
-                        {
-                          "id": "60db9298-1966-4562-a50c-1d4435addbde",
-                          "question": "Diet affected",
-                          "answer": "No",
-                          "alert": {
-                            "tier": 0,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:26:52.000Z"
-                        },
-                        {
-                          "id": "98d1d3ec-d132-4edb-a6bb-e659ad7ec4e3",
-                          "question": "Weight loss",
-                          "answer": "Yes",
-                          "alert": {
-                            "tier": 1,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:26:52.000Z"
-                        },
-                        {
-                          "id": "a3b5bc05-9f7c-4385-b7c8-17e4d6bc350d",
-                          "question": "Weight loss >10%",
-                          "answer": "No",
-                          "alert": {
-                            "tier": 0,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:26:52.000Z"
-                        }
-                      ]
-                    },
-                    "diarrhea": {
-                      "display_name": "Diarrhea",
-                      "alert": {
-                        "tier": 2,
-                        "level": "ALERT",
-                        "additional_info_copy": "Follow up within 24 hours"
-                      },
-                      "responses": [
-                        {
-                          "id": "fc1d2ebb-36c2-4cb3-8818-03ecee747b09",
-                          "question": "Frequency",
-                          "answer": "Occasionally",
-                          "alert": {
-                            "tier": 2,
-                            "level": "ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:52:48.000Z"
-                        },
-                        {
-                          "id": "08cfce77-e2a6-4538-901d-5037cb22827a",
-                          "question": "Daily episodes at worst",
-                          "answer": "2-3",
-                          "alert": {
-                            "tier": 2,
-                            "level": "ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:52:48.000Z"
-                        },
-                        {
-                          "id": "61ac3531-dde6-4139-9c32-495602ef0c27",
-                          "question": "Blood or mucus in stool",
-                          "answer": "No",
-                          "alert": {
-                            "tier": 0,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:52:48.000Z"
-                        },
-                        {
-                          "id": "3afb500a-3098-4aff-86fc-6205192f5c55",
-                          "question": "Instrumental ADL interference",
-                          "answer": "Yes",
-                          "alert": {
-                            "tier": 1,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:52:48.000Z"
-                        },
-                        {
-                          "id": "1295425d-3be6-48d5-a534-eefe421a657a",
-                          "question": "Self care ADL interference",
-                          "answer": "Yes",
-                          "alert": {
-                            "tier": 1,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:52:48.000Z"
-                        }
-                      ]
-                    }
-                  }
-                },
-                "created_at": "2023-06-02T07:21:34.735Z",
-                "completed_on": "2023-06-02T07:43:52.523Z"
-              }
-            ],
-            "inactive_responses": [
-              {
-                "id": "27ce169e-c280-11ed-afa1-0242ac120002",
-                "alert": {
-                  "tier": 4,
-                  "level": "HIGH_ALERT",
-                  "additional_info_copy": "Patient told to call 911 or go to ER"
-                },
-                "care_team_response": {
-                  "id": "1f82b782-c281-11ed-afa1-0242ac120002",
-                  "questionnaire_response_id": "27ce169e-c280-11ed-afa1-0242ac120002",
-                  "is_draft": false,
-                  "responders": [
-                    {
-                      "id": "2cc29228-c281-11ed-afa1-0242ac120002",
-                      "name": "Susan Smith",
-                      "action": "PATIENT_MESSAGE"
-                    },
-                    {
-                      "id": "2cc29228-c281-11ed-afa1-0242ac120002",
-                      "name": "Susan Smith",
-                      "action": "SIGN"
-                    }
-                  ],
-                  "patient_message": {
-                    "option": "address_next",
-                    "display": "Will address: At next appt",
-                    "comment": "You'll be able to discuss this with the doctor at your next visit"
-                  },
-                  "internal_note": "Patient would like to discuss their vomitting with the doctor",
-                  "finalized_at": "2022-02-11T02:45:03.246Z",
-                  "read_at": "2022-02-11T03:26:16.876Z",
-                  "submitted_at": "2022-02-11T02:44:03.246Z",
-                  "created_at": "2022-02-11T02:34:56.356",
-                  "updated_at": "2022-02-11T03:26:16.876Z"
-                },
-                "symptoms": {
-                  "severe": {
-                    "nausea": {
-                      "display_name": "Nausea",
-                      "alert": {
-                        "tier": 4,
-                        "level": "HIGH_ALERT",
-                        "additional_info_copy": "Patient told to call 911 or go to ER"
-                      },
-                      "responses": [
-                        {
-                          "id": "6237dfdc-bf42-43e3-a126-d8d4926b452d",
-                          "question": "Severity",
-                          "answer": "Severe",
-                          "alert": {
-                            "tier": 3,
-                            "level": "ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:26:52.000Z"
-                        },
-                        {
-                          "id": "3e553eaa-c1e7-4560-b274-10392a9fb4a7",
-                          "question": "Frequency",
-                          "answer": "Almost constantly",
-                          "alert": {
-                            "tier": 4,
-                            "level": "HIGH_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:26:52.000Z"
-                        },
-                        {
-                          "id": "44a00f27-067c-4eb6-a3ec-2cabc1414348",
-                          "question": "Diet affected",
-                          "answer": "No",
-                          "alert": {
-                            "tier": 0,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:26:52.000Z"
-                        },
-                        {
-                          "id": "f4fb79ef-1be9-4749-a378-a7876f42c268",
-                          "question": "Weight loss",
-                          "answer": "Yes",
-                          "alert": {
-                            "tier": 1,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:26:52.000Z"
-                        },
-                        {
-                          "id": "3158bf2c-7858-4106-b503-f7b7a54b5628",
-                          "question": "Weight loss >10%",
-                          "answer": "No",
-                          "alert": {
-                            "tier": 0,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:26:52.000Z"
-                        }
-                      ]
-                    },
-                    "diarrhea": {
-                      "display_name": "Diarrhea",
-                      "alert": {
-                        "tier": 2,
-                        "level": "ALERT",
-                        "additional_info_copy": "Follow up within 24 hours"
-                      },
-                      "responses": [
-                        {
-                          "id": "cc542451-8f42-4376-8fc5-b61933f2c40e",
-                          "question": "Frequency",
-                          "answer": "Occasionally",
-                          "alert": {
-                            "tier": 2,
-                            "level": "ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:52:48.000Z"
-                        },
-                        {
-                          "id": "388b8023-f1d9-499d-8816-3e7e18be5145",
-                          "question": "Daily episodes at worst",
-                          "answer": "2-3",
-                          "alert": {
-                            "tier": 2,
-                            "level": "ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:52:48.000Z"
-                        },
-                        {
-                          "id": "b700f1c1-9b50-406c-8456-a78a6e351b02",
-                          "question": "Blood or mucus in stool",
-                          "answer": "No",
-                          "alert": {
-                            "tier": 0,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:52:48.000Z"
-                        },
-                        {
-                          "id": "d9ec9f76-ef97-4dd7-8fcb-f07b9970a918",
-                          "question": "Instrumental ADL interference",
-                          "answer": "Yes",
-                          "alert": {
-                            "tier": 1,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:52:48.000Z"
-                        },
-                        {
-                          "id": "fb50f8f5-d424-436b-b625-39f1a06fc55c",
-                          "question": "Self care ADL interference",
-                          "answer": "Yes",
-                          "alert": {
-                            "tier": 1,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:52:48.000Z"
-                        }
-                      ]
-                    }
-                  }
-                },
-                "created_at": "2023-06-02T07:23:13.837Z",
-                "completed_on": "2023-06-02T07:45:23.534Z"
-              },
-              {
-                "id": "c6cac900-4f09-4399-8d49-fb12d86e6faf",
-                "alert": {
-                  "tier": 1,
-                  "level": "NON_ALERT"
-                },
-                "care_team_response": null,
-                "symptoms": {
-                  "non_severe": {
-                    "nausea": {
-                      "display_name": "Nausea",
-                      "alert": {
-                        "tier": 1,
-                        "level": "NON_ALERT"
-                      },
-                      "responses": [
-                        {
-                          "id": "6237dfdc-bf42-43e3-a126-d8d4926b452d",
-                          "question": "Severity",
-                          "answer": "Not Severe",
-                          "alert": {
-                            "tier": 1,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:26:52.000Z"
-                        },
-                        {
-                          "id": "3e553eaa-c1e7-4560-b274-10392a9fb4a7",
-                          "question": "Frequency",
-                          "answer": "Almost never",
-                          "alert": {
-                            "tier": 1,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:26:52.000Z"
-                        },
-                        {
-                          "id": "44a00f27-067c-4eb6-a3ec-2cabc1414348",
-                          "question": "Diet affected",
-                          "answer": "No",
-                          "alert": {
-                            "tier": 1,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:26:52.000Z"
-                        },
-                        {
-                          "id": "f4fb79ef-1be9-4749-a378-a7876f42c268",
-                          "question": "Weight loss",
-                          "answer": "No",
-                          "alert": {
-                            "tier": 1,
-                            "level": "NON_ALERT"
-                          },
-                          "recorded_on": "2022-12-02T19:26:52.000Z"
-                        }
-                      ]
-                    }
-                  }
-                },
-                "created_at": "2023-06-03T07:23:13.837Z",
-                "completed_on": "2023-06-03T07:45:23.534Z"
-              },
-              {
-                "id": "36f5b5f4-c754-11ed-afa1-0242ac120002",
-                "alert": {
-                  "tier": 0,
-                  "level": "NON_ALERT"
-                },
-                "care_team_response": null,
-                "symptoms": null,
-                "created_at": "2023-06-04T02:34:56.356",
-                "completed_on": "2023-06-04T03:26:16.876Z"
-              }
-            ]
-          }
-        }
-      },
-      "TenantConfigurationResponseBodyExample": {
+      "TenantConfiguration_ResponseBody": {
         "summary": "Tenant Configuration Response Body Example",
         "value": {
-          "meta": {
-            "links": {
-              "self": "/v1/tenants/apposnd/configuration"
-            },
-            "version": "1.0.0"
-          },
           "data": {
-            "patient_not_found_copy": "Send a MyChart message to this patient using the dot phrase .RONINONBOARDING to begin symptom monitoring at home.",
-            "write_back_enabled": true
+            "patientNotFoundCopy": "Send a MyChart message to this patient using the dot phrase .RONINONBOARDING to begin symptom monitoring at home.",
+            "writeBackEnabled": true,
+            "triageActions": [
+              {
+                "code": "monitor_at_home",
+                "display": "Monitor at Home"
+              },
+              {
+                "code": "schedule_visit",
+                "display": "Schedule Visit"
+              }
+            ]
           }
         }
       },
       "BadRequestError": {
         "summary": "Bad Request Error Example",
         "value": {
-          "meta": {
-            "links": {
-              "self": "/v1/care_team_responses/10256"
-            },
-            "version": "1.0.0"
-          },
           "errors": [
             {
               "id": "179F5161-D264-422B-8E2E-72B721739922",
               "title": "Invalid Attribute",
-              "detail_message": "Attribute 'count' must be a positive value.",
+              "detailMessage": "Attribute 'count' must be a positive value.",
               "code": "VALIDATE-25",
               "detail": {
                 "field": "count",
@@ -2956,17 +1542,11 @@
       "DuplicateResource": {
         "summary": "Bad Request - Duplicate Resource",
         "value": {
-          "meta": {
-            "links": {
-              "self": "/v1/care_team_responses/10256"
-            },
-            "version": "1.0.0"
-          },
           "errors": [
             {
               "id": "179F5161-D264-422B-8E2E-72B721739922",
               "title": "Resource Already Exists",
-              "detail_message": "The care team response has already been stored and sent to the patient",
+              "detailMessage": "The care team response has already been stored and sent to the patient",
               "code": "DUPLICATE",
               "status": "400"
             }
@@ -2975,17 +1555,11 @@
       },
       "DuplicateFinalization": {
         "value": {
-          "meta": {
-            "links": {
-              "self": "/v1/care_team_responses/10256"
-            },
-            "version": "1.0.0"
-          },
           "errors": [
             {
               "id": "179F5161-D264-422B-8E2E-72B721739922",
               "title": "Response Already Finalized",
-              "detail_message": "The care team response has already been finalized by a provider",
+              "detailMessage": "The care team response has already been finalized by a provider",
               "code": "DUP_COMPLETION",
               "status": "409"
             }
@@ -2995,17 +1569,11 @@
       "NotFoundError": {
         "summary": "Resource Not Found Error Example",
         "value": {
-          "meta": {
-            "links": {
-              "self": "/v1/care_team_responses/10256"
-            },
-            "version": "1.0.0"
-          },
           "errors": [
             {
               "id": "179F5161-D264-422B-8E2E-72B721739922",
               "title": "Resource Not Found",
-              "detail_message": "No questionnaire response with the ID \"10256\" found",
+              "detailMessage": "No questionnaire response with the ID \"10256\" found",
               "status": "404"
             }
           ]
@@ -3014,17 +1582,11 @@
       "InternalServerError": {
         "summary": "Internal Server Error",
         "value": {
-          "meta": {
-            "links": {
-              "self": "/v1/care_team_responses/10256"
-            },
-            "version": "1.0.0"
-          },
           "errors": [
             {
               "id": "179F5161-D264-422B-8E2E-72B721739922",
               "title": "Internal Server Error",
-              "detail_message": "Lost connection with DB",
+              "detailMessage": "Lost connection with DB",
               "status": "500"
             }
           ]
