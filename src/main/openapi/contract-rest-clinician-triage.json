@@ -1199,27 +1199,145 @@
           "triageActions": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "code": {
-                  "type": "string",
-                  "description": "Computer-friendly representation of the triage action"
-                },
-                "display": {
-                  "type": "string",
-                  "description": "Human-friendly representation of the triage action"
-                }
-              },
-              "required": [
-                "code",
-                "display"
-              ]
+              "$ref": "#/components/schemas/TriageAction"
+            }
+          },
+          "alertLevels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlertLevelConfiguration"
             }
           }
         },
         "required": [
           "writeBackEnabled",
-          "triageActions"
+          "triageActions",
+          "alertLevels"
+        ]
+      },
+      "TriageAction":{
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Computer-friendly representation of the triage action"
+          },
+          "display": {
+            "type": "string",
+            "description": "Human-friendly representation of the triage action"
+          }
+        },
+        "required": [
+          "code",
+          "display"
+        ]
+      },
+      "AlertLevelConfiguration": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "number"
+          },
+          "copy": {
+            "type": "object",
+            "properties": {
+              "clinicianDashboard": {
+                "type": "object",
+                "properties": {
+                  "additionalInfo": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "additionalInfo"
+                ]
+              },
+              "patientApp": {
+                "type": "object",
+                "properties": {
+                  "header": {
+                    "type": "object",
+                    "properties": {
+                      "icon":  {
+                        "type": "string",
+                        "description": "The red triangle with exclamation mark in the images above; this is a string used to identify the icon the client should use"
+                      },
+                      "backgroundColor": {
+                        "type": "string",
+                        "description": "The tan color behind the header icon and other surrounding text"
+                      },
+                      "text":  {
+                        "type": "string",
+                        "description": "The text to show in the header on successfully sending a message (Send to Care Team  in the first image)"
+                      },
+                      "color": {
+                        "type": "string",
+                        "description": "The color of the header title - Should be a hex string (e.g. #FFFFFF for white)"
+                      },
+                      "subtitle":  {
+                        "type": "string",
+                        "description": "The subtitle text that appears above the symptoms list (Your care team will be notified due to your respones for: in the first image)"
+                      },
+                      "subtitleColor": {
+                        "type": "string",
+                        "description": "The color of the symptoms subtitle"
+                      }
+                    },
+                    "required": [
+                      "icon",
+                      "backgroundColor",
+                      "text",
+                      "color",
+                      "subtitle",
+                      "subtitleColor"
+                    ]
+                  },
+                  "body": {
+                    "type": "object",
+                    "properties": {
+                      "text": {
+                        "type": "string",
+                        "description": "The text to show in the body when message delivery is successful (You should expect a response within 24 hours, during clinic hours. in the second image)"
+                      },
+                      "color": {
+                        "type":  "string",
+                        "description": "The color of the text in the body title"
+                      }
+                    },
+                    "required": [
+                      "text",
+                      "color"
+                    ]
+                  },
+                  "footer": {
+                    "type": "object",
+                    "properties": {
+                      "text": {
+                        "type": "string",
+                        "description": "The text to show in the footer at the bottom of each image"
+                      }
+                    },
+                    "required": [
+                      "text"
+                    ]
+                  }
+                },
+                "required": [
+                  "header",
+                  "body",
+                  "footer"
+                ]
+              }
+            },
+            "required": [
+              "clinicianDashboard",
+              "patientApp"
+            ]
+          }
+        },
+        "required": [
+          "level",
+          "copy"
         ]
       },
       "TenantConfiguration_ResponseBody": {
@@ -1515,6 +1633,33 @@
               {
                 "code": "schedule_visit",
                 "display": "Schedule Visit"
+              }
+            ],
+            "alertLevels": [
+              {
+                "level": 1,
+                "copy": {
+                  "clinicianDashboard": {
+                    "additionalInfo": "Mild, Non-Alerted Symptom"
+                  },
+                  "patientApp": {
+                    "header": {
+                      "icon": "green-thumbs-up",
+                      "backgroundColor": "#f4fff5",
+                      "text": "Thank you! Reporting helps us monitor and manage your symptoms.",
+                      "color": "#00830e",
+                      "subtitle": "%{care_team_name} has your symptoms report in their records.",
+                      "subtitleColor": "#000000"
+                    },
+                    "body": {
+                      "text": "Continue to manage and monitor your symptoms at home.",
+                      "color": "#116bff"
+                    },
+                    "footer": {
+                      "text": "If you have new or worsening symptoms, or an emergency, please report them through this app, call your care team or 911."
+                    }
+                  }
+                }
               }
             ]
           }
