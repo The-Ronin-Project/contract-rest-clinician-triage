@@ -22,10 +22,6 @@
     {
       "name": "Tenant Configuration",
       "description": "Tenant-specific configuration values"
-    },
-    {
-      "name": "Care Team Response - Chokuto Cut-Over",
-      "description": "Utilities for supporting the cut-over of care team response data from Chokuto to CTS"
     }
   ],
   "paths": {
@@ -722,106 +718,6 @@
         }
       }
     },
-    "/tenants/{tenantId}/patients/{patientId}/care-team-responses/cut-over": {
-      "put": {
-        "tags": [
-          "Care Team Response - Chokuto Cut-Over"
-        ],
-        "summary": "Sync Care Team Response Data",
-        "description": "Temporary endpoint used to sync care team response data between Chokuto and CTS during the cut-over plan",
-        "operationId": "careTeamResponseCutOver",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "tenantId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "apposnd"
-          },
-          {
-            "in": "path",
-            "name": "patientId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "9d63650e-c289-11ed-afa1-0242ac120002"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CareTeamResponseCutOver_RequestBody"
-              },
-              "examples": {
-                "CareTeamRequestCutOver_RequestBody": {
-                  "$ref": "#/components/examples/CareTeamRequestCutOver_RequestBody"
-                }
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "Successfully received care team response"
-          },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "examples": {
-                  "BadRequestError": {
-                    "$ref": "#/components/examples/BadRequestError"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Resource Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "examples": {
-                  "BadRequestError": {
-                    "$ref": "#/components/examples/NotFoundError"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "examples": {
-                  "BadRequestError": {
-                    "$ref": "#/components/examples/InternalServerError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/tenants/{tenantId}/triage-configuration": {
       "get": {
         "tags": [
@@ -895,78 +791,6 @@
         "required": [
           "questionnaireResponseId",
           "patientMessage"
-        ]
-      },
-      "CareTeamResponseCutOver_RequestBody": {
-        "type": "object",
-        "properties": {
-          "questionnaireResponseId": {
-            "type": "string"
-          },
-          "alertFeedbackId": {
-            "type": "string"
-          },
-          "careTeamResponseId": {
-            "type": "string"
-          },
-          "isDraft": {
-            "type": "boolean"
-          },
-          "responder": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "id",
-              "name"
-            ]
-          },
-          "patientMessage": {
-            "$ref": "#/components/schemas/PatientMessage"
-          },
-          "internalNote": {
-            "type": "string",
-            "description": "Optional note that the clinician can store for internal use",
-            "nullable": true
-          },
-          "ehrWriteBackMessage": {
-            "type": "string",
-            "description": "Message sent to the EHR. Free text with formatted details of the care team response and associated questionnaire response"
-          },
-          "signedAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "The date/time that the clinician finalized the communication with the patient",
-            "nullable": true
-          },
-          "readAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "The date/time that the patient read the response",
-            "nullable": true
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "required": [
-          "questionnaireResponseId",
-          "isDraft",
-          "responder",
-          "patientMessage",
-          "createdAt",
-          "updatedAt"
         ]
       },
       "MarkCareTeamResponsesAsRead_RequestBody": {
@@ -1275,22 +1099,6 @@
       }
     },
     "examples": {
-      "QuestionnaireResponseEventResponseExample": {
-        "summary": "Questionnaire Response Event Response Example",
-        "value": {
-          "patientId": "25e4822e-c289-11ed-afa1-0242ac120002",
-          "tenantId": "5jzj62vp",
-          "surveyResponseId": 19486,
-          "symptoms": [
-            "fatigue",
-            "nausea"
-          ],
-          "writeIn": "blurry vision, sore throat",
-          "alertState": "HIGH_ALERT",
-          "qol": 50,
-          "completedOn": "2022-09-13T12:14:15.000Z"
-        }
-      },
       "CreateCareTeamResponse_ResponseBody": {
         "summary": "Create Care Team Response Example",
         "value": {
@@ -1334,28 +1142,6 @@
           "internalNote": "Patient needs blood tests",
           "action": "SIGN",
           "ehrWriteBackMessage": "Diana Salazar reported symptoms through the Ronin Patient Symptom Monitoring App on 02/12/23 at 8:55pm PST\nSymptoms:\nDiarrhea: - Frequency: Most of the time - Episodes in last 24 hours: 4-6 - Blood in stool: No - Days present: 3 days - Taken Medication: Yes\nNausea: - Frequency: Most of the time - Severity: Severe - Interference with ADLs: Somewhat - Eating less: Yes - Taken Medication: No\nWrite-in: My diarrhea is continuing despite taking Imodium. I am not vomiting but I am so nauseated it hurts to move.\nI responded to the patient via the Ronin Symptom Monitoring App on 02/13/23 at 11:15am PST: We will call you to discuss in more detail within 24 hours. If the message was received outside of clinic hours, you may get a call the next day."
-        }
-      },
-      "CareTeamRequestCutOver_RequestBody": {
-        "summary": "An array of Care Team Responses",
-        "value": {
-          "questionnaireResponseId": "2138eef5-e29b-477c-a5b4-9a585b0a4382",
-          "alertFeedbackId": "2138eef5-e29b-477c-a5b4-9a585b0a4382",
-          "careTeamResponseId": "2138eef5-e29b-477c-a5b4-9a585b0a4382",
-          "isDraft": false,
-          "responder": {
-            "id": "2cc29228-c281-11ed-afa1-0242ac120002",
-            "name": "Susan Smith"
-          },
-          "patientMessage": {
-            "code": "schedule_visit",
-            "display": "Schedule Visit",
-            "comment": "You should get in to see the doctor this week"
-          },
-          "readAt": null,
-          "signedAt": null,
-          "createdAt": "2023-01-12T07:23:13.837Z",
-          "updatedAt": "2023-01-12T07:23:13.837Z"
         }
       },
       "DraftCareTeamResponse_ResponseBody": {
