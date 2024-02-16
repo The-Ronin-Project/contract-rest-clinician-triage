@@ -1032,6 +1032,10 @@
                 "display": {
                   "type": "string",
                   "description": "Human-friendly representation of the triage action"
+                },
+                "defaultComment": {
+                  "type": "string",
+                  "description": "The default comment applied when selected"
                 }
               },
               "required": [
@@ -1296,11 +1300,13 @@
             "triageActions": [
               {
                 "code": "monitor_at_home",
-                "display": "Monitor at Home"
+                "display": "Monitor at Home",
+                "defaultComment": "We have reviewed your symptoms and recommend that you continue to monitor your symptoms at home. Check out the symptom management tips for more help and if you have new or worsening symptoms, please let us know."
               },
               {
                 "code": "schedule_visit",
-                "display": "Schedule Visit"
+                "display": "Schedule Visit",
+                "defaultComment": "We will call you to discuss in more detail within 24 hours. If the message was received outside of clinic hours, you may get a call the next day."
               }
             ]
           }
